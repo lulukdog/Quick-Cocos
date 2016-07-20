@@ -21,7 +21,7 @@ local data_helper = {
 	skill = 2,
 	attr = 2,
 	needGold = 10,
-	needStar = 50,
+	needStar = 36,
 	skillDes = "直接伤害",
 	attrDes = "消除伤害"
 },
@@ -34,7 +34,6 @@ local data_helper = {
 	skill = 3,
 	attr = 3,
 	needGold = 10,
-	needStar = 60,
 	skillDes = "直接伤害",
 	attrDes = "消除伤害"
 },
@@ -47,7 +46,7 @@ local data_helper = {
 	skill = 4,
 	attr = 4,
 	needGold = 10,
-	needStar = 70,
+	needStar = 90,
 	skillDes = "直接伤害",
 	attrDes = "消除伤害"
 },
@@ -60,7 +59,6 @@ local data_helper = {
 	skill = 5,
 	attr = 5,
 	needGold = 10,
-	needStar = 80,
 	skillDes = "防御直接增加",
 	attrDes = "消除增加防御"
 },
@@ -73,7 +71,6 @@ local data_helper = {
 	skill = 6,
 	attr = 6,
 	needGold = 10,
-	needStar = 90,
 	skillDes = "血量直接增加",
 	attrDes = "消除增加血量"
 }

@@ -465,7 +465,7 @@ local data_eliminate = {
 	nextId = 34,
 	score = 100,
 	hasIceAni = 0,
-	describe = "收集物"
+	describe = "日本刀"
 }
 }
 return data_eliminate

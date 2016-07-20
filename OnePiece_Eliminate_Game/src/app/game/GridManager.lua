@@ -580,7 +580,7 @@ function GridManager:collectCell()
 			_cell:removeFromParent()
 			
 			game.collectNum = game.collectNum + 1
-			FightManager:calStarAndExp()
+			sendMessage({msg="GAMESCENE_REFRESH_LEFTNUM"})
 			FightManager:judgeWin()
 			return true
 		end

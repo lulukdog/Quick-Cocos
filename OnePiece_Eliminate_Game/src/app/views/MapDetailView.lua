@@ -83,7 +83,7 @@ function MapDetailView:refreshPage()
 
 	    -- 添加敌人
 	    local nowMonsterTb = common:parseStrOnlyWithComma(stageCfg[game.nowStage].monsterId)
-	    local nowEnemyCsb = monsterCfg[tonumber(nowMonsterTb[#nowMonsterTb])].csb 
+	    local nowEnemyCsb = monsterCfg[tonumber(nowMonsterTb[1])].csb 
 	    local enemyNode = cc.CSLoader:createNode(nowEnemyCsb):addTo(_aniNode)
 		enemyNode:setPosition(180,0)
 	    local enemyAni = cc.CSLoader:createTimeline(nowEnemyCsb)

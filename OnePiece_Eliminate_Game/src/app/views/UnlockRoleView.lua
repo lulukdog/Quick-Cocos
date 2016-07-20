@@ -56,7 +56,7 @@ end
 
 -- 计算解锁需要星星数
 function UnlockRoleView:refreshStarNum( btnNum )
-	if game.myStarNum<tonumber(helperCfg[btnNum].needStar) then
+	if helperCfg[btnNum].needStar==nil or game.myStarNum<tonumber(helperCfg[btnNum].needStar) then
 		UnlockConfirmView.new(btnNum):addTo(self)
 		return
 	end
@@ -72,11 +72,16 @@ function UnlockRoleView:refreshUnlockNode(  )
 		})
 
 		CsbContainer:setStringForLabel(self._mainNode,{
-			["mNeedStarLabel"..i] = game.myStarNum.."/"..helperCfg[i].needStar,
 			["mLvLabel"..i] = "Lv"..game.helper[i],
 		})
 
-		if game.myStarNum<tonumber(helperCfg[i].needStar) then
+		if helperCfg[i].needStar~=nil then
+			CsbContainer:setStringForLabel(self._mainNode,{
+				["mNeedStarLabel"..i] = game.myStarNum.."/"..helperCfg[i].needStar,
+			})
+		end
+
+		if helperCfg[i].needStar~=nil and game.myStarNum<tonumber(helperCfg[i].needStar) then
 			CsbContainer:setColorForNodes(self._mainNode,{
 				["mNeedStarLabel"..i] = GameConfig.Color.Red
 			})

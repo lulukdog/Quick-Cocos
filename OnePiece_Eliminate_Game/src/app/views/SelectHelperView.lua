@@ -93,8 +93,20 @@ function SelectHelperView:ctor(isFromBattlePage)
 			end 
 			self:onFightOrCancel(i,false)
 		end)
+		local fightCellBtn = cc.uiloader:seekNodeByName(self._mainNode,"mFightCellBtn"..i)
+		CsbContainer:decorateBtnNoTrans(fightCellBtn,function()
+			if game.nowStage==10 and game.guideStep==14 then
+				sendMessage({msg="GuideFingerPushView_onNextGuide"})
+			end 
+			self:onFightOrCancel(i,false)
+		end)
+
 		local cancelBtn = cc.uiloader:seekNodeByName(self._mainNode,"mCancelBtn"..i)
 		CsbContainer:decorateBtnNoTrans(cancelBtn,function()
+			self:onFightOrCancel(i,true)
+		end)
+		local cancelCellBtn = cc.uiloader:seekNodeByName(self._mainNode,"mCancelCellBtn"..i)
+		CsbContainer:decorateBtnNoTrans(cancelCellBtn,function()
 			self:onFightOrCancel(i,true)
 		end)
 	end
@@ -102,7 +114,9 @@ function SelectHelperView:ctor(isFromBattlePage)
 	for i=1,4 do
 		local cancelBtn = cc.uiloader:seekNodeByName(self._mainNode,"mFightHelperBtn"..i)
 		CsbContainer:decorateBtnNoTrans(cancelBtn,function()
-			self:onHelperBtn(i)
+			if self._isFromBattlePage==false then
+				self:onHelperBtn(i)
+			end
 		end)
 	end
 
@@ -153,7 +167,10 @@ function SelectHelperView:refreshFightBtn( btnNum )
 	for i,v in ipairs(self.helperTb) do
 		CsbContainer:setNodesVisible(self._mainNode,{
 			["mFightBtn"..i] = not common:table_has_value(self.helperOnShowTb, v),
+			["mFightCellBtn"..i] = not common:table_has_value(self.helperOnShowTb, v),
 			["mCancelBtn"..i] = common:table_has_value(self.helperOnShowTb, v),
+			["mCancelCellBtn"..i] = common:table_has_value(self.helperOnShowTb, v),
+			["mSelectPic"..i] = common:table_has_value(self.helperOnShowTb, v),
 		})
 	end
 	
@@ -162,6 +179,7 @@ function SelectHelperView:refreshFightBtn( btnNum )
 		for i,v in ipairs(self.helperTb) do
 			CsbContainer:setNodesVisible(self._mainNode,{
 				["mCancelBtn"..i] = false,
+				["mCancelCellBtn"..i] = false,
 			})
 		end
 	end

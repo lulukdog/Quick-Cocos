@@ -19,10 +19,12 @@ local TopAniView = import("..views.TopAniView")
 local GuideView = import("..views.GuideView")
 local GuideFingerView = import("..views.GuideFingerView")
 local GuideFingerPushView = import("..views.GuideFingerPushView")
+local StoryView = import("..views.StoryView")
 
 local helperCfg = require("data.data_helper")
 local GameConfig = require("data.GameConfig")
 local cellCfg = require("data.data_eliminate")
+local stageCfg = require("data.data_stage")
 
 
 local GameScene = class("GameScene", function()
@@ -37,12 +39,15 @@ function GameScene:ctor()
 
     addMessage(self, "GAMESCENE_REFRESH_LIFE",self.refreshLife)
     addMessage(self, "GAMESCENE_REFRESH_ROUND",self.refreshRound)
+    addMessage(self, "GAMESCENE_REFRESH_LEFTNUM",self.refreshLeftNum)
 
     addMessage(self, "GAMESCENE_REFRESH_HELPER",self.refreshHelper)
     addMessage(self, "GAMESCENE_CHANGE_FIGHTBG",self.refreshFightBg)
 
     addMessage(self, "GAMESCENE_ENABLE",self.gameEnable)
     addMessage(self, "GAMESCENE_DISABLE",self.gameDisable)
+
+    addMessage(self, "StoryView_Exit",self.storyViewExit)
 
     self.boardView = BoardView.new(handler(self, self.gameOverCallback))
     self.boardView:setPosition(0, 130)
@@ -75,19 +80,14 @@ function GameScene:ctor()
         self.TopAniView:addTo(_topAniNode)
     end
 
-    -- 新手引导
-    if game.guideStep<=game.MAXGUIDESTEP then
-        if game.nowStage<=2 or game.nowStage==9 then
-            GuideView.new():addTo(self)
-        elseif game.nowStage==5 then 
-            GuideFingerView.new():addTo(self)
-        elseif game.guideStep==16 then
-            GuideFingerPushView.new():addTo(self)
-        end
+    -- 剧情
+    if stageCfg[game.nowStage].storyId~=nil then
+        StoryView.new():addTo(self)
     end
 
     self:refreshLife()
     self:refreshRound()
+    self:refreshLeftNum()
     self:refreshHelper()
     self:refreshGoal()
 end
@@ -151,6 +151,22 @@ function GameScene:refreshHelper()
 
   end
 
+end
+
+-- 剧情结束后如果有引导走引导
+function GameScene:storyViewExit()
+    -- 新手引导
+    local a=1
+    local b=2
+    if game.guideStep<=game.MAXGUIDESTEP then
+        if game.nowStage<=2 or game.nowStage==9 then
+            GuideView.new():addTo(self)
+        elseif game.nowStage==5 then 
+            GuideFingerView.new():addTo(self)
+        elseif game.guideStep==16 then
+            GuideFingerPushView.new():addTo(self)
+        end
+    end
 end
 
 function GameScene:createHub()
@@ -251,15 +267,19 @@ function GameScene:refreshRound()
     roundLabel = FightManager:getLeftRound(),
   })
   -- 刷新敌人的属性
-  CsbContainer:setSpritesPic(self._mainNode,{
-    mEnemyAttrPic = cellCfg[FightManager:getEnemyAttr()].icon
-  })
   local _cellBtn = cc.uiloader:seekNodeByName(self._mainNode,"mEnemyAttrBtn")
-  CsbContainer:refreshBtnView(_cellBtn, cellCfg[FightManager:getEnemyAttr()].icon, cellCfg[FightManager:getEnemyAttr()].icon)
-  -- 刷新目标
-  CsbContainer:setStringForLabel(self._mainNode,{
-    mGoalText = FightManager:getGoalLeftNum()
-  })
+  if FightManager:getEnemyAttr()==0 then
+      _cellBtn:setVisible(false)
+  else
+      CsbContainer:refreshBtnView(_cellBtn, cellCfg[FightManager:getEnemyAttr()].icon, cellCfg[FightManager:getEnemyAttr()].icon)
+  end
+  
+end
+-- 刷新怪或是收集物剩余数量
+function GameScene:refreshLeftNum()
+    CsbContainer:setStringForLabel(self._mainNode,{
+        mGoalText = FightManager:getGoalLeftNum()
+    })
 end
 
 function GameScene:gamePause()

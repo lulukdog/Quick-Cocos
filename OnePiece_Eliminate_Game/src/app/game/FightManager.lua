@@ -36,8 +36,10 @@ function FightManager:init()
 
 	game.collectNum = 0
 	
+	local attrAdd = skillCfg[game.helper[6]] and skillCfg[game.helper[6]]["attr"..helperCfg[6].attr] or 0
+	self._nowMaxLife = shipCfg[game.nowShipLevel].life+tonumber(attrAdd)
 	self.nowMonsterTb = common:parseStrOnlyWithComma(stageCfg[game.nowStage].monsterId)
-	self.lifeNum = shipCfg[game.nowShipLevel].life --玩家当前最大生命
+	self.lifeNum = self._nowMaxLife --玩家当前最大生命
 	self:resetFightData()
 	self:changeFightBg()
 end
@@ -71,7 +73,7 @@ function FightManager:getGoalLeftNum()
 	if goalId==0 then
 		return #self.nowMonsterTb-self.nowMonster+1
 	else
-		return goalCount - game.collectNum
+		return math.max(0,goalCount - game.collectNum)
 	end
 end
 
@@ -133,11 +135,7 @@ function FightManager:getBasicNum(actType,cellId)
 		defNum = defNum + tonumber(attrAdd)
 		return defNum
 	elseif actType == "life" then
-		local level = game.helper[6]
-		local lifeNum = shipCfg[game.nowShipLevel].life
-		local attrAdd = skillCfg[level] and skillCfg[level]["attr"..helperCfg[6].attr] or 0
-		lifeNum = lifeNum + tonumber(attrAdd)
-		return lifeNum
+		return math.floor(self._nowMaxLife/6)
 	end 
 end
 -- 和boss属性相克或相同的加成
@@ -168,7 +166,7 @@ function FightManager:calActNum( cellIdTb )
 		end
 	end
 	self.enemyLife = math.max(0,(self.enemyLife - self.attackNum))
-	self.lifeNum = math.min(shipCfg[game.nowShipLevel].life,(self.lifeNum + self:getBasicNum("life")*meatAdd))
+	self.lifeNum = math.min(self._nowMaxLife,(self.lifeNum + self:getBasicNum("life")*meatAdd))
 	self.defNum = self:getBasicNum("def")*defAdd
 	if self.in_dun_skill>0 then
 		self.defNum = self.defNum + self._skillDefNum
@@ -191,7 +189,7 @@ function FightManager:calHelperNum( btnNum )
 		self._skillDefNum = skillNum
 	elseif skillId==6 then
 		self._onceRoleMeat = skillNum
-		self.lifeNum = math.min(shipCfg[game.nowShipLevel].life,(self.lifeNum + skillNum))
+		self.lifeNum = math.min(self._nowMaxLife,(self.lifeNum + skillNum))
 	end
 end
 -- 展示帮手动画
@@ -232,6 +230,7 @@ end
 -- 打败一个怪物后重置数据
 function FightManager:beatOneEnemy()
 	self.nowMonster = self.nowMonster + 1
+	sendMessage({msg="GAMESCENE_REFRESH_LEFTNUM"})
 	self:resetFightData()
 end
 -- 获取当前怪物
@@ -244,7 +243,7 @@ function FightManager:getNowEnemyCsb()
 end
 -- 获取主角当前等级总血量
 function FightManager:getNowRoleMaxLife()
-	return shipCfg[game.nowShipLevel].life
+	return self._nowMaxLife
 end
 -- 获取当前敌人总血量
 function FightManager:getNowEnemyMaxLife()
@@ -252,7 +251,7 @@ function FightManager:getNowEnemyMaxLife()
 end
 -- 复活设置当前血量
 function FightManager:setRoleLifePercent(per)
-	self.lifeNum = per*shipCfg[game.nowShipLevel].life
+	self.lifeNum = per*self._nowMaxLife
 end
 
 -- 战斗胜利计算星星数和获得经验
@@ -311,6 +310,7 @@ function FightManager:judgeWin()
 	for i,v in ipairs(_goalTb) do
 		-- 收集物
 		if v.id==2 and game.collectNum==v.count then
+			self:calStarAndExp()
 			sendMessage({msg="WIN"})
 		end
 	end
