@@ -196,16 +196,10 @@ end
 function FightManager:runHelperAni( btnNum )
 	--sendMessage({msg="GAMESCENE_DISABLE"})
     local skillId = helperCfg[game.helperOnFight[btnNum]].skill
-	if skillId>=1 and skillId<=4 then
-		sendMessage({msg="HELPER_ANI",csbFile = "zoro.csb"})
-		
-	elseif skillId==5 then
-		sendMessage({msg="HELPER_ANI",csbFile = "luffy01.csb"})
-		sendMessage({msg ="MAIN_ROLE",aniStr = "shield2"})
-	elseif skillId==6 then
-		sendMessage({msg="HELPER_ANI",csbFile = "luffy01.csb"})
-		sendMessage({msg ="MAIN_ROLE",aniStr = "meat"})
-	end
+    local _csbFile = helperCfg[game.helperOnFight[btnNum]].csbFile
+    if _csbFile~=nil then
+    	sendMessage({msg="HELPER_ANI",csbFile = _csbFile})
+    end
 end
 -- 计算连接伤害
 function FightManager:calLinkHarm( cellId,linkCount )
@@ -282,8 +276,9 @@ function FightManager:calStarAndExp()
 	end
 	game.nowShipExp = game.nowShipExp + self.shipExp
 	game.myGold = game.myGold + self.winGold
+	UserDefaultUtil:saveGold()
 	-- 船升级
-	if game.nowShipExp>=shipCfg[game.nowShipLevel].needExp then
+	if game.nowShipLevel<#shipCfg and game.nowShipExp>=shipCfg[game.nowShipLevel].needExp then
 		game.nowShipExp = game.nowShipExp - shipCfg[game.nowShipLevel].needExp
 		game.nowShipLevel = game.nowShipLevel + 1
 		game.isShipUpgrade = true

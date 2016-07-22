@@ -30,10 +30,14 @@ function GuideFingerView:onGuide()
     CsbContainer:setStringForLabel(self._mainNode, {
         mDialogLabel = guideCfg[game.guideStep].dialog,
     })
-    if game.guideStep==8 or game.guideStep==9 then
-        local _ani = cc.CSLoader:createTimeline("GuideFingerView.csb")
-        self._mainNode:runAction(_ani)
-        _ani:gotoFrameAndPlay(0,30,true)
+    if game.guideStep==8 then
+        CsbContainer:setSpritesPic(self._mainNode, {
+            mSprite = "pic/dao1.png",
+        })
+    elseif game.guideStep==9 then
+        CsbContainer:setSpritesPic(self._mainNode, {
+            mSprite = "GameScene/zanting.png",
+        })
     else
         self:onExit()
     end

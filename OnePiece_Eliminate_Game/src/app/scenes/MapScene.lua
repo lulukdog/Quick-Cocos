@@ -9,6 +9,10 @@ local BuyGoldView = import("..views.BuyGoldView")
 local BuyEnergyView = import("..views.BuyEnergyView")
 local GuideFingerPushView = import("..views.GuideFingerPushView")
 local StageNode = import("..views.StageNode")
+local UpgradePushView = import("..views.UpgradePushView")
+local RoleGetPushView = import("..views.RoleGetPushView")
+local GoldBoxView = import("..views.GoldBoxView")
+local CommonConfirmView = import("..views.CommonConfirmView")
 
 local common = require("app.common")
 local scheduler = require("framework.scheduler")
@@ -99,12 +103,25 @@ function MapScene:ctor()
     -- 购买无限体力按钮
     local buyInfEnergyBtn = cc.uiloader:seekNodeByName(self._mainNode,"mBuyInfEnergyBtn")
     CsbContainer:decorateBtnNoTrans(buyInfEnergyBtn,function()
-        BuyEnergyView.new():addTo(self)
+        CommonConfirmView.new(GameConfig.BuyInfEnergyLabel,function()
+            game.myEnergy = game.myEnergy + GameConfig.EnergyTb[4]
+            game.countTime = math.max(0,game.countTime-GameConfig.EnergyTb[4]*game.addOneEnergyTime)
+            UserDefaultUtil:SaveEnergy()
+            self:refreshEnergy()
+            self:refreshPage()
+
+        end):addTo(self)
+    end)
+    -- 打开宝箱按钮
+    local boxBtn = cc.uiloader:seekNodeByName(self._mainNode,"mBoxBtn")
+    CsbContainer:decorateBtnNoTrans(boxBtn,function()
+        GoldBoxView.new():addTo(self)
     end)
 
     addMessage(self, "REFRESHGOLD", self.refreshGold)
     addMessage(self, "Refresh_Energy", self.refreshEnergy)
     addMessage(self, "MapScene_RefreshPage", self.refreshPage)
+    addMessage(self, "MapScene_PushRoleGetView", self.pushRoleGetView)
 
     -- 如果战斗胜利并且升级播放战舰升级画面
     if game.isShipUpgrade==true then
@@ -113,18 +130,35 @@ function MapScene:ctor()
         print("MapScene:ctor runShipUpgradeAni")
     end
 
-    CsbContainer:setSpritesPic(self._mainNode, {
-        Map1 = "guanka_map_bg.png"
-    })
-
     -- 新手引导
     if common:getNowMaxStage()==8 and game.guideStep==10 then
         GuideFingerPushView.new():addTo(self)
     end
+
+    -- 12关打过之后获得索隆
+    if game.myStarNum>=helperCfg[2].needStar and game.helper[2]==0 then
+        game.helper[2] = 1
+        UserDefaultUtil:saveHelperLevel()
+        self:refreshPage()
+
+        RoleGetPushView.new(2):addTo(self)
+    end
+    -- 获得乌索普
+    if game.myStarNum>=helperCfg[2].needStar+helperCfg[4].needStar and game.helper[4]==0 then
+        game.helper[4] = 1
+        UserDefaultUtil:saveHelperLevel()
+        self:refreshPage()
+
+        RoleGetPushView.new(4):addTo(self)
+    end
+end
+
+function MapScene:pushRoleGetView( data )
+    RoleGetPushView.new(data._btnNum):addTo(self)
 end
 
 function MapScene:runShipUpgradeAni()
-    --TODO
+    UpgradePushView.new():addTo(self)
 end
 
 function MapScene:refreshGold()
@@ -141,7 +175,6 @@ function MapScene:refreshPage()
     CsbContainer:setNodesVisible(self._mainNode, {
         mBuyShipBtn = game.nowShip<2,
         mBuyInfEnergyBtn = game.myEnergy<5000,
-        mBuyHelperBtn = game.helper[GameConfig.BuyHelper[3]]==0,
     })
     -- 设置当前可购买的是哪个人
     local _nowBuyHelperNum = 0
@@ -151,13 +184,17 @@ function MapScene:refreshPage()
             break
         end
     end
+    CsbContainer:setNodesVisible(self._mainNode, {
+        mBuyHelperBtn = _nowBuyHelperNum~=0,
+    })
     -- 购买人物按钮
     if _nowBuyHelperNum~=0 then
         local buyHelperBtn = cc.uiloader:seekNodeByName(self._mainNode,"mBuyHelperBtn")
         CsbContainer:decorateBtnNoTrans(buyHelperBtn,function()
             UnlockConfirmView.new(_nowBuyHelperNum):addTo(self)
         end)
-        CsbContainer:refreshBtnView(buyHelperBtn,helperCfg[_nowBuyHelperNum].pic,helperCfg[_nowBuyHelperNum].pic)
+        CsbContainer:refreshBtnView(buyHelperBtn,GameConfig.BuyHelperPic[_nowBuyHelperNum],GameConfig.BuyHelperPic[_nowBuyHelperNum])
+        CsbContainer:setSpritesPic(self._mainNode, {mBuyHelperWordSprite = GameConfig.BuyHelperWordPic[_nowBuyHelperNum]})
     end
 end
 
@@ -364,7 +401,7 @@ function MapScene:refreshMapTex(posY)
             elseif i>=_down and i<=_up then
                 local picNum = 9-i
                 CsbContainer:setSpritesPic(self._mainNode, {
-                    ["mapNode"..i] = "guanka_map_bg_0"..picNum..".png"
+                    ["mapNode"..i] = "ditu_all_0"..picNum..".png"
                 })
             end
         end

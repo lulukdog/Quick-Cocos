@@ -76,16 +76,25 @@ local GameConfig = {
 		enemyLose = 4,
 	},
 	-- 船的类型和名字
-	ShipNameCfg = {
-		[1] = "黄金梅丽号",
-		[2] = "万里阳光号",
+	ShipNamePic = {
+		[1] = "yangguangmeilihao_word.png",
+		[2] = "wanliyangguanghao_word.png",
+	},
+	ShipPic = {
+		[1] = "ship_01_bg.png",
+		[2] = "ship_02_bg.png",
+	},
+	-- 升级船页面的船的图片
+	ShipUpgradePic = {
+		[1] = "ship_01_item.png",
+		[2] = "ship_02_item.png",
 	},
 	-- 敌人类型对应物块Id伤害的描述
 	EnemyTypeDes = {
-		[1] = "受到红色方块伤害减半\n受到蓝色方块伤害加倍",
-		[2] = "受到绿色方块伤害减半\n受到红色方块伤害加倍",
-		[3] = "受到黄色方块伤害减半\n受到绿色方块伤害加倍",
-		[4] = "受到蓝色方块伤害减半\n受到黄色方块伤害加倍",
+		[1] = "pic/tips_hongse.png",
+		[2] = "pic/tips_lvse.png",
+		[3] = "pic/tips_huangse.png",
+		[4] = "pic/tips_lanse.png",
 	},
 	-- 关卡目标说明
 	StageGoalDes = {
@@ -93,7 +102,24 @@ local GameConfig = {
 		[2] = "收集物品",
 	},
 	-- 购买帮助角色的顺序
-	BuyHelper = {6,3,5}
+	BuyHelper = {6,3,5}, --乔巴，奈美，山治
+	BuyHelperPic = {
+		[6] = "qiaoba_role.png",
+		[3] = "namei_role.png",
+		[5] = "shanzhi_role.png",
+	}, --乔巴，奈美，山治
+	BuyHelperWordPic = {
+		[6] = "lingquqiaoba_word.png",
+		[3] = "lingqunamei_word.png",
+		[5] = "lingqushanzhi_word.png",
+	},
+	BuyHelperBgPic = {
+		[6] = "buy_qiaoba_bg.png",
+		[3] = "buy_namei_bg.png",
+		[5] = "buy_shanzhi_bg.png",
+	},
+	-- 无限体力文字说明
+	BuyInfEnergyLabel = "是否购买无限体力",
 }
 
 return GameConfig

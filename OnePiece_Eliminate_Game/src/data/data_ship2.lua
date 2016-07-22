@@ -5,6 +5,7 @@ local data_ship2 = {
 	attack = 5,
 	def = 1,
 	life = 12,
+	needExp = 5
 },
 [2] ={
 	id = 2,
@@ -12,7 +13,7 @@ local data_ship2 = {
 	attack = 7,
 	def = 2,
 	life = 18,
-	needExp = 15
+	needExp = 35
 },
 [3] ={
 	id = 3,
@@ -20,7 +21,7 @@ local data_ship2 = {
 	attack = 8,
 	def = 3,
 	life = 25,
-	needExp = 35
+	needExp = 65
 },
 [4] ={
 	id = 4,
@@ -28,7 +29,7 @@ local data_ship2 = {
 	attack = 9,
 	def = 6,
 	life = 32,
-	needExp = 65
+	needExp = 105
 },
 [5] ={
 	id = 5,
@@ -36,7 +37,7 @@ local data_ship2 = {
 	attack = 11,
 	def = 7,
 	life = 38,
-	needExp = 105
+	needExp = 155
 },
 [6] ={
 	id = 6,
@@ -44,7 +45,7 @@ local data_ship2 = {
 	attack = 14,
 	def = 8,
 	life = 45,
-	needExp = 155
+	needExp = 215
 },
 [7] ={
 	id = 7,
@@ -52,7 +53,7 @@ local data_ship2 = {
 	attack = 16,
 	def = 11,
 	life = 52,
-	needExp = 215
+	needExp = 285
 },
 [8] ={
 	id = 8,
@@ -60,7 +61,7 @@ local data_ship2 = {
 	attack = 19,
 	def = 12,
 	life = 58,
-	needExp = 285
+	needExp = 365
 },
 [9] ={
 	id = 9,
@@ -68,7 +69,7 @@ local data_ship2 = {
 	attack = 22,
 	def = 15,
 	life = 65,
-	needExp = 365
+	needExp = 500
 },
 [10] ={
 	id = 10,
@@ -76,7 +77,7 @@ local data_ship2 = {
 	attack = 25,
 	def = 16,
 	life = 72,
-	needExp = 500
+	needExp = 650
 },
 [11] ={
 	id = 11,
@@ -84,7 +85,7 @@ local data_ship2 = {
 	attack = 32,
 	def = 17,
 	life = 78,
-	needExp = 650
+	needExp = 815
 },
 [12] ={
 	id = 12,
@@ -92,7 +93,7 @@ local data_ship2 = {
 	attack = 39,
 	def = 20,
 	life = 85,
-	needExp = 815
+	needExp = 995
 },
 [13] ={
 	id = 13,
@@ -100,7 +101,7 @@ local data_ship2 = {
 	attack = 46,
 	def = 21,
 	life = 92,
-	needExp = 995
+	needExp = 1190
 },
 [14] ={
 	id = 14,
@@ -108,7 +109,7 @@ local data_ship2 = {
 	attack = 53,
 	def = 22,
 	life = 98,
-	needExp = 1190
+	needExp = 1400
 },
 [15] ={
 	id = 15,
@@ -116,7 +117,7 @@ local data_ship2 = {
 	attack = 60,
 	def = 25,
 	life = 105,
-	needExp = 1400
+	needExp = 1625
 },
 [16] ={
 	id = 16,
@@ -124,7 +125,7 @@ local data_ship2 = {
 	attack = 74,
 	def = 26,
 	life = 112,
-	needExp = 1625
+	needExp = 1865
 },
 [17] ={
 	id = 17,
@@ -132,7 +133,7 @@ local data_ship2 = {
 	attack = 88,
 	def = 27,
 	life = 118,
-	needExp = 1865
+	needExp = 2120
 },
 [18] ={
 	id = 18,
@@ -140,7 +141,7 @@ local data_ship2 = {
 	attack = 102,
 	def = 30,
 	life = 125,
-	needExp = 2120
+	needExp = 2390
 },
 [19] ={
 	id = 19,
@@ -148,7 +149,7 @@ local data_ship2 = {
 	attack = 116,
 	def = 31,
 	life = 132,
-	needExp = 2390
+	needExp = 2675
 },
 [20] ={
 	id = 20,
@@ -156,7 +157,7 @@ local data_ship2 = {
 	attack = 130,
 	def = 32,
 	life = 138,
-	needExp = 2675
+	needExp = 2975
 },
 [21] ={
 	id = 21,
@@ -164,7 +165,7 @@ local data_ship2 = {
 	attack = 151,
 	def = 33,
 	life = 145,
-	needExp = 2975
+	needExp = 3290
 },
 [22] ={
 	id = 22,
@@ -172,7 +173,7 @@ local data_ship2 = {
 	attack = 172,
 	def = 36,
 	life = 152,
-	needExp = 3290
+	needExp = 3620
 },
 [23] ={
 	id = 23,
@@ -180,7 +181,7 @@ local data_ship2 = {
 	attack = 193,
 	def = 37,
 	life = 158,
-	needExp = 3620
+	needExp = 3965
 },
 [24] ={
 	id = 24,
@@ -188,7 +189,7 @@ local data_ship2 = {
 	attack = 214,
 	def = 40,
 	life = 165,
-	needExp = 3965
+	needExp = 4325
 },
 [25] ={
 	id = 25,
@@ -196,7 +197,7 @@ local data_ship2 = {
 	attack = 235,
 	def = 41,
 	life = 172,
-	needExp = 4325
+	needExp = 4700
 },
 [26] ={
 	id = 26,
@@ -204,7 +205,7 @@ local data_ship2 = {
 	attack = 263,
 	def = 42,
 	life = 178,
-	needExp = 4700
+	needExp = 5090
 },
 [27] ={
 	id = 27,
@@ -212,7 +213,7 @@ local data_ship2 = {
 	attack = 291,
 	def = 45,
 	life = 185,
-	needExp = 5090
+	needExp = 5495
 },
 [28] ={
 	id = 28,
@@ -220,7 +221,7 @@ local data_ship2 = {
 	attack = 319,
 	def = 46,
 	life = 192,
-	needExp = 5495
+	needExp = 5915
 },
 [29] ={
 	id = 29,
@@ -228,7 +229,7 @@ local data_ship2 = {
 	attack = 347,
 	def = 47,
 	life = 198,
-	needExp = 5915
+	needExp = 6350
 },
 [30] ={
 	id = 30,
@@ -236,7 +237,7 @@ local data_ship2 = {
 	attack = 375,
 	def = 50,
 	life = 205,
-	needExp = 6350
+	needExp = 6950
 },
 [31] ={
 	id = 31,
@@ -244,7 +245,7 @@ local data_ship2 = {
 	attack = 410,
 	def = 51,
 	life = 212,
-	needExp = 6950
+	needExp = 7570
 },
 [32] ={
 	id = 32,
@@ -252,7 +253,7 @@ local data_ship2 = {
 	attack = 445,
 	def = 52,
 	life = 218,
-	needExp = 7570
+	needExp = 8210
 },
 [33] ={
 	id = 33,
@@ -260,7 +261,7 @@ local data_ship2 = {
 	attack = 480,
 	def = 55,
 	life = 225,
-	needExp = 8210
+	needExp = 8870
 },
 [34] ={
 	id = 34,
@@ -268,7 +269,7 @@ local data_ship2 = {
 	attack = 515,
 	def = 56,
 	life = 232,
-	needExp = 8870
+	needExp = 9550
 },
 [35] ={
 	id = 35,
@@ -276,7 +277,7 @@ local data_ship2 = {
 	attack = 550,
 	def = 57,
 	life = 238,
-	needExp = 9550
+	needExp = 10250
 },
 [36] ={
 	id = 36,
@@ -284,7 +285,7 @@ local data_ship2 = {
 	attack = 592,
 	def = 60,
 	life = 245,
-	needExp = 10250
+	needExp = 10970
 },
 [37] ={
 	id = 37,
@@ -292,7 +293,7 @@ local data_ship2 = {
 	attack = 634,
 	def = 61,
 	life = 252,
-	needExp = 10970
+	needExp = 11710
 },
 [38] ={
 	id = 38,
@@ -300,7 +301,7 @@ local data_ship2 = {
 	attack = 676,
 	def = 62,
 	life = 258,
-	needExp = 11710
+	needExp = 12470
 },
 [39] ={
 	id = 39,
@@ -308,7 +309,7 @@ local data_ship2 = {
 	attack = 718,
 	def = 65,
 	life = 265,
-	needExp = 12470
+	needExp = 13250
 },
 [40] ={
 	id = 40,
@@ -316,7 +317,7 @@ local data_ship2 = {
 	attack = 767,
 	def = 66,
 	life = 272,
-	needExp = 13250
+	needExp = 14050
 },
 [41] ={
 	id = 41,
@@ -324,7 +325,7 @@ local data_ship2 = {
 	attack = 816,
 	def = 67,
 	life = 278,
-	needExp = 14050
+	needExp = 14870
 },
 [42] ={
 	id = 42,
@@ -332,7 +333,7 @@ local data_ship2 = {
 	attack = 865,
 	def = 70,
 	life = 285,
-	needExp = 14870
+	needExp = 15710
 },
 [43] ={
 	id = 43,
@@ -340,7 +341,7 @@ local data_ship2 = {
 	attack = 914,
 	def = 71,
 	life = 292,
-	needExp = 15710
+	needExp = 16570
 },
 [44] ={
 	id = 44,
@@ -348,7 +349,7 @@ local data_ship2 = {
 	attack = 963,
 	def = 72,
 	life = 298,
-	needExp = 16570
+	needExp = 17670
 },
 [45] ={
 	id = 45,
@@ -356,7 +357,7 @@ local data_ship2 = {
 	attack = 1012,
 	def = 75,
 	life = 305,
-	needExp = 17670
+	needExp = 18795
 },
 [46] ={
 	id = 46,
@@ -364,7 +365,7 @@ local data_ship2 = {
 	attack = 1068,
 	def = 76,
 	life = 312,
-	needExp = 18795
+	needExp = 19945
 },
 [47] ={
 	id = 47,
@@ -372,7 +373,7 @@ local data_ship2 = {
 	attack = 1124,
 	def = 77,
 	life = 318,
-	needExp = 19945
+	needExp = 21120
 },
 [48] ={
 	id = 48,
@@ -380,7 +381,7 @@ local data_ship2 = {
 	attack = 1180,
 	def = 80,
 	life = 325,
-	needExp = 21120
+	needExp = 22320
 },
 [49] ={
 	id = 49,
@@ -388,7 +389,7 @@ local data_ship2 = {
 	attack = 1236,
 	def = 81,
 	life = 332,
-	needExp = 22320
+	needExp = 23545
 },
 [50] ={
 	id = 50,
@@ -396,7 +397,6 @@ local data_ship2 = {
 	attack = 1300,
 	def = 82,
 	life = 338,
-	needExp = 23545
 }
 }
 return data_ship2

@@ -14,7 +14,6 @@ local data_stage = {
 	starReward1 = "1_60,2_6",
 	starReward2 = "1_80,2_8",
 	starReward3 = "1_100,2_10",
-	storyId = "1,2"
 },
 [2] ={
 	id = 2,

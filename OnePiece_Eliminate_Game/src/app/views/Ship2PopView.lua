@@ -25,7 +25,7 @@ function Ship2PopView:ctor()
 
     local buyBtn = cc.uiloader:seekNodeByName(self._mainNode,"mBuyBtn")
     CsbContainer:decorateBtn(buyBtn,function()
-        if game.nowShip<#GameConfig.ShipNameCfg then
+        if game.nowShip<#GameConfig.ShipNamePic then
             game.nowShip = game.nowShip+1
             UserDefaultUtil:saveShipType()
             sendMessage({msg = "SHIP_UPGRADE_REFRESH"})

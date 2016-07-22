@@ -62,6 +62,10 @@ function TopAniView:addHelperAni(data)
         print("***********************" .. event)
         if frame:getEvent()=="beatAni" then           
             sendMessage({msg ="ENEMY_ROLE",aniStr = "beat"})
+        elseif frame:getEvent()=="shieldAni" then
+            sendMessage({msg ="MAIN_ROLE",aniStr = "shield2"})
+        elseif frame:getEvent()=="meatAni" then
+            sendMessage({msg ="MAIN_ROLE",aniStr = "meat"})
         end
     end) 
     scheduler.performWithDelayGlobal(function()

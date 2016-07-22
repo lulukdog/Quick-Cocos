@@ -48,6 +48,10 @@ function MyApp:run()
     cc.FileUtils:getInstance():addSearchPath("res/sprites/StageNode")
     cc.FileUtils:getInstance():addSearchPath("res/sprites/LinkNum")
     cc.FileUtils:getInstance():addSearchPath("res/sprites/GuideView")
+    cc.FileUtils:getInstance():addSearchPath("res/sprites/UpgradePushView")
+    cc.FileUtils:getInstance():addSearchPath("res/sprites/RoleGetPushView")
+    cc.FileUtils:getInstance():addSearchPath("res/sprites/Prefacemov")
+    cc.FileUtils:getInstance():addSearchPath("res/sprites/GoldBoxView")
 
     --preload all sounds
     for k, v in pairs(GAME_SOUND) do

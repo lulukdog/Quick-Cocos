@@ -39,7 +39,7 @@ function SelectHelperView:ctor(isFromBattlePage)
 	end)
 	local startBtn = cc.uiloader:seekNodeByName(self._mainNode,"mStartBtn")
 	CsbContainer:decorateBtnNoTrans(startBtn,function()
-		if game.nowStage==10 and game.guideStep==15 then
+		if game.helper[2]>0 and game.nowStage==13 and game.guideStep==15 then
 			sendMessage({msg="GuideFingerPushView_onNext"})
 		end 
 
@@ -88,14 +88,11 @@ function SelectHelperView:ctor(isFromBattlePage)
 
 		local fightBtn = cc.uiloader:seekNodeByName(self._mainNode,"mFightBtn"..i)
 		CsbContainer:decorateBtnNoTrans(fightBtn,function()
-			if game.nowStage==10 and game.guideStep==14 then
-				sendMessage({msg="GuideFingerPushView_onNextGuide"})
-			end 
 			self:onFightOrCancel(i,false)
 		end)
 		local fightCellBtn = cc.uiloader:seekNodeByName(self._mainNode,"mFightCellBtn"..i)
 		CsbContainer:decorateBtnNoTrans(fightCellBtn,function()
-			if game.nowStage==10 and game.guideStep==14 then
+			if game.helper[2]>0 and game.nowStage==13 and game.guideStep==14 then
 				sendMessage({msg="GuideFingerPushView_onNextGuide"})
 			end 
 			self:onFightOrCancel(i,false)
@@ -121,7 +118,7 @@ function SelectHelperView:ctor(isFromBattlePage)
 	end
 
 	-- 新手引导
-	if game.nowStage==10 and game.guideStep==14 then
+	if game.helper[2]>0 and game.nowStage==13 and game.guideStep==14 then
 		-- TODO 金币不够
 		if game.myGold>500 then
 			GuideFingerPushView.new():addTo(self)

@@ -31,19 +31,23 @@ function UnlockRoleView:ctor()
 	-- 解锁按钮
 	for i=2,6 do
 		local unlockBtn = cc.uiloader:seekNodeByName(self._mainNode,"mUnlockBtn"..i)
-		CsbContainer:decorateBtnNoTrans(unlockBtn,function()
-			self:onUnlock(i)
-		end)
+		if unlockBtn~=nil then
+			CsbContainer:decorateBtnNoTrans(unlockBtn,function()
+				self:onUnlock(i)
+			end)
+		end
 	end
 	-- 查看人物详情按钮
 	for i=1,6 do
 		local onRoleBtn = cc.uiloader:seekNodeByName(self._mainNode,"onRole"..i)
-		CsbContainer:decorateBtnNoTrans(onRoleBtn,function()
-			if game.guideStep==11 then
-				sendMessage({msg="GuideFingerPushView_onNext"})
-			end 
-			RoleDetailView.new(i):addTo(self)
-		end)
+		if onRoleBtn~=nil then
+			CsbContainer:decorateBtnNoTrans(onRoleBtn,function()
+				if game.guideStep==11 then
+					sendMessage({msg="GuideFingerPushView_onNext"})
+				end 
+				RoleDetailView.new(i):addTo(self)
+			end)
+		end
 	end
 
 	addMessage(self, "UnlockRoleView_refreshUnlockNode",self.refreshUnlockNode)

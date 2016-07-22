@@ -3,14 +3,14 @@
 local picPath = {
 	"pic/boardBG.png",
 	-- "mapDetail.png",
-	"guanka_map_bg_01.png",
-	"guanka_map_bg_02.png",
-	"guanka_map_bg_03.png",
-	"guanka_map_bg_04.png",
-	"guanka_map_bg_05.png",
-	"guanka_map_bg_06.png",
-	"guanka_map_bg_07.png",
-	"guanka_map_bg_08.png",
+	"ditu_all_01.png",
+	"ditu_all_02.png",
+	"ditu_all_03.png",
+	"ditu_all_04.png",
+	"ditu_all_05.png",
+	"ditu_all_06.png",
+	"ditu_all_07.png",
+	"ditu_all_08.png",
 }
 
 return picPath

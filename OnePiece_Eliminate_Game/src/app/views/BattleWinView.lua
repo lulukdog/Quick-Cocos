@@ -37,20 +37,20 @@ function BattleWinView:ctor()
 		app:enterScene("MapScene", nil, "fade", 0.6, display.COLOR_WHITE)
 	end)
 
-	-- 显示奖励内容 TODO
-	-- local rewardStr = stageCfg[game.nowStage]["starReward"..FightManager.starNum]
-	-- local rewardCfg = common:parseStrWithComma(rewardStr)
-	-- for i,v in ipairs(rewardCfg) do
-	-- 	if v.id == game.ITEM.EXP then
-			
-	-- 	end
-	-- end
+	local advBtn = cc.uiloader:seekNodeByName(self._mainNode,"mViewAdvBtn")
+	CsbContainer:decorateBtn(advBtn,function()
+		print("view adv")
+		advBtn:setEnabled(false)
+		CsbContainer:setStringForLabel(self._mainNode, {mGoldLabel = "+"..(FightManager.winGold*2)})
+		game.myGold = game.myGold + FightManager.winGold
+	end)
+	
 
 	CsbContainer:setStringForLabel(self._mainNode,{
 		mShipExpLabel = FightManager.shipExp,
 		mScoreLabel = game.getScores,
     	mHighestScoreLabel = FightManager.highestScore,
-    	mGoldLabel = FightManager.winGold,
+    	mGoldLabel = "+"..FightManager.winGold,
     	mStageNumLabel = string.format("%03d",game.nowStage),
 	})
 

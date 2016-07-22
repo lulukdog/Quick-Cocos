@@ -1,6 +1,7 @@
 local BubbleButton = import("..views.BubbleButton")
 local picPath = require("data.data_picPath")
 local plistPngPath = require("data.data_plistPath")
+local scheduler = require("framework.scheduler")
 
 local LoadingScene = class("LoadingScene", function()
     return display.newScene("LoadingScene")
@@ -52,6 +53,16 @@ function LoadingScene:ctor()
 
   -- 每秒走一次，倒计时用
   GameUtil_addSecond()
+
+  -- 先播放开场动画
+  -- local _preMoveNode = CsbContainer:createPushCsb("Prefacemov.csb"):addTo(self)
+  -- local _preMoveAni = cc.CSLoader:createTimeline("Prefacemov.csb")
+  -- _preMoveNode:runAction(_preMoveAni)
+  -- _preMoveAni:gotoFrameAndPlay(0,280,false)
+  -- scheduler.performWithDelayGlobal(function( )
+  --     _preMoveNode:removeFromParent()
+  -- end,280/GAME_FRAME_RATE)
+
 end
 
 -- 初始化倒计时和体力值
@@ -182,7 +193,11 @@ end
 function LoadingScene:isLoadingFinish(  )
   if self.load_num==self.all_num then 
     self:cacheAni()
-    app:enterScene("MapScene", nil, "fade", 0.6, display.COLOR_WHITE)
+    if game.firstEnterGame==true then
+      app:enterScene("GameScene", nil, "fade", 0.6, display.COLOR_WHITE)
+    else
+      app:enterScene("MapScene", nil, "fade", 0.6, display.COLOR_WHITE)
+    end
   end
 end
 function LoadingScene:loadPic( )

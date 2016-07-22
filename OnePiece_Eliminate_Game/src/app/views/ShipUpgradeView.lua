@@ -1,7 +1,7 @@
 ----------------------------------------------------------------------------------
 --[[
     FILE:           ShipUpgradeView.lua
-    DESCRIPTION:    船升级页面
+    DESCRIPTION:    换船页面
     AUTHOR:         ZhaoLu
     CREATED:        2016-06-21 
 --]]
@@ -37,15 +37,20 @@ function ShipUpgradeView:refreshPage()
 	local shipCfg = GameUtil_getShipCfg()
 
 	CsbContainer:setNodesVisible(self._mainNode, {
-		upgradeBtn = game.nowShip<#GameConfig.ShipNameCfg
+		upgradeBtn = game.nowShip<#GameConfig.ShipNamePic
 	})
 
 	CsbContainer:setStringForLabel(self._mainNode, {
-		mShipName = GameConfig.ShipNameCfg[game.nowShip],
 		mLevel = game.nowShipLevel,
 		mAttack = shipCfg[game.nowShipLevel].attack,
 		mDef = shipCfg[game.nowShipLevel].def,
 		mLife = shipCfg[game.nowShipLevel].life,
+		mExpLabel = game.nowShipExp.."/"..shipCfg[game.nowShipLevel].needExp,
+	})
+
+	CsbContainer:setSpritesPic(self._mainNode, {
+		mShipNameSprite = GameConfig.ShipNamePic[game.nowShip],
+		mShipSprite = GameConfig.ShipPic[game.nowShip],
 	})
 
 	-- 当前船的经验

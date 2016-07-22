@@ -25,6 +25,7 @@ local helperCfg = require("data.data_helper")
 local GameConfig = require("data.GameConfig")
 local cellCfg = require("data.data_eliminate")
 local stageCfg = require("data.data_stage")
+local scheduler = require("framework.scheduler")
 
 
 local GameScene = class("GameScene", function()
@@ -83,6 +84,20 @@ function GameScene:ctor()
     -- 剧情
     if stageCfg[game.nowStage].storyId~=nil then
         StoryView.new():addTo(self)
+    else
+        self:guideStep()
+    end
+
+    -- 如果第一次进来播动画
+    if game.firstEnterGame==true then
+        local _movieNode = CsbContainer:createPushCsb("lufyymutou.csb"):addTo(self)
+        local _moveAni = cc.CSLoader:createTimeline("lufyymutou.csb")
+        _movieNode:runAction(_moveAni)
+        _moveAni:gotoFrameAndPlay(0,220,false)
+        scheduler.performWithDelayGlobal(function()
+            game.firstEnterGame = false
+            _movieNode:removeFromParent()
+        end,220/GAME_FRAME_RATE)
     end
 
     self:refreshLife()
@@ -153,11 +168,8 @@ function GameScene:refreshHelper()
 
 end
 
--- 剧情结束后如果有引导走引导
-function GameScene:storyViewExit()
-    -- 新手引导
-    local a=1
-    local b=2
+-- 新手引导
+function GameScene:guideStep( )
     if game.guideStep<=game.MAXGUIDESTEP then
         if game.nowStage<=2 or game.nowStage==9 then
             GuideView.new():addTo(self)
@@ -167,6 +179,10 @@ function GameScene:storyViewExit()
             GuideFingerPushView.new():addTo(self)
         end
     end
+end
+-- 剧情结束后如果有引导走引导
+function GameScene:storyViewExit()
+    self:guideStep()
 end
 
 function GameScene:createHub()
@@ -216,8 +232,8 @@ function GameScene:createHub()
     end)
     _cellBtn:addTouchEventListener(function(sender,eventType)
         if eventType==ccui.TouchEventType.began then
-            CsbContainer:setStringForLabel(self._mainNode,{
-                mEnemyIdText = GameConfig.EnemyTypeDes[FightManager:getEnemyAttr()]
+            CsbContainer:setSpritesPic(self._mainNode,{
+                mAttrSprite = GameConfig.EnemyTypeDes[FightManager:getEnemyAttr()]
             })
             CsbContainer:setNodesVisible(self._mainNode, {
                 mEnemyIdNode = true,
