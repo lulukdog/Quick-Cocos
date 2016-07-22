@@ -168,7 +168,7 @@ function UserDefaultUtil:getShipExp()
     shipExp = common:decInt(tonumber(shipExp))
     return shipExp
 end
--- 记录当前是3艘船中的哪艘船
+-- 记录当前是2艘船中的哪艘船
 function UserDefaultUtil:saveShipType()
     local _shipType = common:encInt(game.nowShip) 
     cc.UserDefault:getInstance():setIntegerForKey(game.PLAYERID.."ShipType",_shipType)
@@ -182,4 +182,33 @@ function UserDefaultUtil:getShipType()
     end
     shipType = common:decInt(tonumber(shipType))
     return shipType
+end
+-- 记录当前引导步数
+function UserDefaultUtil:saveGuideStep()
+    local _guideStep = common:encInt(game.guideStep) 
+    cc.UserDefault:getInstance():setIntegerForKey(game.PLAYERID.."GuideStep",_guideStep)
+    cc.UserDefault:getInstance():flush()
+end
+function UserDefaultUtil:getGuideStep()
+    local guideStep = cc.UserDefault:getInstance():getIntegerForKey(game.PLAYERID.."GuideStep")
+    -- print(" test userdefault getGuideStep is  "..game.guideStep)
+    if guideStep==0 then
+        return 0
+    end
+    guideStep = common:decInt(tonumber(guideStep))
+    return guideStep
+end
+-- 记录当前是否第一次开始游戏
+function UserDefaultUtil:saveFirstGame()
+    if game.firstEnterGame==true then
+        cc.UserDefault:getInstance():setIntegerForKey(game.PLAYERID.."FirstGame",1)
+    else
+        cc.UserDefault:getInstance():setIntegerForKey(game.PLAYERID.."FirstGame",2)
+    end
+    cc.UserDefault:getInstance():flush()
+end
+function UserDefaultUtil:getFirstGame()
+    local firstGame = cc.UserDefault:getInstance():getIntegerForKey(game.PLAYERID.."FirstGame")
+    -- print("UserDefaultUtil:getFirstGame  "..firstGame)
+    return firstGame
 end

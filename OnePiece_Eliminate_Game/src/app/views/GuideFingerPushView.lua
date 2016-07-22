@@ -25,11 +25,13 @@ end
 
 function GuideFingerPushView:onNext()
     game.guideStep = game.guideStep + 1
+    UserDefaultUtil:saveGuideStep()
     self:onExit()
 end
 -- 选择人物引导页面不退出指引
 function GuideFingerPushView:onNextGuide()
     game.guideStep = game.guideStep + 1
+    UserDefaultUtil:saveGuideStep()
     self:onGuide()
 end
 

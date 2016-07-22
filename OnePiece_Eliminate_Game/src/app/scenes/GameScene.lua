@@ -96,6 +96,7 @@ function GameScene:ctor()
         _moveAni:gotoFrameAndPlay(0,220,false)
         scheduler.performWithDelayGlobal(function()
             game.firstEnterGame = false
+            UserDefaultUtil:saveFirstGame()
             _movieNode:removeFromParent()
         end,220/GAME_FRAME_RATE)
     end

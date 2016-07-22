@@ -26,6 +26,7 @@ function GuideFingerView:ctor()
 end
 
 function GuideFingerView:onGuide()
+    UserDefaultUtil:saveGuideStep()
     print("GuideFingerView:onGuide "..game.guideStep)
     CsbContainer:setStringForLabel(self._mainNode, {
         mDialogLabel = guideCfg[game.guideStep].dialog,

@@ -255,7 +255,7 @@ end
 
 --建立100个关卡按钮
 function MapScene:initStageNode()
-    if self._leftNum<=0 and self._rightNum>=100 then
+    if self._leftNum<=0 and self._rightNum>game.MAXSTAGE then
         scheduler.unscheduleGlobal(self._stageScheduler)
         return
     end
@@ -265,8 +265,8 @@ function MapScene:initStageNode()
             self:addStageNode(i)
         end
     end
-    if self._rightNum<100 then
-        local rightToNum = math.min(99,self._rightNum+10)
+    if self._rightNum<=game.MAXSTAGE then
+        local rightToNum = math.min(game.MAXSTAGE,self._rightNum+10)
         for i=self._rightNum,rightToNum do
             self:addStageNode(i)
         end

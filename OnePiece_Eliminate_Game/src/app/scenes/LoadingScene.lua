@@ -50,18 +50,24 @@ function LoadingScene:ctor()
   self:initGold()
   -- 初始化音乐和音效开关
   self:initMusicAndSound()
+  -- 初始化当前引导步数
+  self:initGuideStep()
+  -- 初始化当前是否第一次开始游戏
+  self:initFirstGame()
 
   -- 每秒走一次，倒计时用
   GameUtil_addSecond()
 
   -- 先播放开场动画
-  -- local _preMoveNode = CsbContainer:createPushCsb("Prefacemov.csb"):addTo(self)
-  -- local _preMoveAni = cc.CSLoader:createTimeline("Prefacemov.csb")
-  -- _preMoveNode:runAction(_preMoveAni)
-  -- _preMoveAni:gotoFrameAndPlay(0,280,false)
-  -- scheduler.performWithDelayGlobal(function( )
-  --     _preMoveNode:removeFromParent()
-  -- end,280/GAME_FRAME_RATE)
+  if game.firstEnterGame==true then
+      local _preMoveNode = CsbContainer:createPushCsb("Prefacemov.csb"):addTo(self)
+      local _preMoveAni = cc.CSLoader:createTimeline("Prefacemov.csb")
+      _preMoveNode:runAction(_preMoveAni)
+      _preMoveAni:gotoFrameAndPlay(0,280,false)
+      scheduler.performWithDelayGlobal(function( )
+          _preMoveNode:removeFromParent()
+      end,280/GAME_FRAME_RATE)
+  end
 
 end
 
@@ -123,7 +129,6 @@ function LoadingScene:initShipType()
     game.nowShip = UserDefaultUtil:getShipType()
   end
 end
-
 -- 初始化金币
 function LoadingScene:initGold()
   if UserDefaultUtil:getGold()~=0 then
@@ -137,6 +142,18 @@ function LoadingScene:initMusicAndSound()
   end
   game.MusicOn = UserDefaultUtil:getMusic()==1
   game.SoundOn = UserDefaultUtil:getSound()==1
+end
+-- 初始化当前引导步数
+function LoadingScene:initGuideStep()
+  if UserDefaultUtil:getGuideStep()~=0 then
+      game.guideStep = UserDefaultUtil:getGuideStep()
+  end
+end
+-- 初始化当前是否第一次开始游戏
+function LoadingScene:initFirstGame()
+  if UserDefaultUtil:getFirstGame()~=0 then
+      game.firstEnterGame = UserDefaultUtil:getFirstGame()==1
+  end
 end
 
 

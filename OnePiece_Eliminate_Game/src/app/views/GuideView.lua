@@ -32,7 +32,7 @@ function GuideView:ctor()
     self:onGuide()
 end
 
-function GuideView:slideCell( )
+function GuideView:slideCell()
     if game.guideStep==2 or game.guideStep==5 or game.guideStep==7 then
         game.guideStep = game.guideStep+1
         self:onGuide()
@@ -40,6 +40,7 @@ function GuideView:slideCell( )
 end
 
 function GuideView:onGuide()
+    UserDefaultUtil:saveGuideStep()
     print("GuideView:onGuide "..game.guideStep)
     if game.guideStep<=game.MAXGUIDESTEP then
         CsbContainer:setStringForLabel(self._mainNode, {
