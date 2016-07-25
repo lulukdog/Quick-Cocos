@@ -1,4 +1,3 @@
-local BubbleButton = import("..views.BubbleButton")
 local picPath = require("data.data_picPath")
 local plistPngPath = require("data.data_plistPath")
 local scheduler = require("framework.scheduler")
@@ -8,23 +7,14 @@ local LoadingScene = class("LoadingScene", function()
 end)
 
 function LoadingScene:ctor()
-  self.bg = display.newSprite("Login/BG.png", display.cx, display.cy)
-  self.bg:setScale(display.right/self.bg:getContentSize().width)
-  self:addChild(self.bg)
+  self._mainNode = CsbContainer:createLoadingCsb("LoadingScene.csb"):addTo(self)
+  local _startBtn = cc.uiloader:seekNodeByName(self._mainNode, "mStartBtn")
+  CsbContainer:decorateBtn(_startBtn, function()
+      if game.PLAYERID~="" then
+          self:enterMapScene()
+      end
+  end)
 
-  self.startButton = BubbleButton.new({
-          image = "Login/StartBtn.png",
-          prepare = function()
-              audio.playSound(GAME_SOUND.tapButton)
-              self.startButton:setButtonEnabled(false)
-          end,
-          listener = function()
-              self:enterMapScene()
-          end,
-      })
-      :align(display.CENTER, display.cx, display.bottom + 150)
-      :addTo(self)
-  self.startButton:setScale(display.right/self.bg:getContentSize().width)
   self.all_num = #picPath + #plistPngPath
   self.load_num = 0
   self.load_plist = 0
@@ -32,6 +22,11 @@ function LoadingScene:ctor()
   -- 设置全局随机种子
   math.newrandomseed()
 
+  -- 先确定玩家sdk返回的puid
+  self:initPuid()
+  if game.PLAYERID=="" then
+      MessagePopView.new(5):addTo(self)
+  end
   -- 初始化倒计时和体力值
   self:initEnergyNum()
   -- 初始化当前关卡
@@ -69,6 +64,20 @@ function LoadingScene:ctor()
       end,280/GAME_FRAME_RATE)
   end
 
+end
+
+function LoadingScene:initPuid( )
+    if device.platform == "android" then
+        local args = {}
+        local ok, _puid = luaj.callStaticMethod(className, "eye_getPuid", args, "()Ljava/lang/String")
+        if not ok then
+            print("LoadingScene:initPuid luaj error:", _puid)
+        else
+            game.PLAYERID = _puid
+        end
+    elseif device.platform == "windows" then
+        game.PLAYERID = "Win32"
+    end
 end
 
 -- 初始化倒计时和体力值

@@ -16,7 +16,7 @@ end)
 
 function StoryView:ctor()
 
-	self._mainNode = CsbContainer:createCsb("StoryView.csb"):addTo(self)
+	self._mainNode = CsbContainer:createPushCsb("StoryView.csb"):addTo(self)
 
     self._storyIdTb = common:parseStrOnlyWithComma(stageCfg[game.nowStage].storyId)
     self._storyNum = 1

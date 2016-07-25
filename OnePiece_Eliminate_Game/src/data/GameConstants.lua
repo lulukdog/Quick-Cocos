@@ -60,7 +60,7 @@ game.firstEnterGame = true --第一次进入游戏直接跳转到关卡不去地
 game.MusicOn = true
 game.SoundOn = true
 
-game.PLAYERID = "PlayerID1_"
+game.PLAYERID = ""
 
 -------------------- 游戏中数据不保存 --------------------
 game.collectNum = 0 -- 收集物数量

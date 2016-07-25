@@ -7,7 +7,7 @@ local data_story = {
 },
 [2] ={
 	id = 2,
-	pic = "ddhj01.png",
+	pic = "mengka.png",
 	dialog = "你跑不出我的掌心",
 	pos = 2
 },
@@ -19,7 +19,7 @@ local data_story = {
 },
 [4] ={
 	id = 4,
-	pic = "ddhj01.png",
+	pic = "mengka.png",
 	dialog = "你跑不出我的掌心",
 	pos = 2
 },
@@ -31,7 +31,7 @@ local data_story = {
 },
 [6] ={
 	id = 6,
-	pic = "ddhj01.png",
+	pic = "mengka.png",
 	dialog = "你跑不出我的掌心",
 	pos = 2
 },
@@ -43,7 +43,7 @@ local data_story = {
 },
 [8] ={
 	id = 8,
-	pic = "ddhj01.png",
+	pic = "mengka.png",
 	dialog = "你跑不出我的掌心",
 	pos = 2
 },
@@ -55,7 +55,7 @@ local data_story = {
 },
 [10] ={
 	id = 10,
-	pic = "ddhj01.png",
+	pic = "mengka.png",
 	dialog = "你跑不出我的掌心",
 	pos = 2
 },
@@ -67,7 +67,7 @@ local data_story = {
 },
 [12] ={
 	id = 12,
-	pic = "ddhj01.png",
+	pic = "mengka.png",
 	dialog = "你跑不出我的掌心",
 	pos = 2
 },
@@ -79,7 +79,7 @@ local data_story = {
 },
 [14] ={
 	id = 14,
-	pic = "ddhj01.png",
+	pic = "mengka.png",
 	dialog = "你跑不出我的掌心",
 	pos = 2
 },
@@ -91,7 +91,7 @@ local data_story = {
 },
 [16] ={
 	id = 16,
-	pic = "ddhj01.png",
+	pic = "mengka.png",
 	dialog = "你跑不出我的掌心",
 	pos = 2
 },
@@ -103,7 +103,7 @@ local data_story = {
 },
 [18] ={
 	id = 18,
-	pic = "ddhj01.png",
+	pic = "mengka.png",
 	dialog = "你跑不出我的掌心",
 	pos = 2
 },
@@ -115,7 +115,7 @@ local data_story = {
 },
 [20] ={
 	id = 20,
-	pic = "ddhj01.png",
+	pic = "mengka.png",
 	dialog = "你跑不出我的掌心",
 	pos = 2
 },
@@ -127,7 +127,7 @@ local data_story = {
 },
 [22] ={
 	id = 22,
-	pic = "ddhj01.png",
+	pic = "mengka.png",
 	dialog = "你跑不出我的掌心",
 	pos = 2
 },
@@ -139,7 +139,7 @@ local data_story = {
 },
 [24] ={
 	id = 24,
-	pic = "ddhj01.png",
+	pic = "mengka.png",
 	dialog = "你跑不出我的掌心",
 	pos = 2
 },
@@ -151,7 +151,7 @@ local data_story = {
 },
 [26] ={
 	id = 26,
-	pic = "ddhj01.png",
+	pic = "mengka.png",
 	dialog = "你跑不出我的掌心",
 	pos = 2
 },
@@ -163,7 +163,7 @@ local data_story = {
 },
 [28] ={
 	id = 28,
-	pic = "ddhj01.png",
+	pic = "mengka.png",
 	dialog = "你跑不出我的掌心",
 	pos = 2
 }

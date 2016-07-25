@@ -60,6 +60,17 @@ function CsbContainer:createPushCsb( filename )
 	return _node
 end
 
+function CsbContainer:createLoadingCsb( filename )
+	local _node = cc.uiloader:load(filename)
+
+	if _node then
+		_node:setPosition(display.cx,display.cy)
+		_node:setAnchorPoint(cc.p(0.5,0.5))
+		_node:setScale(display.right/1080)
+	end
+	return _node
+end
+
 function CsbContainer:createMapCsb( filename )
 	local _node = cc.uiloader:load(filename)
 
