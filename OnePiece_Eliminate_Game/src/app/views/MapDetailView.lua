@@ -7,6 +7,9 @@
 --]]
 ----------------------------------------------------------------------------------
 local SelectHelperView = import(".SelectHelperView")
+local CommonConfirmView = import(".CommonConfirmView")
+local BuyEnergyView = import(".BuyEnergyView")
+
 local FightManager = import("..game.FightManager")
 local stageCfg = require("data.data_stage")
 local stageMapCfg = require("data.data_stagemap")
@@ -36,7 +39,9 @@ function MapDetailView:ctor()
 		if common:energyIsEnough(5) then
 			app:enterScene("GameScene", nil, "fade", 0.6, display.COLOR_WHITE)
 		else
-			MessagePopView.new(1):addTo(self)
+			CommonConfirmView.new(GameConfig.NotEnoughEnergy,function()
+				BuyEnergyView.new():addTo(self)
+			end):addTo(self)
 		end
 	end)
 

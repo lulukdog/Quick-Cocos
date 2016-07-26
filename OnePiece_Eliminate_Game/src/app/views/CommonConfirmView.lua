@@ -21,7 +21,7 @@ function CommonConfirmView:ctor(content,func)
 	end)
 
     local confirmBtn = cc.uiloader:seekNodeByName(self._mainNode,"mConfirmBtn")
-    CsbContainer:decorateBtnNoTrans(confirmBtn,function()
+    CsbContainer:decorateBtn(confirmBtn,function()
         func()
         self:removeFromParent()
         self._mainNode = nil

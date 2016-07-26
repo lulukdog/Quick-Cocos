@@ -118,8 +118,19 @@ local GameConfig = {
 		[3] = "buy_namei_bg.png",
 		[5] = "buy_shanzhi_bg.png",
 	},
+	-- 敌人属性图片
+	EnemyAttrPic = {
+		[1] = "pic/attr_maozi",
+		[2] = "pic/attr_dao",
+		[3] = "pic/attr_juzi",
+		[4] = "pic/attr_dangong",
+	},
 	-- 无限体力文字说明
 	BuyInfEnergyLabel = "是否购买无限体力",
+	-- 金币不足购买金币
+	NotEnoughGold = "金币不足请购买金币",
+	-- 体力不足购买体力
+	NotEnoughEnergy = "体力不足请购买体力",
 }
 
 return GameConfig

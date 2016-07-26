@@ -69,6 +69,8 @@ function BuyEnergyView:buyEnergy( btnNum )
     -- 购买50体力要加倒计时
     if btnNum == 3 then
         game.count50EnergyTime = game.energy50Time
+        UserDefaultUtil:Save50EnergyCount()
+        self:countTime()
     end
     game.myEnergy = game.myEnergy + GameConfig.EnergyTb[btnNum]
     game.countTime = math.max(0,game.countTime-GameConfig.EnergyTb[btnNum]*game.addOneEnergyTime)

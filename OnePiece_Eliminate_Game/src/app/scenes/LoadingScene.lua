@@ -29,6 +29,8 @@ function LoadingScene:ctor()
   end
   -- 初始化倒计时和体力值
   self:initEnergyNum()
+  -- 初始化50体力倒计时
+  self:init50EnergyCount()
   -- 初始化当前关卡
   self:initNowStage()
   -- 初始化星星
@@ -94,6 +96,15 @@ function LoadingScene:initEnergyNum()
   local diffTime = math.max((os.time() - osTime),0)
   game.myEnergy = math.min((math.floor(diffTime/game.addOneEnergyTime)+energyNum),game.MAXENERGY)
   game.countTime = math.max((countTime-diffTime),0)
+end
+-- 初始化50体力倒计时
+function LoadingScene:init50EnergyCount()
+  if UserDefaultUtil:Get50EnergyCount() == nil then
+    return
+  end
+  local osTime,countTime = UserDefaultUtil:Get50EnergyCount()
+  local diffTime = math.max((os.time() - osTime),0)
+  game.count50EnergyTime = math.max((countTime-diffTime),0)
 end
 -- 初始化当前关卡
 function LoadingScene:initNowStage()

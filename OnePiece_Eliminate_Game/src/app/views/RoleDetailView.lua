@@ -7,7 +7,10 @@
 --]]
 ----------------------------------------------------------------------------------
 local GuideFingerPushView = import(".GuideFingerPushView")
+local CommonConfirmView = import(".CommonConfirmView")
+local BuyGoldView = import(".BuyGoldView")
 
+local GameConfig = require("data.GameConfig")
 local helperCfg = require("data.data_helper")
 local skillCfg = require("data.data_skill")
 local common = require("app.common")
@@ -49,7 +52,10 @@ function RoleDetailView:ctor(btnNum)
 			self:refreshPage()
 			sendMessage({msg="REFRESHGOLD"})
 		else
-			MessagePopView.new(2):addTo(self)
+			-- MessagePopView.new(2):addTo(self)
+			CommonConfirmView.new(GameConfig.NotEnoughGold,function()
+				BuyGoldView.new():addTo(self)
+			end):addTo(self)
 		end
 		
 	end)

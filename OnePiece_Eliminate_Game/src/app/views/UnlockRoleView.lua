@@ -60,6 +60,11 @@ end
 
 -- 计算解锁需要星星数
 function UnlockRoleView:refreshStarNum( btnNum )
+	-- 山治要用看视频解锁
+	if btnNum==5 then
+		UnlockConfirmView.new(5):addTo(self)
+		return
+	end
 	if helperCfg[btnNum].needStar==nil or game.myStarNum<tonumber(helperCfg[btnNum].needStar) then
 		UnlockConfirmView.new(btnNum):addTo(self)
 		return

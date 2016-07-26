@@ -27,7 +27,23 @@ function UserDefaultUtil:GetEnergy()
     local timeTb = common:parseStrOnlyWithUnderline(timeStr)
     return tonumber(timeTb[1]),tonumber(timeTb[2]),tonumber(timeTb[3])
 end
-
+-- 购买50体力倒计时
+function UserDefaultUtil:Save50EnergyCount()
+    local timeStr = os.time().."_"..game.count50EnergyTime
+    timeStr = common:encString(timeStr)
+    cc.UserDefault:getInstance():setStringForKey(game.PLAYERID.."50EnergyCount",timeStr)
+    cc.UserDefault:getInstance():flush()
+end
+function UserDefaultUtil:Get50EnergyCount()
+    local timeStr = cc.UserDefault:getInstance():getStringForKey(game.PLAYERID.."50EnergyCount")
+    -- print("UserDefaultUtil:GetEnergy  "..timeStr)
+    if timeStr=="" then
+        return nil
+    end
+    timeStr = common:decString(timeStr)
+    local timeTb = common:parseStrOnlyWithUnderline(timeStr)
+    return tonumber(timeTb[1]),tonumber(timeTb[2])
+end
 -- 通关后记录当前关卡
 function UserDefaultUtil:SaveNowMaxStage()
     local _maxStage = common:encInt(common:getNowMaxStage()) 

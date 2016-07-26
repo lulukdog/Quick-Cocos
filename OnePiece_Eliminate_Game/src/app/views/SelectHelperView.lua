@@ -7,7 +7,10 @@
 --]]
 ----------------------------------------------------------------------------------
 local GuideFingerPushView = import(".GuideFingerPushView")
+local CommonConfirmView = import(".CommonConfirmView")
+local BuyEnergyView = import(".BuyEnergyView")
 
+local GameConfig = require("data.GameConfig")
 local helperCfg = require("data.data_helper")
 local skillCfg = require("data.data_skill")
 local common = require("app.common")
@@ -47,7 +50,9 @@ function SelectHelperView:ctor(isFromBattlePage)
 			self:onStart(false)
 			app:enterScene("GameScene", nil, "fade", 0.6, display.COLOR_WHITE)
 		else
-			MessagePopView.new(1):addTo(self)
+			CommonConfirmView.new(GameConfig.NotEnoughEnergy,function()
+				BuyEnergyView.new():addTo(self)
+			end):addTo(self)
 		end
 	end)
 	local confirmBtn = cc.uiloader:seekNodeByName(self._mainNode,"mConfirmBtn")
