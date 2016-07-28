@@ -8,6 +8,7 @@
 ----------------------------------------------------------------------------------
 local GuideFingerPushView = import(".GuideFingerPushView")
 local CommonConfirmView = import(".CommonConfirmView")
+local HelperUpgradeView = import(".HelperUpgradeView")
 local BuyGoldView = import(".BuyGoldView")
 
 local GameConfig = require("data.GameConfig")
@@ -49,6 +50,7 @@ function RoleDetailView:ctor(btnNum)
 		if common:goldIsEnough(self.needGold) then
 			game.helper[btnNum] = game.helper[btnNum] + 1
 			UserDefaultUtil:saveHelperLevel()
+			HelperUpgradeView.new(btnNum):addTo(self)
 			self:refreshPage()
 			sendMessage({msg="REFRESHGOLD"})
 		else
@@ -67,6 +69,11 @@ function RoleDetailView:ctor(btnNum)
 	if game.guideStep==12 then
 		GuideFingerPushView.new():addTo(self)
 	end
+
+	-- 动画
+	local _ani = cc.CSLoader:createTimeline("RoleDetailView.csb")
+	self._mainNode:runAction(_ani)
+	_ani:gotoFrameAndPlay(0,45,true)
 end
 
 -- 刷新等级，伤害，所需物品

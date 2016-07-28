@@ -25,7 +25,7 @@ function LoadingScene:ctor()
   -- 先确定玩家sdk返回的puid
   self:initPuid()
   if game.PLAYERID=="" then
-      MessagePopView.new(5):addTo(self)
+      return
   end
   -- 初始化倒计时和体力值
   self:initEnergyNum()
@@ -71,9 +71,11 @@ end
 function LoadingScene:initPuid( )
     if device.platform == "android" then
         local args = {}
-        local ok, _puid = luaj.callStaticMethod(className, "eye_getPuid", args, "()Ljava/lang/String")
+        local className = "org/cocos2dx/sdk/EyeCat"
+        local ok, _puid = luaj.callStaticMethod(className, "eye_getPuid", args, "()Ljava/lang/String;")
+        print("LoadingScene:initPuid:",_puid)
         if not ok then
-            print("LoadingScene:initPuid luaj error:", _puid)
+            game.PLAYERID = "android"
         else
             game.PLAYERID = _puid
         end
@@ -224,7 +226,16 @@ function LoadingScene:cacheAni()
     frames = display.newFrames("xin%d.png",1,5)
     animation = display.newAnimation(frames,0.5/5)     
     display.setAnimationCache("xin",animation)
-
+    -- add 水波纹动画
+    frames = display.newFrames("waterflash_1_%02d.png",1,4)
+    animation = display.newAnimation(frames,0.4/4)     
+    display.setAnimationCache("wave1",animation)
+    frames = display.newFrames("waterflash_2_%02d.png",1,5)
+    animation = display.newAnimation(frames,0.5/5)     
+    display.setAnimationCache("wave2",animation)
+    frames = display.newFrames("waterflash_3_%02d.png",1,6)
+    animation = display.newAnimation(frames,0.6/6)     
+    display.setAnimationCache("wave3",animation)
 end
 
 function LoadingScene:isLoadingFinish(  )

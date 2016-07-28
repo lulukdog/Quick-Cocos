@@ -120,10 +120,10 @@ local GameConfig = {
 	},
 	-- 敌人属性图片
 	EnemyAttrPic = {
-		[1] = "pic/attr_maozi",
-		[2] = "pic/attr_dao",
-		[3] = "pic/attr_juzi",
-		[4] = "pic/attr_dangong",
+		[1] = "pic/attr_maozi.png",
+		[2] = "pic/attr_dao.png",
+		[3] = "pic/attr_juzi.png",
+		[4] = "pic/attr_dangong.png",
 	},
 	-- 无限体力文字说明
 	BuyInfEnergyLabel = "是否购买无限体力",
@@ -131,6 +131,12 @@ local GameConfig = {
 	NotEnoughGold = "金币不足请购买金币",
 	-- 体力不足购买体力
 	NotEnoughEnergy = "体力不足请购买体力",
+	HelperUpgradeCfg = {
+		attackDirect = "zish.png",
+		attackLink = "scsh.png",
+		defDirect = "zify.png",
+		defLink = "scfy.png",
+	},
 }
 
 return GameConfig

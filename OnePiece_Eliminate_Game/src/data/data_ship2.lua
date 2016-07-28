@@ -5,7 +5,7 @@ local data_ship2 = {
 	attack = 5,
 	def = 1,
 	life = 12,
-	needExp = 5
+	needExp = 15
 },
 [2] ={
 	id = 2,

@@ -54,6 +54,7 @@ function MapDetailView:ctor()
 
     CsbContainer:setStringForLabel(self._mainNode, {
     	mStageLabel = string.format("%03d",game.nowStage),
+    	mStageNameLabel = stageCfg[game.nowStage].name,
     })
 
     self:refreshPage()

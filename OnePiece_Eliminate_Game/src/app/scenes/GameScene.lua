@@ -288,6 +288,7 @@ function GameScene:refreshRound()
   if FightManager:getEnemyAttr()==0 then
       _cellBtn:setVisible(false)
   else
+      _cellBtn:setVisible(true)
       CsbContainer:refreshBtnView(_cellBtn, GameConfig.EnemyAttrPic[FightManager:getEnemyAttr()], GameConfig.EnemyAttrPic[FightManager:getEnemyAttr()])
   end
   

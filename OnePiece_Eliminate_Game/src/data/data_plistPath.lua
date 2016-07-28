@@ -6,6 +6,7 @@ local plistPngPath = {
 	"ice.png",
 	"stone.png",
 	"blink.png",
+	"WaveAni.png",
 }
 
 return plistPngPath

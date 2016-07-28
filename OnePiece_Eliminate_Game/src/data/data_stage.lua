@@ -14,6 +14,7 @@ local data_stage = {
 	starReward1 = "1_60,2_6",
 	starReward2 = "1_80,2_8",
 	starReward3 = "1_100,2_10",
+	storyId = 1
 },
 [2] ={
 	id = 2,
@@ -30,7 +31,6 @@ local data_stage = {
 	starReward1 = "1_66,2_8",
 	starReward2 = "1_88,2_11",
 	starReward3 = "1_110,2_14",
-	storyId = "3,4,5"
 },
 [3] ={
 	id = 3,
@@ -63,7 +63,6 @@ local data_stage = {
 	starReward1 = "1_72,2_16",
 	starReward2 = "1_96,2_22",
 	starReward3 = "1_120,2_28",
-	storyId = "6,7"
 },
 [5] ={
 	id = 5,
@@ -80,6 +79,7 @@ local data_stage = {
 	starReward1 = "1_75,2_22",
 	starReward2 = "1_100,2_30",
 	starReward3 = "1_125,2_38",
+	storyId = "2,3,4,5,6"
 },
 [6] ={
 	id = 6,
@@ -96,6 +96,7 @@ local data_stage = {
 	starReward1 = "1_78,2_30",
 	starReward2 = "1_104,2_40",
 	starReward3 = "1_130,2_50",
+	storyId = "7,8,9,10,11"
 },
 [7] ={
 	id = 7,
@@ -193,6 +194,7 @@ local data_stage = {
 	starReward1 = "1_216,2_98",
 	starReward2 = "1_288,2_131",
 	starReward3 = "1_360,2_164",
+	storyId = "22,23,24"
 },
 [13] ={
 	id = 13,
@@ -209,6 +211,7 @@ local data_stage = {
 	starReward1 = "1_219,2_114",
 	starReward2 = "1_292,2_152",
 	starReward3 = "1_365,2_190",
+	storyId = "14,15,16"
 },
 [14] ={
 	id = 14,
@@ -337,6 +340,7 @@ local data_stage = {
 	starReward1 = "1_363,2_282",
 	starReward2 = "1_484,2_376",
 	starReward3 = "1_605,2_470",
+	storyId = "12,13"
 },
 [22] ={
 	id = 22,
@@ -514,6 +518,7 @@ local data_stage = {
 	starReward1 = "1_576,2_638",
 	starReward2 = "1_768,2_851",
 	starReward3 = "1_960,2_1064",
+	storyId = "19,20,21"
 },
 [33] ={
 	id = 33,
@@ -660,6 +665,7 @@ local data_stage = {
 	starReward1 = "1_723,2_1038",
 	starReward2 = "1_964,2_1384",
 	starReward3 = "1_1205,2_1730",
+	storyId = "17,18"
 },
 [42] ={
 	id = 42,

@@ -23,7 +23,7 @@ function ShipUpgradeView:ctor()
 	end)
 
 	local closeBtn = cc.uiloader:seekNodeByName(self._mainNode,"closeBtn")
-	CsbContainer:decorateBtn(closeBtn,function()
+	CsbContainer:decorateBtnNoTrans(closeBtn,function()
 		self:removeFromParent()
 		self._mainNode = nil
 	end)

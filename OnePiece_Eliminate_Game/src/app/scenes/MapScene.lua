@@ -28,7 +28,7 @@ end)
 function MapScene:ctor()
 	self._mainNode = CsbContainer:createMapCsb("MapScene.csb"):addTo(self)
     self._mapNode = cc.uiloader:seekNodeByName(self._mainNode, "Map")
-
+        
     -- 加上滑动层
     self._touchLayer = display.newLayer():addTo(self)
     self._touchLayer:setTouchSwallowEnabled(false)
@@ -48,24 +48,6 @@ function MapScene:ctor()
     self._stageScheduler = nil
     self._oneMapHeight = 1050 -- 一张地图碎片的高度
     self._mapNum = 0 -- 上一次在哪张地图碎片
-
-	-- -- 选关按钮
- --    local stage1Button = cc.uiloader:seekNodeByTag(self._mainNode,101)
- --    CsbContainer:decorateBtn(stage1Button,function()
- --        game.nowStage = 1
- --        -- self:enterGameScene()
- --        MapDetailView.new():addTo(self)
- --        -- test java
- --        self:buyItem()
- --    end)
- --    local stage2Button = cc.uiloader:seekNodeByTag(self._mainNode,102)
- --    CsbContainer:decorateBtn(stage2Button,function()
- --        game.nowStage = 2
- --        -- self:enterGameScene()
- --        MapDetailView.new():addTo(self)
- --        -- test java
- --        self:buySuccess()
- --    end)
 
     -- 船升级按钮
     local shipUpgradeBtn = cc.uiloader:seekNodeByName(self._mainNode,"ShipUpgradeBtn")
@@ -151,6 +133,7 @@ function MapScene:ctor()
 
         RoleGetPushView.new(4):addTo(self)
     end
+    math.newrandomseed()
 end
 
 function MapScene:pushRoleGetView( data )
@@ -422,59 +405,70 @@ function MapScene:onEnter()
         self:initStageNode()
     end,0.3)
 
+    -- 地图上的动画
+    -- 瀑布动画
+    local _mapAni = cc.CSLoader:createTimeline("MapScene.csb")
+    self._mainNode:runAction(_mapAni)
+    _mapAni:gotoFrameAndPlay(0,30,true)
+
+    -- 鸟的动画
+    local _birdAniTb = {}
+    for i=1,3 do
+        local _birdNode = cc.uiloader:seekNodeByName(self._mainNode, "mBirdAniNode"..i)
+        local _birdAniCsb = cc.uiloader:load("BirdAniNode.csb"):addTo(_birdNode)
+        _birdAniTb[i] = cc.CSLoader:createTimeline("BirdAniNode.csb")
+        _birdAniCsb:runAction(_birdAniTb[i])
+    end
+    self._birdScheduler = scheduler.scheduleGlobal(function()
+        for i=1,3 do
+            _birdAniTb[i]:gotoFrameAndPlay(0,310,false)
+        end
+    end,8)
+
+    -- 水波纹动画
+    for i=1,20 do
+        local _mapWaveNode = cc.uiloader:seekNodeByName(self._mainNode,"mWaveNode"..i)
+        self:addWaveAni(_mapWaveNode,math.random(3,6))
+        -- local _wave1Sprite = display.newSprite("#waterflash_1_01.png"):addTo(_mapWaveNode)
+        -- _wave1Sprite:setPosition(math.random(20),math.random(40))
+        -- _wave1Sprite:setScale(math.random(0.4*_scaleRate,1*_scaleRate))
+        -- _wave1Sprite:playAnimationForever(display.getAnimationCache("wave1"))
+        -- local _wave2Sprite = display.newSprite("#waterflash_2_01.png"):addTo(_mapWaveNode)
+        -- _wave2Sprite:setPosition(math.random(20,40),math.random(50,100))
+        -- _wave2Sprite:setScale(math.random(0.7*_scaleRate,0.9*_scaleRate))
+        -- _wave2Sprite:playAnimationForever(display.getAnimationCache("wave2"))
+        -- local _wave3Sprite = display.newSprite("#waterflash_3_01.png"):addTo(_mapWaveNode)
+        -- _wave3Sprite:setPosition(math.random(40,60),math.random(100,150))
+        -- _wave3Sprite:setScale(math.random(0.4*_scaleRate,0.8*_scaleRate))
+        -- _wave3Sprite:playAnimationForever(display.getAnimationCache("wave3"))
+    end
 end
+function MapScene:addWaveAni( addNode,addNum )
+    local _scaleRate = display.top/1334
+    if display.right>=1080 then
+        _scaleRate = 1.4
+    end
+    local scale1,scale2 = _scaleRate*6,_scaleRate*10
+    for i=1,addNum do
+        local ranSpriteNum = math.random(1,3)
+        local scale = math.random(scale1,scale2)*0.1
+        print("ranSpriteNum,scale"..ranSpriteNum..","..scale)
+        local waveSprite = display.newSprite("#waterflash_"..ranSpriteNum.."_01.png"):addTo(addNode)
+        waveSprite:setPosition(math.random(60),math.random(120))
+        waveSprite:setScale(scale)
+        scheduler.performWithDelayGlobal(function()
+            waveSprite:playAnimationForever(display.getAnimationCache("wave"..ranSpriteNum))
+        end,math.random(1,4)*0.1)
+    end
+end
+
 function MapScene:onExit()
     print("MapScene:onExit")
     removeMessageByTarget(self)
     scheduler.unscheduleGlobal(self._stageScheduler)
+    scheduler.unscheduleGlobal(self._birdScheduler)
     if self._moveScheduler~=nil then
         scheduler.unscheduleGlobal(self._moveScheduler)
-    end
-end
-
-local function callback(result)
-    if result == "success" then
-        print("MapScene:buyItem callback is success")
-    end
-end
-
-function MapScene:buyItem()
-	local args = {
-        "items",
-        10,
-        8,
-        callback,
-    }
-    print("MapScene:buyItem")
-    if device.platform == "android" then
-
-        -- Java 类的名称
-        local className = "org/cocos2dx/sdk/EyeCat"
-        -- 调用 Java 方法
-        print("MapScene:buyItem"..className)
-        local ok, ret = luaj.callStaticMethod(className, "eye_buy", args, "(Ljava/lang/String;III)I")
-        if not ok then
-            print("luaj error:", ret)
-        else
-            print("ret:", ret) -- 输出 ret: 5
-        end
-    end
-	
-end
-
-function MapScene:buySuccess(  )
-	print("MapScene:buySuccess")
-	if device.platform == "android" then
-
-        -- Java 类的名称
-        local className = "org/cocos2dx/sdk/EyeCat"
-        -- 调用 Java 方法
-        local ok = luaj.callStaticMethod(className, "rechargeSuccess")
-        if not ok then
-            print("luaj error:")
-        else
-            print("ret:")
-        end
     end
 end
 

@@ -8,6 +8,8 @@
 ----------------------------------------------------------------------------------
 local GameConfig = require("data.GameConfig")
 local shipCfg = require("data.data_ship2")
+local ShipGetPushView = import(".ShipGetPushView")
+
 
 local Ship2PopView = class("Ship2PopView", function()
     return display.newNode()
@@ -28,8 +30,9 @@ function Ship2PopView:ctor()
         if game.nowShip<#GameConfig.ShipNamePic then
             game.nowShip = game.nowShip+1
             UserDefaultUtil:saveShipType()
-            sendMessage({msg = "SHIP_UPGRADE_REFRESH"})
             sendMessage({msg = "MapScene_RefreshPage"})
+            sendMessage({msg = "SHIP_UPGRADE_REFRESH"})
+            ShipGetPushView.new():addTo(self:getParent())
         end
         self:removeFromParent()
         self._mainNode = nil

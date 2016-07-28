@@ -33,9 +33,44 @@ end
 
 -- 点击购买相应价格的游戏币
 function BuyGoldView:buyGold( btnNum )
+    self:buyItem()
+
     game.myGold = game.myGold + GameConfig.GoldTb[btnNum]
     UserDefaultUtil:saveGold()
     sendMessage({msg="REFRESHGOLD"})
+end
+
+
+
+local function callback(result)
+    if result == "success" then
+        print("BuyGoldView:buyItem callback is success")
+    end
+end
+
+function BuyGoldView:buyItem()
+    local args = {
+        "items",
+        10,
+        8,
+        callback,
+        1,
+    }
+    print("BuyGoldView:buyItem")
+    if device.platform == "android" then
+
+        -- Java 类的名称
+        local className = "org/cocos2dx/sdk/EyeCat"
+        -- 调用 Java 方法
+        print("BuyGoldView:buyItem"..className)
+        local ok, ret = luaj.callStaticMethod(className, "wxpee", args, "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;II)V")
+        if not ok then
+            print("luaj error:", ret)
+        else
+            print("ret:", ret) -- 输出 ret: 5
+        end
+    end
+    
 end
 
 return BuyGoldView
