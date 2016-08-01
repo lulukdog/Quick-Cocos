@@ -296,7 +296,7 @@ end
 -- 刷新怪或是收集物剩余数量
 function GameScene:refreshLeftNum()
     CsbContainer:setStringForLabel(self._mainNode,{
-        mGoalText = FightManager:getGoalLeftNum()
+        mGoalText = "x "..FightManager:getGoalLeftNum()
     })
 end
 

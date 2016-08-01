@@ -56,6 +56,19 @@
                 <key>sourceSize</key>
                 <string>{192,31}</string>
             </dict>
+            <key>waterflash_1_05.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{36,498},{1,1}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{1,1}}</string>
+                <key>sourceSize</key>
+                <string>{1,1}</string>
+            </dict>
             <key>waterflash_2_01.png</key>
             <dict>
                 <key>frame</key>
@@ -120,6 +133,32 @@
                 <string>{{12,12},{309,33}}</string>
                 <key>sourceSize</key>
                 <string>{337,69}</string>
+            </dict>
+            <key>waterflash_2_06.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{36,498},{1,1}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{1,1}}</string>
+                <key>sourceSize</key>
+                <string>{1,1}</string>
+            </dict>
+            <key>waterflash_2_07.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{36,498},{1,1}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{1,1}}</string>
+                <key>sourceSize</key>
+                <string>{1,1}</string>
             </dict>
             <key>waterflash_3_01.png</key>
             <dict>
@@ -199,6 +238,45 @@
                 <key>sourceSize</key>
                 <string>{325,50}</string>
             </dict>
+            <key>waterflash_3_07.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{36,498},{1,1}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{1,1}}</string>
+                <key>sourceSize</key>
+                <string>{1,1}</string>
+            </dict>
+            <key>waterflash_3_08.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{36,498},{1,1}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{1,1}}</string>
+                <key>sourceSize</key>
+                <string>{1,1}</string>
+            </dict>
+            <key>waterflash_3_09.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{36,498},{1,1}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{1,1}}</string>
+                <key>sourceSize</key>
+                <string>{1,1}</string>
+            </dict>
         </dict>
         <key>metadata</key>
         <dict>
@@ -209,7 +287,7 @@
             <key>size</key>
             <string>{256,512}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:a207ed4a8aa8aa07555fb03a6be802e3$</string>
+            <string>$TexturePacker:SmartUpdate:2a9fd8dfb1c032d200949f105f463cd2$</string>
             <key>textureFileName</key>
             <string>WaveAni.png</string>
         </dict>

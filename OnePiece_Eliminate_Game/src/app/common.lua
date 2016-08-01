@@ -101,6 +101,23 @@ function common:formatSecond( second )
     s = math.floor(second - h*3600 - m*60)
     return string.format("%02d:%02d:%02d",h,m,s)
 end
+
+-- 获取开机时间
+function common:getElapsedTime()
+    if device.platform == "android" then
+        local args = {}
+        local className = "org/cocos2dx/sdk/EyeCat"
+        local ok, _elapsedTime = luaj.callStaticMethod(className, "eye_getElapsedTime", args, "()Ljava/lang/String;")
+        print("common:getElapsedTime():",_elapsedTime)
+        if not ok then
+            return os.time()
+        else
+            return math.ceil(tonumber(_elapsedTime)/1000)
+        end
+    elseif device.platform == "windows" then
+        return os.time()
+    end
+end
 -------------------table util---------------------
 function common:is_table_same(tb_1,tb_2)
     for k, v in pairs(tb_1) do

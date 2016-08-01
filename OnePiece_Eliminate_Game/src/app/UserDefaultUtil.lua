@@ -12,7 +12,7 @@ local common = require("app.common")
 
 -- 系统时间，倒计时，体力
 function UserDefaultUtil:SaveEnergy()
-    local timeStr = os.time().."_"..game.countTime.."_"..game.myEnergy
+    local timeStr = common:getElapsedTime().."_"..game.countTime.."_"..game.myEnergy
     timeStr = common:encString(timeStr)
     cc.UserDefault:getInstance():setStringForKey(game.PLAYERID.."Time",timeStr)
     cc.UserDefault:getInstance():flush()
@@ -29,14 +29,31 @@ function UserDefaultUtil:GetEnergy()
 end
 -- 购买50体力倒计时
 function UserDefaultUtil:Save50EnergyCount()
-    local timeStr = os.time().."_"..game.count50EnergyTime
+    local timeStr = common:getElapsedTime().."_"..game.count50EnergyTime
     timeStr = common:encString(timeStr)
     cc.UserDefault:getInstance():setStringForKey(game.PLAYERID.."50EnergyCount",timeStr)
     cc.UserDefault:getInstance():flush()
 end
 function UserDefaultUtil:Get50EnergyCount()
     local timeStr = cc.UserDefault:getInstance():getStringForKey(game.PLAYERID.."50EnergyCount")
-    -- print("UserDefaultUtil:GetEnergy  "..timeStr)
+    -- print("UserDefaultUtil:Get50EnergyCount  "..timeStr)
+    if timeStr=="" then
+        return nil
+    end
+    timeStr = common:decString(timeStr)
+    local timeTb = common:parseStrOnlyWithUnderline(timeStr)
+    return tonumber(timeTb[1]),tonumber(timeTb[2])
+end
+-- 宝箱剩余时间倒计时
+function UserDefaultUtil:SaveBoxLeftTime()
+    local timeStr = common:getElapsedTime().."_"..game.boxLeftTime
+    timeStr = common:encString(timeStr)
+    cc.UserDefault:getInstance():setStringForKey(game.PLAYERID.."BoxLeftTime",timeStr)
+    cc.UserDefault:getInstance():flush()
+end
+function UserDefaultUtil:GetBoxLeftTime()
+    local timeStr = cc.UserDefault:getInstance():getStringForKey(game.PLAYERID.."BoxLeftTime")
+    -- print("UserDefaultUtil:GetBoxLeftTime  "..timeStr)
     if timeStr=="" then
         return nil
     end

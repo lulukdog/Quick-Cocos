@@ -40,8 +40,13 @@ end
 
 function GameUtil_addSecond()
     scheduler.scheduleGlobal(function()
+        -- 购买50体力倒计时
         if game.count50EnergyTime>0 then
             game.count50EnergyTime= game.count50EnergyTime-1
+        end
+        -- 宝箱倒计时
+        if game.boxLeftTime>0 then
+            game.boxLeftTime= game.boxLeftTime-1
         end
 
         if game.countTime>0 then

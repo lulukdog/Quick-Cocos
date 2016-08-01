@@ -102,7 +102,7 @@ local GameConfig = {
 		[2] = "收集物品",
 	},
 	-- 购买帮助角色的顺序
-	BuyHelper = {6,3,5}, --乔巴，奈美，山治
+	BuyHelper = {5,3,6}, --山治,奈美,乔巴
 	BuyHelperPic = {
 		[6] = "qiaoba_role.png",
 		[3] = "namei_role.png",

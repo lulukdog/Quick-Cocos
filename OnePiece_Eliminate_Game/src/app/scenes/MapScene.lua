@@ -95,26 +95,34 @@ function MapScene:ctor()
         end):addTo(self)
     end)
     -- 打开宝箱按钮
-    local boxBtn = cc.uiloader:seekNodeByName(self._mainNode,"mBoxBtn")
-    CsbContainer:decorateBtnNoTrans(boxBtn,function()
+    self._boxBtn = cc.uiloader:seekNodeByName(self._mainNode,"mBoxBtn")
+    CsbContainer:decorateBtnNoTrans(self._boxBtn,function()
         GoldBoxView.new():addTo(self)
     end)
+    -- 宝箱上的剩余时间
+    self:countBoxTime()
+    self.timeBoxHandler = scheduler.scheduleGlobal(function()
+        self:countBoxTime()
+    end, 1) 
 
     addMessage(self, "REFRESHGOLD", self.refreshGold)
+    addMessage(self, "MapScene_CountBoxTime", self.countBoxTime)
     addMessage(self, "Refresh_Energy", self.refreshEnergy)
     addMessage(self, "MapScene_RefreshPage", self.refreshPage)
     addMessage(self, "MapScene_PushRoleGetView", self.pushRoleGetView)
 
-    -- 如果战斗胜利并且升级播放战舰升级画面
-    if game.isShipUpgrade==true then
-        game.isShipUpgrade = false
-        self:runShipUpgradeAni()
-        print("MapScene:ctor runShipUpgradeAni")
-    end
-
+    local _skipShipUpgrade = false -- 是否跳过船舱升级画面，新手引导阶段就跳过
     -- 新手引导
     if common:getNowMaxStage()==8 and game.guideStep==10 then
         GuideFingerPushView.new():addTo(self)
+        _skipShipUpgrade = true
+    end
+
+    -- 如果战斗胜利并且升级播放战舰升级画面
+    if game.isShipUpgrade==true and _skipShipUpgrade==false then
+        game.isShipUpgrade = false
+        self:runShipUpgradeAni()
+        print("MapScene:ctor runShipUpgradeAni")
     end
 
     -- 12关打过之后获得索隆
@@ -134,6 +142,22 @@ function MapScene:ctor()
         RoleGetPushView.new(4):addTo(self)
     end
     math.newrandomseed()
+end
+
+function MapScene:countBoxTime( )
+    if game.boxLeftTime>0 then
+        self._boxBtn:setEnabled(false)
+    else
+        self._boxBtn:setEnabled(true)
+    end
+
+    CsbContainer:setNodesVisible(self._mainNode, {
+        mBoxLeftTimeLabel = game.boxLeftTime>0
+    })
+    CsbContainer:setStringForLabel(self._mainNode, {
+        mBoxLeftTimeLabel = common:formatSecond(game.boxLeftTime),
+    })
+    
 end
 
 function MapScene:pushRoleGetView( data )
@@ -428,19 +452,7 @@ function MapScene:onEnter()
     -- 水波纹动画
     for i=1,20 do
         local _mapWaveNode = cc.uiloader:seekNodeByName(self._mainNode,"mWaveNode"..i)
-        self:addWaveAni(_mapWaveNode,math.random(3,6))
-        -- local _wave1Sprite = display.newSprite("#waterflash_1_01.png"):addTo(_mapWaveNode)
-        -- _wave1Sprite:setPosition(math.random(20),math.random(40))
-        -- _wave1Sprite:setScale(math.random(0.4*_scaleRate,1*_scaleRate))
-        -- _wave1Sprite:playAnimationForever(display.getAnimationCache("wave1"))
-        -- local _wave2Sprite = display.newSprite("#waterflash_2_01.png"):addTo(_mapWaveNode)
-        -- _wave2Sprite:setPosition(math.random(20,40),math.random(50,100))
-        -- _wave2Sprite:setScale(math.random(0.7*_scaleRate,0.9*_scaleRate))
-        -- _wave2Sprite:playAnimationForever(display.getAnimationCache("wave2"))
-        -- local _wave3Sprite = display.newSprite("#waterflash_3_01.png"):addTo(_mapWaveNode)
-        -- _wave3Sprite:setPosition(math.random(40,60),math.random(100,150))
-        -- _wave3Sprite:setScale(math.random(0.4*_scaleRate,0.8*_scaleRate))
-        -- _wave3Sprite:playAnimationForever(display.getAnimationCache("wave3"))
+        self:addWaveAni(_mapWaveNode,math.random(4,5))
     end
 end
 function MapScene:addWaveAni( addNode,addNum )
@@ -448,17 +460,20 @@ function MapScene:addWaveAni( addNode,addNum )
     if display.right>=1080 then
         _scaleRate = 1.4
     end
-    local scale1,scale2 = _scaleRate*6,_scaleRate*10
+    local _scale1,_scale2 = _scaleRate*5,_scaleRate*9
+    local _posX,_posY,_delay = 30,0,0.1
     for i=1,addNum do
-        local ranSpriteNum = math.random(1,3)
-        local scale = math.random(scale1,scale2)*0.1
-        print("ranSpriteNum,scale"..ranSpriteNum..","..scale)
+        _posX = _posX + math.random(10,20)
+        _posY = _posY + math.random(20,40)
+        _delay = _delay + math.random(1,4)*0.1
+        local ranSpriteNum = i<=3 and i or math.random(1,3)
+        local scale = math.random(_scale1,_scale2)*0.1
         local waveSprite = display.newSprite("#waterflash_"..ranSpriteNum.."_01.png"):addTo(addNode)
-        waveSprite:setPosition(math.random(60),math.random(120))
+        waveSprite:setPosition(_posX,_posY)
         waveSprite:setScale(scale)
         scheduler.performWithDelayGlobal(function()
             waveSprite:playAnimationForever(display.getAnimationCache("wave"..ranSpriteNum))
-        end,math.random(1,4)*0.1)
+        end,_delay)
     end
 end
 
@@ -467,6 +482,7 @@ function MapScene:onExit()
     removeMessageByTarget(self)
     scheduler.unscheduleGlobal(self._stageScheduler)
     scheduler.unscheduleGlobal(self._birdScheduler)
+    scheduler.unscheduleGlobal(self.timeBoxHandler)
     if self._moveScheduler~=nil then
         scheduler.unscheduleGlobal(self._moveScheduler)
     end

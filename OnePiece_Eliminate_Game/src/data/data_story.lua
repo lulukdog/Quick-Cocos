@@ -1,7 +1,7 @@
 local data_story = {
 [1] ={
 	id = 1,
-	pic = "lufei.png",
+	pic = "lufeiStory.png",
 	dialog = "我是要成为海贼王的男人！",
 	pos = 1
 },
@@ -13,7 +13,7 @@ local data_story = {
 },
 [3] ={
 	id = 3,
-	pic = "lufei.png",
+	pic = "lufeiStory.png",
 	dialog = "不，我是海贼。",
 	pos = 1
 },
@@ -25,7 +25,7 @@ local data_story = {
 },
 [5] ={
 	id = 5,
-	pic = "lufei.png",
+	pic = "lufeiStory.png",
 	dialog = "我可是要成为海贼王的男人！",
 	pos = 1
 },
@@ -37,43 +37,43 @@ local data_story = {
 },
 [7] ={
 	id = 7,
-	pic = "suolong.png",
+	pic = "suolongStory.png",
 	dialog = "过来帮我把这绳子解开。",
 	pos = 2
 },
 [8] ={
 	id = 8,
-	pic = "lufei.png",
+	pic = "lufeiStory.png",
 	dialog = "我叫路飞，我帮你解开，所以当我的伙伴吧！",
 	pos = 1
 },
 [9] ={
 	id = 9,
-	pic = "suolong.png",
+	pic = "suolongStory.png",
 	dialog = "你这个家伙有没有听我说话！",
 	pos = 2
 },
 [10] ={
 	id = 10,
-	pic = "lufei.png",
+	pic = "lufeiStory.png",
 	dialog = "我不管！我已经决定让你当伙伴了！",
 	pos = 1
 },
 [11] ={
 	id = 11,
-	pic = "suolong.png",
+	pic = "suolongStory.png",
 	dialog = "你不要擅做主张啊！",
 	pos = 2
 },
 [12] ={
 	id = 12,
-	pic = "wusuopu.png",
+	pic = "wusuopuStory.png",
 	dialog = "大伙儿，不好了海盗进村了！乌索普海贼团冲锋！",
 	pos = 2
 },
 [13] ={
 	id = 13,
-	pic = "lufei.png",
+	pic = "lufeiStory.png",
 	dialog = "吹牛，哈哈哈！你真有意思。",
 	pos = 1
 },
@@ -85,7 +85,7 @@ local data_story = {
 },
 [15] ={
 	id = 15,
-	pic = "lufei.png",
+	pic = "lufeiStory.png",
 	dialog = "你个混蛋,居然要炸掉小镇。",
 	pos = 1
 },
@@ -97,31 +97,31 @@ local data_story = {
 },
 [17] ={
 	id = 17,
-	pic = "namei.png",
+	pic = "nameiStory.png",
 	dialog = "路飞救救我。",
 	pos = 2
 },
 [18] ={
 	id = 18,
-	pic = "lufei.png",
+	pic = "lufeiStory.png",
 	dialog = "那是当然的啦！",
 	pos = 1
 },
 [19] ={
 	id = 19,
-	pic = "shanzhi.png",
+	pic = "shanzhiStory.png",
 	dialog = "就是你们要吃霸王餐？",
 	pos = 2
 },
 [20] ={
 	id = 20,
-	pic = "lufei.png",
+	pic = "lufeiStory.png",
 	dialog = "啊 啊你听我解释。",
 	pos = 1
 },
 [21] ={
 	id = 21,
-	pic = "shanzhi.png",
+	pic = "shanzhiStory.png",
 	dialog = "准备留在厨房刷碗还债。",
 	pos = 2
 },
@@ -139,7 +139,7 @@ local data_story = {
 },
 [24] ={
 	id = 24,
-	pic = "lufei.png",
+	pic = "lufeiStory.png",
 	dialog = "我是路飞！请多关照！",
 	pos = 1
 }

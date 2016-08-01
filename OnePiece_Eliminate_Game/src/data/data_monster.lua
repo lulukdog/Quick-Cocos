@@ -4,9 +4,9 @@ local data_monster = {
 	name = "匕首海贼",
 	type = 0,
 	csb = "bshz.csb",
-	attack = 2,
+	attack = 200,
 	interval = 3,
-	life = 28,
+	life = 280,
 },
 [2] ={
 	id = 2,

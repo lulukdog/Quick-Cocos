@@ -1,6 +1,7 @@
 local picPath = require("data.data_picPath")
 local plistPngPath = require("data.data_plistPath")
 local scheduler = require("framework.scheduler")
+local common = require("app.common")
 
 local LoadingScene = class("LoadingScene", function()
     return display.newScene("LoadingScene")
@@ -31,6 +32,8 @@ function LoadingScene:ctor()
   self:initEnergyNum()
   -- 初始化50体力倒计时
   self:init50EnergyCount()
+  -- 初始化宝箱剩余时间
+  self:initBoxLeftTime()
   -- 初始化当前关卡
   self:initNowStage()
   -- 初始化星星
@@ -89,13 +92,13 @@ function LoadingScene:initEnergyNum()
   if UserDefaultUtil:GetEnergy() == nil then
     return
   end
-  local osTime,countTime,energyNum = UserDefaultUtil:GetEnergy()
+  local elapsedTime,countTime,energyNum = UserDefaultUtil:GetEnergy()
   if energyNum>=game.MAXENERGY then
     game.myEnergy = energyNum
     return
   end
 
-  local diffTime = math.max((os.time() - osTime),0)
+  local diffTime = math.max((common:getElapsedTime() - elapsedTime),0)
   game.myEnergy = math.min((math.floor(diffTime/game.addOneEnergyTime)+energyNum),game.MAXENERGY)
   game.countTime = math.max((countTime-diffTime),0)
 end
@@ -104,9 +107,20 @@ function LoadingScene:init50EnergyCount()
   if UserDefaultUtil:Get50EnergyCount() == nil then
     return
   end
-  local osTime,countTime = UserDefaultUtil:Get50EnergyCount()
-  local diffTime = math.max((os.time() - osTime),0)
+  local elapsedTime,countTime = UserDefaultUtil:Get50EnergyCount()
+  local diffTime = math.max((common:getElapsedTime() - elapsedTime),0)
   game.count50EnergyTime = math.max((countTime-diffTime),0)
+end
+-- 初始化宝箱剩余时间
+function LoadingScene:initBoxLeftTime()
+  print("LoadingScene:initBoxLeftTime")
+  if UserDefaultUtil:GetBoxLeftTime() == nil then
+    return
+  end
+  local elapsedTime,countTime = UserDefaultUtil:GetBoxLeftTime()
+  print("LoadingScene:initBoxLeftTime common:getElapsedTime() elapsedTime,countTime"..common:getElapsedTime()..","..elapsedTime..","..countTime)
+  local diffTime = math.max((common:getElapsedTime() - elapsedTime),0)
+  game.boxLeftTime = math.max((countTime-diffTime),0)
 end
 -- 初始化当前关卡
 function LoadingScene:initNowStage()
@@ -209,32 +223,32 @@ function LoadingScene:cacheAni()
     display.setAnimationCache("stone",animation)
     -- add 物块静止时的扫光动画
     frames = display.newFrames("dangong%d.png",1,5)
-    animation = display.newAnimation(frames,0.5/5)     
+    animation = display.newAnimation(frames,0.8/5)     
     display.setAnimationCache("dangong",animation)
     frames = display.newFrames("dao%d.png",1,5)
-    animation = display.newAnimation(frames,0.5/5)     
+    animation = display.newAnimation(frames,0.8/5)     
     display.setAnimationCache("dao",animation)
     frames = display.newFrames("dun%d.png",1,5)
-    animation = display.newAnimation(frames,0.5/5)     
+    animation = display.newAnimation(frames,0.8/5)     
     display.setAnimationCache("dun",animation)
     frames = display.newFrames("juzi%d.png",1,5)
-    animation = display.newAnimation(frames,0.5/5)     
+    animation = display.newAnimation(frames,0.8/5)     
     display.setAnimationCache("juzi",animation)
     frames = display.newFrames("maozi%d.png",1,5)
-    animation = display.newAnimation(frames,0.5/5)     
+    animation = display.newAnimation(frames,0.8/5)     
     display.setAnimationCache("maozi",animation)
     frames = display.newFrames("xin%d.png",1,5)
-    animation = display.newAnimation(frames,0.5/5)     
+    animation = display.newAnimation(frames,0.8/5)     
     display.setAnimationCache("xin",animation)
     -- add 水波纹动画
-    frames = display.newFrames("waterflash_1_%02d.png",1,4)
-    animation = display.newAnimation(frames,0.4/4)     
-    display.setAnimationCache("wave1",animation)
-    frames = display.newFrames("waterflash_2_%02d.png",1,5)
+    frames = display.newFrames("waterflash_1_%02d.png",1,5)
     animation = display.newAnimation(frames,0.5/5)     
+    display.setAnimationCache("wave1",animation)
+    frames = display.newFrames("waterflash_2_%02d.png",1,7)
+    animation = display.newAnimation(frames,0.7/7)     
     display.setAnimationCache("wave2",animation)
-    frames = display.newFrames("waterflash_3_%02d.png",1,6)
-    animation = display.newAnimation(frames,0.6/6)     
+    frames = display.newFrames("waterflash_3_%02d.png",1,9)
+    animation = display.newAnimation(frames,0.9/9)     
     display.setAnimationCache("wave3",animation)
 end
 

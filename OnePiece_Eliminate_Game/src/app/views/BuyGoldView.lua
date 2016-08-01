@@ -33,18 +33,22 @@ end
 
 -- 点击购买相应价格的游戏币
 function BuyGoldView:buyGold( btnNum )
-    self:buyItem()
-
-    game.myGold = game.myGold + GameConfig.GoldTb[btnNum]
-    UserDefaultUtil:saveGold()
-    sendMessage({msg="REFRESHGOLD"})
+    if device.platform == "android" then
+        self:buyItem()
+    elseif device.platform == "windows" then
+        game.myGold = game.myGold + GameConfig.GoldTb[btnNum]
+        UserDefaultUtil:saveGold()
+        sendMessage({msg="REFRESHGOLD"})
+    end
 end
 
 
 
 local function callback(result)
     if result == "success" then
-        print("BuyGoldView:buyItem callback is success")
+        game.myGold = game.myGold + 500
+        UserDefaultUtil:saveGold()
+        sendMessage({msg="REFRESHGOLD"})
     end
 end
 

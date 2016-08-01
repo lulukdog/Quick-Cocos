@@ -111,7 +111,6 @@ function BoardView:createBoard()
             tile = display.newSprite("bg_grid2.png")
          end
          tile:setPosition(gridToPoint(j,i))
-         tile:setOpacity(80)
          tile:addTo(boardBg)
       end
    end
@@ -125,8 +124,6 @@ function BoardView:createBoard()
    
    -- 剪裁区域
    local rect = cc.rect(boardBg:getPositionX(),boardBg:getPositionY(),boardBg:getContentSize().width,boardBg:getContentSize().height)
-   -- local clipnode = display.newClippingRegionNode(rect)
-   -- clipnode:addChild(boardBg)
    self:addChild(boardBg)
 
 end

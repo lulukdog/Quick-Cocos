@@ -7,6 +7,8 @@
 --]]
 ----------------------------------------------------------------------------------
 local FightManager = require("app.game.FightManager")
+local stageCfg = require("data.data_stage")
+local common = require("app.common")
 
 local BattleFailPopView = class("BattleFailPopView", function()
     return display.newNode()
@@ -29,9 +31,17 @@ function BattleFailPopView:ctor()
 
     local allRebirthBtn = cc.uiloader:seekNodeByName(self._mainNode,"mAllRebirthBtn")
     CsbContainer:decorateBtn(allRebirthBtn,function()
-        self:onRebirthBtn(1)
+        local _rebirthGold = stageCfg[game.nowStage].rebirthGold
+        if common:goldIsEnough(_rebirthGold) then
+            self:onRebirthBtn(1)
+        else
+            MessagePopView.new(2):addTo(self)
+        end
     end)
 
+    CsbContainer:setStringForLabel(self._mainNode, {
+        mRebirtGoldLabel = stageCfg[game.nowStage].rebirthGold
+    })
 end
 
 function BattleFailPopView:onRebirthBtn( per )

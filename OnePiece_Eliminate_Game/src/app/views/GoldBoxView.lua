@@ -16,8 +16,11 @@ function GoldBoxView:ctor()
 
     local getBtn = cc.uiloader:seekNodeByName(self._mainNode,"mGetBtn")
 	CsbContainer:decorateBtn(getBtn,function()
+        game.boxLeftTime = 3600*6
+        UserDefaultUtil:SaveBoxLeftTime()
         game.myGold = game.myGold+1000
         sendMessage({msg="REFRESHGOLD"})
+        sendMessage({msg="MapScene_CountBoxTime"})
 		self:removeFromParent()
 		self._mainNode = nil
 	end)
