@@ -47,7 +47,7 @@ function RoleDetailView:ctor(btnNum)
 			return
 		end
 
-		if common:goldIsEnough(self.needGold) then
+		if common:goldCost(self.needGold) then
 			game.helper[btnNum] = game.helper[btnNum] + 1
 			UserDefaultUtil:saveHelperLevel()
 			HelperUpgradeView.new(btnNum):addTo(self)

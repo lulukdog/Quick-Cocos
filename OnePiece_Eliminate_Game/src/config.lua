@@ -29,9 +29,29 @@ GAME_FRAME_RATE = 60
 
 -- sounds
 GAME_SOUND = {
-    tapButton      	= "sfx/TapButtonSound.mp3",
-    luffieAttack1   = "sfx/luffieAttack1.wav",
+    tapButton      	= "sfx/sound.click.mp3",
+    linkCell1		= "sfx/sound.Eliminate1.mp3",
+    linkCell2		= "sfx/sound.Eliminate2.mp3",
+    linkCell3		= "sfx/sound.Eliminate3.mp3",
+    linkCell4		= "sfx/sound.Eliminate4.mp3",
+    linkCell5		= "sfx/sound.Eliminate5.mp3",
+    linkCell6		= "sfx/sound.Eliminate6.mp3",
+    linkCell7		= "sfx/sound.Eliminate7.mp3",
+    linkCell8		= "sfx/sound.Eliminate8.mp3",
+    costCoin		= "sfx/sound.gold.coin.mp3",
+    monsterAtt1		= "sfx/ATT01.mp3",
+    monsterAtt2		= "sfx/ATT02.mp3",
+    helperLvlUp		= "sfx/lvlup.mp3",
+    mailBeat		= "sfx/bj.mp3",
+    femailBeat 		= "sfx/nvbj.mp3",
+    bomb 			= "sfx/baozha.mp3",
+    winStar 		= "sfx/sound.star.mp3",
 }
 GAME_MUSIC = {
-    bgMusic 	  	= "sfx/bg.mp3",
+    bgMusic 	  	= "sfx/denglu.mp3",
+    battleWin 	  	= "sfx/shengli01.mp3",
+    zhandou1 	  	= "sfx/zhandou01.mp3",
+    zhandou2 	  	= "sfx/zhandou02.mp3",
+    zhandou3 	  	= "sfx/zhandou03.mp3",
+    zhandouBoss 	= "sfx/zhandouBOSS.mp3",
 }

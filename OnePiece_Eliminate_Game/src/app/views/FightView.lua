@@ -353,6 +353,8 @@ function FightView:enemyAni(data)
 			cc.CallFunc:create(function()
 				self._enemyAni:gotoFrameAndPlay(GameConfig.Enemy[aniStr].frameBegin,GameConfig.Enemy[aniStr].frameEnd,false)
 				sendMessage({msg="LINKNUMVIEW_ONCE_END_ANI",aniTag = GameConfig.LinkNum.roleBeat})
+				-- 怪物被打音效
+				FightManager:enemyAttackSound()
 			end),
 			cc.DelayTime:create((GameConfig.Enemy[aniStr].frameEnd-GameConfig.Enemy[aniStr].frameBegin)/GAME_FRAME_RATE),
 			cc.CallFunc:create(function()
@@ -366,6 +368,7 @@ function FightView:enemyAni(data)
 			cc.CallFunc:create(function()
 				self._enemyAni:gotoFrameAndPlay(GameConfig.Enemy[aniStr].frameBegin,GameConfig.Enemy[aniStr].frameEnd,false)
 				sendMessage({msg="LINKNUMVIEW_ONCE_END_ANI",aniTag = GameConfig.LinkNum.enemyBeat})
+				
 			end),
 			cc.DelayTime:create((GameConfig.Enemy[aniStr].frameEnd-GameConfig.Enemy[aniStr].frameBegin)/GAME_FRAME_RATE),
 			cc.CallFunc:create(function()
@@ -380,13 +383,17 @@ function FightView:enemyAni(data)
 				self._enemyAni:gotoFrameAndPlay(GameConfig.Enemy.stand.frameBegin,GameConfig.Enemy.stand.frameEnd,true)
 			end)
 		))
+		scheduler.performWithDelayGlobal(function()
+			-- 怪物被打音效
+			FightManager:enemyBeatSound()
+		end,1.2)
 	elseif aniStr=="beat2" then
 		self._enemyNode:runAction(cc.Sequence:create(
 			cc.DelayTime:create(0.55),
 			cc.DelayTime:create(GameConfig.Attack2AniEnd.luffie/GAME_FRAME_RATE),
 			cc.CallFunc:create(function()
 				self._enemyAni:gotoFrameAndPlay(GameConfig.Enemy[aniStr].frameBegin,GameConfig.Enemy[aniStr].frameEnd,false)
-				sendMessage({msg="LINKNUMVIEW_ONCE_END_ANI",aniTag = GameConfig.LinkNum.enemyBeat})
+				sendMessage({msg="LINKNUMVIEW_ONCE_END_ANI",aniTag = GameConfig.LinkNum.enemyBeat2})
 			end),
 			cc.DelayTime:create((GameConfig.Enemy[aniStr].frameEnd-GameConfig.Enemy[aniStr].frameBegin)/GAME_FRAME_RATE),
 			cc.CallFunc:create(function()
@@ -400,6 +407,10 @@ function FightView:enemyAni(data)
 				self._enemyAni:gotoFrameAndPlay(GameConfig.Enemy.stand.frameBegin,GameConfig.Enemy.stand.frameEnd,true)
 			end)
 		))
+		scheduler.performWithDelayGlobal(function()
+			-- 怪物被打音效
+			FightManager:enemyBeatSound()
+		end,2.6)
 	elseif aniStr=="die" then
 		FightManager:beatOneEnemy()
 		self._enemyNode:runAction(cc.Sequence:create(

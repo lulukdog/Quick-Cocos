@@ -85,10 +85,12 @@ function SelectHelperView:ctor(isFromBattlePage)
 		})
 
 		local helperLevel = game.helper[v]
+		local _useCost = tonumber(common:parseStrWithComma(skillCfg[helperLevel].useCost)[1].count)
 		CsbContainer:setStringForLabel(self._mainNode,{
 			["mLevelLabel"..i] = helperLevel,
 			["mDirectHurtLabel"..i] = helperCfg[v].skillDes..skillCfg[helperLevel]["skill"..v],
 			["mName"..i] = helperCfg[v].name,
+			["mNeedGoldLabel"..i] = _useCost,
 		})
 
 		local fightBtn = cc.uiloader:seekNodeByName(self._mainNode,"mFightBtn"..i)
@@ -131,12 +133,26 @@ function SelectHelperView:ctor(isFromBattlePage)
 			game.guideStep = game.MAXGUIDESTEP+1
 		end
 	end
+
+	-- 自己的金币数
+	self._myGold = game.myGold
+	self:refreshPage()
+end
+
+function SelectHelperView:refreshPage()
+	CsbContainer:setStringForLabel(self._mainNode, {
+		mMyGoldLabel = self._myGold,
+	})
 end
 
 function SelectHelperView:onStart(isConfirm)
 	game.helperOnFight = {}
 	game.helperOnFight = common:table_deep_copy(self.helperOnShowTb)
 	self.helperOnShowTb = {}
+
+	-- 选中的帮助角色扣钱
+	game.myGold = self._myGold
+	UserDefaultUtil:saveGold()
 
 	if isConfirm==true then
 		sendMessage({msg ="GAMESCENE_REFRESH_HELPER"})
@@ -155,6 +171,7 @@ function SelectHelperView:setHelperOnFight( btnNum,isCancel )
 		else
 			table.insert(self.helperOnShowTb,heplerNum)
 		end
+	-- 选择出战
 	else
 		for i,v in ipairs(self.helperOnShowTb) do
 			if v==heplerNum then
@@ -203,6 +220,23 @@ function SelectHelperView:refreshShowHelper()
 	
 end
 function SelectHelperView:onFightOrCancel( btnNum,isCancel )
+
+	-- 扣钱
+	local helperLevel = game.helper[self.helperTb[btnNum]]
+	local _useCost = tonumber(common:parseStrWithComma(skillCfg[helperLevel].useCost)[1].count)
+	if isCancel==false then
+		if self._myGold >= _useCost then
+			self._myGold = self._myGold - _useCost
+			self:refreshPage()
+		else
+			MessagePopView.new(2):addTo(self)
+			return
+		end
+	else
+		self._myGold = self._myGold + _useCost
+		self:refreshPage()
+	end
+	
 	-- 显示取消或是显示出战
 	self:setHelperOnFight(btnNum,isCancel)
 	self:refreshFightBtn(btnNum)

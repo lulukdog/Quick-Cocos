@@ -59,7 +59,7 @@ function TopAniView:addHelperAni(data)
     helperAni:gotoFrameAndPlay(0,GameConfig.Attack2AniEnd.zoro,false)
     helperAni:setFrameEventCallFunc(function(frame)
         local event = frame:getEvent() 
-        print("***********************" .. event)
+        print("TopAniView:addHelperAni **** " .. event)
         if frame:getEvent()=="beatAni" then           
             sendMessage({msg ="ENEMY_ROLE",aniStr = "beat"})
         elseif frame:getEvent()=="shieldAni" then

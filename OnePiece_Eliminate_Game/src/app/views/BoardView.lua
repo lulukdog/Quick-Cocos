@@ -42,6 +42,8 @@ function BoardView:ctor(gameOverCallback)
   self._isInhint = false --当前是否在提示中，方式不断添加提示线
   self._hintHanlder = scheduler.scheduleGlobal(function( )
     self._hintCount = self._hintCount + 3
+    -- 炸弹动画
+    self.gridMgr:bombBlink()
     -- 6秒没有操作的话添加扫光
     if self._hintCount>=6 then
       self.gridMgr:cellBlink()
@@ -308,8 +310,9 @@ function BoardView:onTouchEvent(event)
 
                 -- 选中同色物块高亮，其他遮罩
                 self.gridMgr:cellHightLight(cell.id)
+                -- 播放选中音效
+                GameUtil_PlaySound(GAME_SOUND.linkCell1)
             end
-
         end
 
         return true
@@ -332,6 +335,12 @@ function BoardView:onTouchEvent(event)
                 firstCell:unselected()
                 table.remove(self.linkData,linkCount)
                 self.chainLayer:popChain()
+                -- 播放选中音效
+                if #self.linkData>8 then
+                  GameUtil_PlaySound(GAME_SOUND["linkCell"..8])
+                else
+                  GameUtil_PlaySound(GAME_SOUND["linkCell"..#self.linkData])
+                end
                 -- 连接时计算伤害
                 sendMessage({msg="LINKNUMVIEW_REFRESH_HARM",cellId=cell.id,count=table.nums(self.linkData)})
                 sendMessage({msg="FIGHTVIEW_CELL_ANI",cellId=cell.id,count=table.nums(self.linkData)})
@@ -353,6 +362,12 @@ function BoardView:onTouchEvent(event)
 
         cell:selected()
         table.insert(self.linkData,cell)
+        -- 播放选中音效
+        if #self.linkData>8 then
+          GameUtil_PlaySound(GAME_SOUND["linkCell"..8])
+        else
+          GameUtil_PlaySound(GAME_SOUND["linkCell"..#self.linkData])
+        end
 
         local p1 = cc.p(cell:getGridPosition())
         local p2 = cc.p(firstCell:getGridPosition())
@@ -368,6 +383,7 @@ function BoardView:onTouchEvent(event)
             self.gridMgr:refreshAffectCell()
             self:cellDropFill()
             sendMessage({msg ="GAMESCENE_DISABLE"})
+            GameUtil_PlaySound(GAME_SOUND.bomb)
             return
         end
         local linkCount = table.nums(self.linkData)

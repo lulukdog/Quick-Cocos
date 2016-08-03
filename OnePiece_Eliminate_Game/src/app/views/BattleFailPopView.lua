@@ -32,7 +32,7 @@ function BattleFailPopView:ctor()
     local allRebirthBtn = cc.uiloader:seekNodeByName(self._mainNode,"mAllRebirthBtn")
     CsbContainer:decorateBtn(allRebirthBtn,function()
         local _rebirthGold = stageCfg[game.nowStage].rebirthGold
-        if common:goldIsEnough(_rebirthGold) then
+        if common:goldCost(_rebirthGold) then
             self:onRebirthBtn(1)
         else
             MessagePopView.new(2):addTo(self)

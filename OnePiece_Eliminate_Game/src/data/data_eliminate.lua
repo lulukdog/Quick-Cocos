@@ -456,6 +456,20 @@ local data_eliminate = {
 [34] ={
 	id = 34,
 	type = 4,
+	icon = "pic/ribendao.png",
+	iconSelected = "pic/ribendao.png",
+	beatValue = 0,
+	canDrop = 1,
+	canClick = 0,
+	life = 999,
+	nextId = 34,
+	score = 10,
+	hasIceAni = 0,
+	describe = "日本刀"
+},
+[35] ={
+	id = 35,
+	type = 4,
 	icon = "pic/xiangzi.png",
 	iconSelected = "pic/xiangzi.png",
 	beatValue = 0,
@@ -463,9 +477,51 @@ local data_eliminate = {
 	canClick = 0,
 	life = 999,
 	nextId = 34,
-	score = 100,
+	score = 10,
 	hasIceAni = 0,
-	describe = "日本刀"
+	describe = "箱子"
+},
+[36] ={
+	id = 36,
+	type = 4,
+	icon = "pic/daodan.png",
+	iconSelected = "pic/daodan.png",
+	beatValue = 0,
+	canDrop = 1,
+	canClick = 0,
+	life = 999,
+	nextId = 34,
+	score = 10,
+	hasIceAni = 0,
+	describe = "炸弹"
+},
+[37] ={
+	id = 37,
+	type = 4,
+	icon = "pic/rou.png",
+	iconSelected = "pic/rou.png",
+	beatValue = 0,
+	canDrop = 1,
+	canClick = 0,
+	life = 999,
+	nextId = 34,
+	score = 10,
+	hasIceAni = 0,
+	describe = "漫画肉"
+},
+[38] ={
+	id = 38,
+	type = 4,
+	icon = "pic/taoguanshuihu.png",
+	iconSelected = "pic/taoguanshuihu.png",
+	beatValue = 0,
+	canDrop = 1,
+	canClick = 0,
+	life = 999,
+	nextId = 34,
+	score = 10,
+	hasIceAni = 0,
+	describe = "水壶"
 }
 }
 return data_eliminate

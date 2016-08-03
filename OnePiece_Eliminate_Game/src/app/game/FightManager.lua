@@ -23,8 +23,10 @@ function FightManager:init()
     self.nowMonster = 1 --当前关卡玩家打到了第几个怪物
 	self.shipExp = 0 -- 当前关卡获得经验
 	self.winGold = 0 -- 当前关卡获得金币数
+	self.winEnergy = 0 -- 当前关卡获得体力数
 	self.starNum = 1 -- 当前关卡星星数
 	self.highestScore = 0 -- 当前关卡最高分
+	self.roundSum = 0 -- 总回合数，计算最后积分加成用
 	game.getScores = 0
 
 	self.in_dun_skill = 0 -- 盾的技能持续4回合，是否在4回合内的判断标志
@@ -79,6 +81,8 @@ end
 
 function FightManager:addRound()
 	self.round = self.round+1
+	self.roundSum = self.roundSum + 1
+	print("FightManager:addRound roundSum "..self.roundSum)
 	sendMessage({msg="GAMESCENE_REFRESH_ROUND"})
 end
 -- 防御技能计算回合数
@@ -235,13 +239,18 @@ function FightManager:getNowEnemyCsb()
 		return nil
 	end
 end
+
 -- 获取主角当前等级总血量
 function FightManager:getNowRoleMaxLife()
 	return self._nowMaxLife
 end
 -- 获取当前敌人总血量
 function FightManager:getNowEnemyMaxLife()
-	return monsterCfg[self.nowMonsterId].life
+	if self.nowMonsterId~=0 then
+		return monsterCfg[self.nowMonsterId].life
+	else
+		return 0
+	end
 end
 -- 复活设置当前血量
 function FightManager:setRoleLifePercent(per)
@@ -250,6 +259,13 @@ end
 
 -- 战斗胜利计算星星数和获得经验
 function FightManager:calStarAndExp()
+	-- 回合数少的话积分加成，怪物+1回合内积分*6，怪物+3回合内积分*2
+	if self.roundSum<=(#self.nowMonsterTb+1) then
+		game.getScores = game.getScores * 6
+	elseif self.roundSum<=(#self.nowMonsterTb+3) then
+		game.getScores = game.getScores * 2
+	end
+
 	-- 计算星星数
 	for i=3,1,-1 do
 		if game.getScores>stageCfg[game.nowStage]["starScore"..i] then
@@ -272,10 +288,13 @@ function FightManager:calStarAndExp()
 			self.shipExp = v.count
 		elseif v.id == game.ITEM.GOLD then
 			self.winGold = v.count
+		elseif v.id == game.ITEM.ENERGY then
+			self.winEnergy = v.count
 		end
 	end
 	game.nowShipExp = game.nowShipExp + self.shipExp
 	game.myGold = game.myGold + self.winGold
+	game.myEnergy = game.myEnergy + self.winEnergy
 	UserDefaultUtil:saveGold()
 	-- 船升级
 	if game.nowShipLevel<#shipCfg and game.nowShipExp>=shipCfg[game.nowShipLevel].needExp then
@@ -327,6 +346,16 @@ end
 function FightManager:changeFightBg()
 	local mapTb = common:parseStrOnlyWithComma(stageCfg[game.nowStage].stageMap)
 	sendMessage({msg="GAMESCENE_CHANGE_FIGHTBG",bgPic = stageMapCfg[tonumber(mapTb[self.nowMonster])].picPath}) 
+    -- 刷新战斗音乐
+    GameUtil_PlayMusic(monsterCfg[self.nowMonsterId].bgMusic)
+end
+-- 播放被打击音效
+function FightManager:enemyBeatSound()
+	GameUtil_PlaySound(monsterCfg[self.nowMonsterId].beatSound)
+end
+-- 播放打击音效
+function FightManager:enemyAttackSound()
+	GameUtil_PlaySound(monsterCfg[self.nowMonsterId].attackSound)
 end
 
 return FightManager

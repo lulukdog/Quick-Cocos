@@ -55,6 +55,7 @@ function GuideView:onGuide()
             mGuideNode = game.guideStep==1 or game.guideStep==3,
             mMaskNode = game.guideStep==2,
             mPointToEnemy = game.guideStep==1,
+            mAnyPointNode = game.guideStep==1,
             mCollectNode = false,
         })
         if game.guideStep==2 then

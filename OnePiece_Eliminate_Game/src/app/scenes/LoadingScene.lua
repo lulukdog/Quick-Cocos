@@ -2,6 +2,7 @@ local picPath = require("data.data_picPath")
 local plistPngPath = require("data.data_plistPath")
 local scheduler = require("framework.scheduler")
 local common = require("app.common")
+local scheduler = require("framework.scheduler")
 
 local LoadingScene = class("LoadingScene", function()
     return display.newScene("LoadingScene")
@@ -9,9 +10,17 @@ end)
 
 function LoadingScene:ctor()
   self._mainNode = CsbContainer:createLoadingCsb("LoadingScene.csb"):addTo(self)
+  local _ani = cc.CSLoader:createTimeline("LoadingScene.csb")
+  self._mainNode:runAction(_ani)
+  _ani:gotoFrameAndPlay(0,180,false)
+  scheduler.performWithDelayGlobal(function()
+    _ani:gotoFrameAndPlay(130,180,true)
+  end,180/GAME_FRAME_RATE)
+
   local _startBtn = cc.uiloader:seekNodeByName(self._mainNode, "mStartBtn")
   CsbContainer:decorateBtn(_startBtn, function()
       if game.PLAYERID~="" then
+          _startBtn:setEnabled(false)
           self:enterMapScene()
       end
   end)
@@ -250,6 +259,10 @@ function LoadingScene:cacheAni()
     frames = display.newFrames("waterflash_3_%02d.png",1,9)
     animation = display.newAnimation(frames,0.9/9)     
     display.setAnimationCache("wave3",animation)
+    -- add 炸弹动画
+    frames = display.newFrames("bomb_%d.png",1,3)
+    animation = display.newAnimation(frames,0.3/3)     
+    display.setAnimationCache("bomb",animation)
 end
 
 function LoadingScene:isLoadingFinish(  )
@@ -279,7 +292,7 @@ end
 
 function LoadingScene:onEnter()
   print("LoadingScene:onEnter")
-  GameUtil_resetMusic()
+  GameUtil_PlayMusic(GAME_MUSIC.bgMusic)
 end
 
 function LoadingScene:onExit()

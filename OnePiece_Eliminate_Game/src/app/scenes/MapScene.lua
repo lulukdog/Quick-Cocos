@@ -142,6 +142,9 @@ function MapScene:ctor()
         RoleGetPushView.new(4):addTo(self)
     end
     math.newrandomseed()
+
+    -- 播放音效
+    GameUtil_PlayMusic(GAME_MUSIC.bgMusic)
 end
 
 function MapScene:countBoxTime( )
@@ -433,7 +436,7 @@ function MapScene:onEnter()
     -- 瀑布动画
     local _mapAni = cc.CSLoader:createTimeline("MapScene.csb")
     self._mainNode:runAction(_mapAni)
-    _mapAni:gotoFrameAndPlay(0,30,true)
+    _mapAni:gotoFrameAndPlay(0,10,true)
 
     -- 鸟的动画
     local _birdAniTb = {}

@@ -601,5 +601,17 @@ function GridManager:cellBlink()
   	end
 end
 
+-- 炸弹2秒动画
+function GridManager:bombBlink()
+	for col=1,game.GRID_COLS do
+      	for row=1,game.GRID_ROWS do
+      		local _cell = self:find(row, col)
+      		if _cell and _cell:isBomb() then
+      			_cell:bombFlight()
+      		end
+      	end
+  	end
+end
+
 return GridManager
 

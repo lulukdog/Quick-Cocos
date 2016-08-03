@@ -8,6 +8,8 @@
 ----------------------------------------------------------------------------------
 local FightManager = require("app.game.FightManager")
 local GameConfig = require("data.GameConfig")
+local scheduler = require("framework.scheduler")
+local common = require("app.common")
 
 local LinkNumView = class("LinkNumView", function()
     return display.newNode()
@@ -76,6 +78,9 @@ end
 function LinkNumView:roleMeatEndAni()
   self._mainRoleAni:gotoFrameAndPlay(136,152,false)
 end
+function LinkNumView:roleBeat2Ani()
+  self._enemyAni:gotoFrameAndPlay(160,175,false)
+end
 
 -- 连接的同时刷新伤害值
 function LinkNumView:refreshHarm(data)
@@ -87,8 +92,8 @@ function LinkNumView:refreshHarm(data)
       end
       local harmNum =  FightManager:calLinkHarm( cellId,linkCount )
       CsbContainer:setStringForLabel(self._enemyNode, {
-          mNormalLabel = harmNum,
-          mBigLabel = harmNum,
+          mNormalLabel = "-"..harmNum,
+          mBigLabel = "-"..harmNum,
       })
   elseif linkCount>=3 and cellId==6 then
       self:roleMeatAni()
@@ -105,14 +110,31 @@ end
 function LinkNumView:runEndAni( data )
     local _tag = data.aniTag
     if _tag==GameConfig.LinkNum.enemyBeat then
-        self:enemyEndHarmAni()
-        CsbContainer:setStringForLabel(self._enemyNode, {mEndLabel = FightManager._onceEnemyHarm})
+        scheduler.performWithDelayGlobal(function()
+            self:enemyEndHarmAni()
+            CsbContainer:setStringForLabel(self._enemyNode, {mEndLabel = "-"..FightManager._onceEnemyHarm})
+        end,0.45)
     elseif _tag==GameConfig.LinkNum.enemyLose then
         self:enemyLoseAni()
         CsbContainer:setStringForLabel(self._enemyNode, {mEndLabel = FightManager._onceEnemyHarm})
     elseif _tag==GameConfig.LinkNum.roleBeat then
-        self:roleEndHarmAni()
-        CsbContainer:setStringForLabel(self._mainRoleNode, {mEndLabel = FightManager._onceRoleHarm})
+        scheduler.performWithDelayGlobal(function()
+            self:roleEndHarmAni()
+            CsbContainer:setStringForLabel(self._mainRoleNode, {mEndLabel = "-"..FightManager._onceRoleHarm})
+        end,0.45)
+    elseif _tag==GameConfig.LinkNum.enemyBeat2 then
+        local _onceHarm,_delay = 0,0
+        scheduler.performWithDelayGlobal(function() 
+            local ranTb = common:random_divide_part(FightManager._onceEnemyHarm,5)
+            for i=1,5 do
+                scheduler.performWithDelayGlobal(function()
+                    self:roleBeat2Ani()
+                    _onceHarm = "-"..math.ceil(ranTb[i])
+                    CsbContainer:setStringForLabel(self._enemyNode, {mBeat2Label = _onceHarm})
+                end,_delay)
+                _delay = _delay+15/GAME_FRAME_RATE
+            end
+        end,0.45)
     elseif _tag==GameConfig.LinkNum.roleMeat then
         self:roleMeatEndAni()
         CsbContainer:setStringForLabel(self._mainRoleNode, {mMeatEndLabel = FightManager._onceRoleMeat})

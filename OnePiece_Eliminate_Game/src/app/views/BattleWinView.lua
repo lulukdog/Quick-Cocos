@@ -22,6 +22,14 @@ function BattleWinView:ctor()
 	self._mainNode:runAction(self._mainAni)
 	local starAni = GameConfig.WinAniFrame["star"..FightManager.starNum]
 	self._mainAni:gotoFrameAndPlay(1,starAni.firstEnd,false)
+	self._mainAni:setFrameEventCallFunc(function(frame)
+        local event = frame:getEvent() 
+        print("BattleWinView:ctor **** " .. event)
+        if frame:getEvent()=="starSound" then           
+            GameUtil_PlaySound(GAME_SOUND.winStar)
+        end
+    end)
+
 	self._mainNode:runAction(cc.Sequence:create(
 		cc.DelayTime:create(starAni.firstEnd/GAME_FRAME_RATE),
 		cc.CallFunc:create(function()
@@ -29,6 +37,9 @@ function BattleWinView:ctor()
 		end)
 	))
 	
+	-- 播放音乐
+	GameUtil_PlayMusic(GAME_MUSIC.battleWin,false)
+
 	local nextStage = cc.uiloader:seekNodeByName(self._mainNode,"mNextStageBtn")
 	CsbContainer:decorateBtnNoTrans(nextStage,function()
 		-- 失败权重清0
@@ -45,12 +56,16 @@ function BattleWinView:ctor()
 		game.myGold = game.myGold + FightManager.winGold
 	end)
 	
+	CsbContainer:setNodesVisible(self._mainNode, {
+		mWinEnergyNode = FightManager.winEnergy>0,
+	})
 
 	CsbContainer:setStringForLabel(self._mainNode,{
 		mShipExpLabel = FightManager.shipExp,
 		mScoreLabel = game.getScores,
     	mHighestScoreLabel = FightManager.highestScore,
     	mGoldLabel = "+"..FightManager.winGold,
+    	mEnergyLabel = "+"..FightManager.winEnergy,
     	mStageNumLabel = string.format("%03d",game.nowStage),
 	})
 

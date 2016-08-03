@@ -7,10 +7,10 @@ local data_helper = {
 	detailPic = "pic/lufeiDetail.png",
 	skill = 1,
 	attr = 1,
-	needGold = 10,
+	needGold = 0,
 	needStar = 0,
-	skillDes = "直接伤害",
-	attrDes = "消除伤害"
+	skillDes = "船长出战",
+	attrDes = "红色方块伤害+"
 },
 [2] ={
 	id = 2,
@@ -22,10 +22,10 @@ local data_helper = {
 	csbFile = "zoro.csb",
 	skill = 2,
 	attr = 2,
-	needGold = 10,
+	needGold = 0,
 	needStar = 36,
-	skillDes = "直接伤害",
-	attrDes = "消除伤害"
+	skillDes = "对敌方造成伤害",
+	attrDes = "绿色方块伤害+"
 },
 [3] ={
 	id = 3,
@@ -37,9 +37,9 @@ local data_helper = {
 	csbFile = "namei.csb",
 	skill = 3,
 	attr = 3,
-	needGold = 10,
-	skillDes = "直接伤害",
-	attrDes = "消除伤害"
+	needGold = 0,
+	skillDes = "对敌方造成伤害",
+	attrDes = "黄色方块伤害+"
 },
 [4] ={
 	id = 4,
@@ -51,10 +51,10 @@ local data_helper = {
 	csbFile = "uspboo.csb",
 	skill = 4,
 	attr = 4,
-	needGold = 10,
+	needGold = 0,
 	needStar = 90,
-	skillDes = "直接伤害",
-	attrDes = "消除伤害"
+	skillDes = "对敌方造成伤害",
+	attrDes = "蓝色方块伤害+"
 },
 [5] ={
 	id = 5,
@@ -66,9 +66,9 @@ local data_helper = {
 	csbFile = "shanzhi.csb",
 	skill = 5,
 	attr = 5,
-	needGold = 10,
-	skillDes = "防御直接增加",
-	attrDes = "消除增加防御"
+	needGold = 0,
+	skillDes = "4回合抵消伤害",
+	attrDes = "防御+"
 },
 [6] ={
 	id = 6,
@@ -80,9 +80,9 @@ local data_helper = {
 	csbFile = "qiaoba.csb",
 	skill = 6,
 	attr = 6,
-	needGold = 10,
-	skillDes = "血量直接增加",
-	attrDes = "消除增加血量"
+	needGold = 0,
+	skillDes = "恢复生命",
+	attrDes = "生命上限+"
 }
 }
 return data_helper

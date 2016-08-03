@@ -7,7 +7,7 @@
 --]]
 ----------------------------------------------------------------------------------
 local GameConfig = require("data.GameConfig")
-local shipCfg = require("data.data_ship2")
+-- local shipCfg = require("data.data_ship2")
 local ShipGetPushView = import(".ShipGetPushView")
 
 
@@ -38,11 +38,11 @@ function Ship2PopView:ctor()
         self._mainNode = nil
     end)
 
-    CsbContainer:setStringForLabel(self._mainNode, {
-        mAttackLabel = shipCfg[game.nowShipLevel].attack,
-        mDefLabel = shipCfg[game.nowShipLevel].def,
-        mLifeLabel = shipCfg[game.nowShipLevel].life,
-    })
+    -- CsbContainer:setStringForLabel(self._mainNode, {
+    --     mAttackLabel = shipCfg[game.nowShipLevel].attack,
+    --     mDefLabel = shipCfg[game.nowShipLevel].def,
+    --     mLifeLabel = shipCfg[game.nowShipLevel].life,
+    -- })
 
 end
 

@@ -29,6 +29,7 @@ game.MAXGUIDESTEP = 16 --最大引导步数16
 game.ITEM = {
 	GOLD = 1,
 	EXP = 2,
+	ENERGY = 3,
 }
 game.MAPHEIGHT = 8400
 
@@ -55,7 +56,7 @@ game.stageMaxScore = {}--每关对应的最高分
 game.getScores = 0 -- 当前关卡获得的积分数
 game.isShipUpgrade = false -- 是否播放船升级画面
 game.guideStep = 1 --当前引导步数
-game.firstEnterGame = false --第一次进入游戏直接跳转到关卡不去地图
+game.firstEnterGame = true --第一次进入游戏直接跳转到关卡不去地图
 game.boxLeftTime = 0 --每次开启宝箱的剩余时间
 
 game.MusicOn = true

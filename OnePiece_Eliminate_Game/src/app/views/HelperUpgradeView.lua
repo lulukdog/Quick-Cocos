@@ -25,7 +25,7 @@ function HelperUpgradeView:ctor(roleNum)
     end,115/GAME_FRAME_RATE)
 
     local closeBtn = cc.uiloader:seekNodeByName(self._mainNode,"mCloseBtn")
-	CsbContainer:decorateBtn(closeBtn,function()
+	CsbContainer:decorateBtnNoTrans(closeBtn,function()
         scheduler.unscheduleGlobal(_schedule)
 		self:removeFromParent()
 		self._mainNode = nil
@@ -46,6 +46,8 @@ function HelperUpgradeView:ctor(roleNum)
         mDirectSprite = _directPic,
         mLinkSprite = _linkPic,
     })
+
+    GameUtil_PlaySound(GAME_SOUND.helperLvlUp)
 end
 
 return HelperUpgradeView

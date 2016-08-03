@@ -77,8 +77,24 @@ end
 function GameUtil_resetMusic()
     UserDefaultUtil:saveMusic()
     if game.MusicOn==true then
-        audio.playMusic(GAME_MUSIC.bgMusic,true)
+        -- audio.playMusic(GAME_MUSIC.bgMusic,true)
+        audio.resumeMusic()
+    else
+        -- audio.stopMusic()
+        audio.pauseMusic()
+    end
+end
+
+function GameUtil_PlayMusic(musicName,isLoop)
+    local _loop = isLoop and isLoop or true
+    if game.MusicOn==true then
+        audio.playMusic(musicName,_loop)
     else
         audio.stopMusic()
+    end
+end
+function GameUtil_PlaySound(soundName)
+    if game.SoundOn==true then
+        audio.playSound(soundName,false)
     end
 end

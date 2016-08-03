@@ -118,6 +118,24 @@ function common:getElapsedTime()
         return os.time()
     end
 end
+
+-- 保存统计计费点
+function common:saveUserData(key,value)
+    if device.platform == "android" then
+        local args = {
+            key,
+            value,
+        }
+        local className = "org/cocos2dx/sdk/EyeCat"
+        local ok = luaj.callStaticMethod(className, "eye_saveUserData", args, "(Ljava/lang/String;Ljava/lang/String;)V")
+        print("common:saveUserData")
+        if not ok then
+            print("common:saveUserData error")
+        end
+    elseif device.platform == "windows" then
+        print("common:saveUserData key "..key.." value "..value)
+    end
+end
 -------------------table util---------------------
 function common:is_table_same(tb_1,tb_2)
     for k, v in pairs(tb_1) do
@@ -216,17 +234,41 @@ function common:decString(stringValue)
     end
     return _str
 end
+--------------- 数学部分 ---------------------------------
+-- 将num分成parts份，每份值随机，返回table
+function common:random_divide_part( num,parts )
+    local _tb,_sum = {},0
+    local _basicNum = math.ceil(num/parts)
+    for i=1,parts do
+        local ranNum = math.random(1,4)
+        if i==parts then
+            table.insert(_tb,num-_sum)
+            break
+        end
+        local _ran = 0
+        if i%2==0 then
+            _ran = _basicNum + ranNum
+        else
+            _ran = _basicNum - ranNum
+        end
+        table.insert(_tb,_ran)
+        _sum = _sum + _ran
+    end
+    return _tb
+end
 
 --------------- 跟游戏逻辑有关的工具 ----------------------
 
 -- 金币不足判断+金币消耗
-function common:goldIsEnough( needGoldNum )
+function common:goldCost( needGoldNum )
     if game.myGold<needGoldNum then
-        print("common:goldIsEnough gold is not enough")
+        print("common:goldCost gold is not enough")
         return false
     else
         game.myGold = game.myGold - needGoldNum
         UserDefaultUtil:saveGold()
+        -- 消耗金币音效
+        GameUtil_PlaySound(GAME_SOUND.costCoin)
         return true
     end
 end

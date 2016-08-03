@@ -45,12 +45,6 @@ function BuyEnergyView:ctor()
     addMessage(self, "BuyEnergyView_refreshTime", self.refreshEnergy)
 end
 function BuyEnergyView:countTime()
-    if game.count50EnergyTime>0 then
-        self._buy50EnergyBtn:setEnabled(false)
-    else
-        self._buy50EnergyBtn:setEnabled(true)
-    end
-
     CsbContainer:setNodesVisible(self._mainNode, {
         m50EneryLabel = game.count50EnergyTime>0
     })
@@ -68,9 +62,14 @@ function BuyEnergyView:buyEnergy( btnNum )
     end
     -- 购买50体力要加倒计时
     if btnNum == 3 then
-        game.count50EnergyTime = game.energy50Time
-        UserDefaultUtil:Save50EnergyCount()
-        self:countTime()
+        if game.count50EnergyTime>0 then
+            MessagePopView.new(6):addTo(self)
+            return
+        else
+            game.count50EnergyTime = game.energy50Time
+            UserDefaultUtil:Save50EnergyCount()
+            self:countTime()
+        end
     end
     game.myEnergy = game.myEnergy + GameConfig.EnergyTb[btnNum]
     game.countTime = math.max(0,game.countTime-GameConfig.EnergyTb[btnNum]*game.addOneEnergyTime)

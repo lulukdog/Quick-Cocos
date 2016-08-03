@@ -74,6 +74,7 @@ local GameConfig = {
 		roleBeat = 2,
 		roleMeat = 3,
 		enemyLose = 4,
+		enemyBeat2 = 5,
 	},
 	-- 船的类型和名字
 	ShipNamePic = {
