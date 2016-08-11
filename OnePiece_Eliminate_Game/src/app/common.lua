@@ -120,20 +120,20 @@ function common:getElapsedTime()
 end
 
 -- 保存统计计费点
-function common:saveUserData(key,value)
+function common:javaSaveUserData(key,value)
     if device.platform == "android" then
         local args = {
             key,
-            value,
+            tostring(value),
         }
         local className = "org/cocos2dx/sdk/EyeCat"
         local ok = luaj.callStaticMethod(className, "eye_saveUserData", args, "(Ljava/lang/String;Ljava/lang/String;)V")
-        print("common:saveUserData")
+        print("common:javaSaveUserData")
         if not ok then
-            print("common:saveUserData error")
+            print("common:javaSaveUserData error")
         end
     elseif device.platform == "windows" then
-        print("common:saveUserData key "..key.." value "..value)
+        print("common:javaSaveUserData key "..key.." value "..value)
     end
 end
 -------------------table util---------------------
@@ -312,6 +312,15 @@ function common:getNowEnergyLabel()
         return "永久无限"
     end
     return game.myEnergy.."/"..game.MAXENERGY
+end
+
+
+--------------- 全局方法 ----------------------
+function common.showVideoListener(result)
+    print("common.showVideoListener")
+    if result=="video_success" then
+        print("common.showVideoListener".."video_success")
+    end
 end
 
 

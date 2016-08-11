@@ -69,6 +69,8 @@ function BattleWinView:ctor()
     	mStageNumLabel = string.format("%03d",game.nowStage),
 	})
 
+	-- 统计关卡_战斗次数_胜利次数
+	common:javaSaveUserData("BattleWin",tostring(game.nowStage))
 end
 
 return BattleWinView

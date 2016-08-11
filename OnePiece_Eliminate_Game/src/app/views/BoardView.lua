@@ -31,6 +31,8 @@ function BoardView:ctor(gameOverCallback)
   local boardBg = display.newSprite("pic/boardBG.png"):addTo(self)
   boardBg:setAnchorPoint(0.5,0)
   boardBg:setPosition(0,-5)
+  -- 炸弹动画
+  self.gridMgr:bombBlink()
   
   self:createBoard()
   self:createCell()
@@ -42,8 +44,7 @@ function BoardView:ctor(gameOverCallback)
   self._isInhint = false --当前是否在提示中，方式不断添加提示线
   self._hintHanlder = scheduler.scheduleGlobal(function( )
     self._hintCount = self._hintCount + 3
-    -- 炸弹动画
-    self.gridMgr:bombBlink()
+    
     -- 6秒没有操作的话添加扫光
     if self._hintCount>=6 then
       self.gridMgr:cellBlink()
@@ -53,14 +54,17 @@ function BoardView:ctor(gameOverCallback)
         self._isInhint = true
         local _hintOrderTb = self.gridMgr:getOrderedHintTable()
         if #_hintOrderTb>0 then
-          for i=1,2 do
-              local _p1 = cc.p(_hintOrderTb[i]:getGridPosition())
-              local _p2 = cc.p(_hintOrderTb[i+1]:getGridPosition())
-              self.chainLayer:pushChain(_p1,_p2,80)
-          end
+            for i=1,2 do
+                local _p1 = cc.p(_hintOrderTb[i]:getGridPosition())
+                local _p2 = cc.p(_hintOrderTb[i+1]:getGridPosition())
+                self.chainLayer:pushChain(_p1,_p2,80)
+            end
         else
             -- 没有可消除的物块时，刷新全部物块
-            self.gridMgr:noCanLinkCell()
+            if self.gridMgr:judgeNoEliminateCell() then
+                MessagePopView.new(9):addTo(self)
+                self.gridMgr:refreshAllCell()
+            end
         end
     end
   end,3)
@@ -90,6 +94,8 @@ function BoardView:addCell(row, col, id, initPoint)
       cell:setVisible(false)
       scheduler.performWithDelayGlobal(function(  )
         cell:setVisible(true)
+        -- 炸弹动画
+        cell:bombFlight()
       end,1)
      end
   end

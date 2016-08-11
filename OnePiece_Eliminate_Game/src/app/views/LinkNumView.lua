@@ -58,28 +58,29 @@ function LinkNumView:hideAllNode(data)
     self._mainRoleAni:gotoFrameAndPlay(0,1,true)
 end
 function LinkNumView:enemyNormalHarmAni()
-  self._enemyAni:gotoFrameAndPlay(113,114,true)
+  self._enemyAni:gotoFrameAndPlay(163,164,true)
 end
 function LinkNumView:enemyBigHarmAni()
-  self._enemyAni:gotoFrameAndPlay(118,131,true)
+  self._enemyAni:gotoFrameAndPlay(163,164,true)
 end
 function LinkNumView:enemyEndHarmAni()
-  self._enemyAni:gotoFrameAndPlay(61,111,false)
+  self._enemyAni:gotoFrameAndPlay(61,138,false)
 end
 function LinkNumView:enemyLoseAni()
-  self._enemyAni:gotoFrameAndPlay(1,60,false)
+  self._enemyAni:gotoFrameAndPlay(0,56,false)
 end
 function LinkNumView:roleEndHarmAni()
-  self._mainRoleAni:gotoFrameAndPlay(61,111,false)
+  self._mainRoleAni:gotoFrameAndPlay(61,138,false)
 end
 function LinkNumView:roleMeatAni()
-  self._mainRoleAni:gotoFrameAndPlay(133,134,true)
+  self._mainRoleAni:gotoFrameAndPlay(192,193,true)
 end
 function LinkNumView:roleMeatEndAni()
-  self._mainRoleAni:gotoFrameAndPlay(136,152,false)
+  self._mainRoleAni:gotoFrameAndPlay(203,218,false)
 end
 function LinkNumView:roleBeat2Ani()
-  self._enemyAni:gotoFrameAndPlay(160,175,false)
+  self._mainRoleAni:gotoFrameAndPlay(230,241,false)
+  self._enemyAni:gotoFrameAndPlay(105,138,false)
 end
 
 -- 连接的同时刷新伤害值
@@ -89,6 +90,9 @@ function LinkNumView:refreshHarm(data)
       self:enemyNormalHarmAni()
       if linkCount>=6 then
           self:enemyBigHarmAni()
+          sendMessage({msg="GameScene_LongLinkAni",showFlag=true})
+      else
+          sendMessage({msg="GameScene_LongLinkAni",showFlag=false})
       end
       local harmNum =  FightManager:calLinkHarm( cellId,linkCount )
       CsbContainer:setStringForLabel(self._enemyNode, {
@@ -102,6 +106,7 @@ function LinkNumView:refreshHarm(data)
       })
   else
       self:hideAllNode()
+      sendMessage({msg="GameScene_LongLinkAni",showFlag=false})
   end
 
 end
@@ -113,15 +118,15 @@ function LinkNumView:runEndAni( data )
         scheduler.performWithDelayGlobal(function()
             self:enemyEndHarmAni()
             CsbContainer:setStringForLabel(self._enemyNode, {mEndLabel = "-"..FightManager._onceEnemyHarm})
-        end,0.45)
+        end,0.55)
     elseif _tag==GameConfig.LinkNum.enemyLose then
         self:enemyLoseAni()
-        CsbContainer:setStringForLabel(self._enemyNode, {mEndLabel = FightManager._onceEnemyHarm})
+        -- CsbContainer:setStringForLabel(self._enemyNode, {mEndLabel = FightManager._onceEnemyHarm})
     elseif _tag==GameConfig.LinkNum.roleBeat then
         scheduler.performWithDelayGlobal(function()
             self:roleEndHarmAni()
             CsbContainer:setStringForLabel(self._mainRoleNode, {mEndLabel = "-"..FightManager._onceRoleHarm})
-        end,0.45)
+        end,0.55)
     elseif _tag==GameConfig.LinkNum.enemyBeat2 then
         local _onceHarm,_delay = 0,0
         scheduler.performWithDelayGlobal(function() 
@@ -130,7 +135,8 @@ function LinkNumView:runEndAni( data )
                 scheduler.performWithDelayGlobal(function()
                     self:roleBeat2Ani()
                     _onceHarm = "-"..math.ceil(ranTb[i])
-                    CsbContainer:setStringForLabel(self._enemyNode, {mBeat2Label = _onceHarm})
+                    CsbContainer:setStringForLabel(self._enemyNode, {mEndLabel = _onceHarm})
+                    CsbContainer:setStringForLabel(self._mainRoleNode, {mComboLable = i})
                 end,_delay)
                 _delay = _delay+15/GAME_FRAME_RATE
             end

@@ -12,10 +12,18 @@ function LoadingScene:ctor()
   self._mainNode = CsbContainer:createLoadingCsb("LoadingScene.csb"):addTo(self)
   local _ani = cc.CSLoader:createTimeline("LoadingScene.csb")
   self._mainNode:runAction(_ani)
-  _ani:gotoFrameAndPlay(0,180,false)
-  scheduler.performWithDelayGlobal(function()
-    _ani:gotoFrameAndPlay(130,180,true)
-  end,180/GAME_FRAME_RATE)
+  _ani:gotoFrameAndPlay(0,215,false)
+  -- 添加扫光遮罩
+  self:addLightSweep()
+  self._aniScheduler = scheduler.performWithDelayGlobal(function()
+      _ani:gotoFrameAndPlay(135,215,true)
+  end,215/GAME_FRAME_RATE)
+  -- 添加扫光后的光
+  local _logoNode = cc.uiloader:seekNodeByName(self._mainNode, "mLogoNode")
+  self._shiningAniNode = cc.uiloader:load("ShiningAniNode.csb"):addTo(_logoNode)
+  self._shiningAni = cc.CSLoader:createTimeline("ShiningAniNode.csb")
+  self._shiningAniNode:runAction(self._shiningAni)
+  self._shiningAniNode:setVisible(false)
 
   local _startBtn = cc.uiloader:seekNodeByName(self._mainNode, "mStartBtn")
   CsbContainer:decorateBtn(_startBtn, function()
@@ -80,6 +88,33 @@ function LoadingScene:ctor()
 
 end
 
+-- 添加扫光
+function LoadingScene:addLightSweep(  )
+    local _logoNode = cc.uiloader:seekNodeByName(self._mainNode, "mLogoNode")
+    local _logoSprite = cc.uiloader:seekNodeByName(self._mainNode, "mLogoSprite")
+    local clipSize = _logoSprite:getContentSize()
+
+    local spark = display.newSprite("pic/spark.png")
+
+    local clippingNode = cc.ClippingNode:create():addTo(_logoNode,1,1)
+
+    clippingNode:setAlphaThreshold(0)
+    clippingNode:setContentSize(clipSize)
+
+    clippingNode:setStencil(_logoSprite)
+    clippingNode:addChild(spark,1)
+
+    spark:runAction(cc.RepeatForever:create(cc.Sequence:create(
+        cc.CallFunc:create(function()
+            spark:setPositionX(-self:getContentSize().width)
+        end),
+        cc.MoveTo:create(1.5,cc.p(self:getContentSize().width/2,0)),
+        cc.CallFunc:create(function()
+            self._shiningAniNode:setVisible(true)
+            self._shiningAni:gotoFrameAndPlay(0,8,false)
+        end)
+    )))
+end
 function LoadingScene:initPuid( )
     if device.platform == "android" then
         local args = {}
@@ -140,7 +175,7 @@ end
 -- 初始化星星
 function LoadingScene:initStageStars()
   if UserDefaultUtil:getStageStars()~=nil then
-    game.stageStars = UserDefaultUtil:getStageStars()
+    game.stageStars = UserDefaultUtil:getStageStars()--{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}--UserDefaultUtil:getStageStars()
     game.myStarNum = 0
     for i,v in ipairs(game.stageStars) do
       game.myStarNum = game.myStarNum + v
@@ -296,6 +331,7 @@ function LoadingScene:onEnter()
 end
 
 function LoadingScene:onExit()
+  scheduler.unscheduleGlobal(self._aniScheduler)
 	print("LoadingScene:onExit")
 end
 

@@ -54,6 +54,18 @@ function BuyEnergyView:countTime()
     })
 end
 
+function buyEnergy_callback(result)
+    if result == "fail" then
+        MessagePopView.new(8):addTo(self)
+    else
+        game.myEnergy = game.myEnergy + GameConfig.BuyEnergyCfg[tonumber(result)/100]
+        game.countTime = math.max(0,game.countTime-GameConfig.BuyEnergyCfg[tonumber(result)/100]*game.addOneEnergyTime)
+        UserDefaultUtil:SaveEnergy()
+        self:refreshEnergy()
+        sendMessage({msg="Refresh_Energy"})
+    end
+end
+
 -- 点击购买相应价格的体力值
 function BuyEnergyView:buyEnergy( btnNum )
     if game.myEnergy>5000 then
@@ -64,18 +76,44 @@ function BuyEnergyView:buyEnergy( btnNum )
     if btnNum == 3 then
         if game.count50EnergyTime>0 then
             MessagePopView.new(6):addTo(self)
-            return
         else
             game.count50EnergyTime = game.energy50Time
             UserDefaultUtil:Save50EnergyCount()
             self:countTime()
+            -- 统计视频次数
+            common:javaSaveUserData("AdvVideo",tostring(GameConfig.AdvType.energy))
         end
+        return
     end
-    game.myEnergy = game.myEnergy + GameConfig.EnergyTb[btnNum]
-    game.countTime = math.max(0,game.countTime-GameConfig.EnergyTb[btnNum]*game.addOneEnergyTime)
-    UserDefaultUtil:SaveEnergy()
-    self:refreshEnergy()
-    sendMessage({msg="Refresh_Energy"})
+
+
+    local _rmbCount = GameConfig.RMBEnergyCfg[btnNum]
+    local args = {
+        "jinbi",
+        _rmbCount,
+        1,
+        buyEnergy_callback,
+        1,
+    }
+    print("BuyGoldView:buyItem")
+    if device.platform == "android" then
+        -- Java 类的名称
+        local className = "org/cocos2dx/sdk/EyeCat"
+        -- 调用 Java 方法
+        print("BuyGoldView:buyItem"..className)
+        local ok, ret = luaj.callStaticMethod(className, "wxpee", args, "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;II)V")
+        if not ok then
+            print("luaj error:", ret)
+        else
+            print("ret:", ret)
+        end
+    elseif device.platform == "windows" then
+        game.myEnergy = game.myEnergy + GameConfig.EnergyTb[btnNum]
+        game.countTime = math.max(0,game.countTime-GameConfig.EnergyTb[btnNum]*game.addOneEnergyTime)
+        UserDefaultUtil:SaveEnergy()
+        self:refreshEnergy()
+        sendMessage({msg="Refresh_Energy"})
+    end
 end
 
 --刷新体力显示

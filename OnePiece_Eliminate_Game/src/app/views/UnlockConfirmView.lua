@@ -8,6 +8,7 @@
 ----------------------------------------------------------------------------------
 local helperCfg = require("data.data_helper")
 local GameConfig = require("data.GameConfig")
+local common = require("app.common")
 
 local RoleGetPushView = import(".RoleGetPushView")
 
@@ -33,6 +34,22 @@ function UnlockConfirmView:ctor(btnNum)
     CsbContainer:decorateBtn(confirmBtn,function()
         -- TODO buy
         if game.helper[btnNum]==0 then
+            -- 统计视频次数
+            if btnNum==5 then
+                common:javaSaveUserData("AdvVideo",tostring(GameConfig.AdvType.shanzhiHelper))
+
+                -- 观看视频
+                if device.platform == "android" then
+                    local args = {}
+                    local className = "org/cocos2dx/sdk/TapjoySDK"
+                    local ok = luaj.callStaticMethod(className, "Tapjoy_ShowVideo", args, "()V")
+                    print("Tapjoy_ShowVideo")
+                    if not ok then
+                        print("Tapjoy_ShowVideo error")
+                    end
+                end
+            end
+
             game.helper[btnNum] = 1
             UserDefaultUtil:saveHelperLevel()
             sendMessage({msg="UnlockRoleView_refreshUnlockNode"})

@@ -22,7 +22,7 @@ function BuyGoldView:ctor()
 		self._mainNode = nil
 	end)
 
-    for i=1,5 do
+    for i=1,4 do
         local buyBtn = cc.uiloader:seekNodeByName(self._mainNode,"mBuyBtn"..i)
         CsbContainer:decorateBtn(buyBtn,function()
             self:buyGold(i)
@@ -34,7 +34,7 @@ end
 -- 点击购买相应价格的游戏币
 function BuyGoldView:buyGold( btnNum )
     if device.platform == "android" then
-        self:buyItem()
+        self:buyItem(btnNum)
     elseif device.platform == "windows" then
         game.myGold = game.myGold + GameConfig.GoldTb[btnNum]
         UserDefaultUtil:saveGold()
@@ -44,20 +44,24 @@ end
 
 
 
-local function callback(result)
-    if result == "success" then
-        game.myGold = game.myGold + 500
+function buyGold_callback(result)
+    if result == "fail" then
+        MessagePopView.new(8):addTo(self)
+    else
+        print("buyGold_callback"..result)
+        game.myGold = game.myGold + GameConfig.BuyGoldCfg[tonumber(result)/100]
         UserDefaultUtil:saveGold()
         sendMessage({msg="REFRESHGOLD"})
     end
 end
 
-function BuyGoldView:buyItem()
+function BuyGoldView:buyItem(btnNum)
+    local _rmbCount = GameConfig.RMBGoldCfg[btnNum]
     local args = {
-        "items",
-        10,
-        8,
-        callback,
+        "jinbi",
+        _rmbCount,
+        1,
+        buyGold_callback,
         1,
     }
     print("BuyGoldView:buyItem")
@@ -71,7 +75,7 @@ function BuyGoldView:buyItem()
         if not ok then
             print("luaj error:", ret)
         else
-            print("ret:", ret) -- 输出 ret: 5
+            print("ret:", ret)
         end
     end
     

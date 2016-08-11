@@ -95,18 +95,40 @@ function MapScene:ctor()
         end):addTo(self)
     end)
     -- 打开宝箱按钮
-    self._boxBtn = cc.uiloader:seekNodeByName(self._mainNode,"mBoxBtn")
-    CsbContainer:decorateBtnNoTrans(self._boxBtn,function()
+    local _boxNode = cc.uiloader:seekNodeByName(self._mainNode, "mBoxNode")
+    self._boxNode = cc.uiloader:load("RewardBoxNode.csb"):addTo(_boxNode)
+    self._boxBtn = cc.uiloader:seekNodeByName(self._boxNode, "mBoxBtn")
+    self._boxAni = cc.CSLoader:createTimeline("RewardBoxNode.csb")
+    self._boxNode:runAction(self._boxAni)
+    CsbContainer:decorateBtnNoTrans(self._boxBtn, function()
+        -- 观看视频
+        if device.platform == "android" then
+            local args = {
+                common.showVideoListener,
+            }
+            local className = "org/cocos2dx/sdk/YoumiSDK"
+            local ok = luaj.callStaticMethod(className, "YoumiSDK_ShowVideo", args, "(I)V")
+            print("YoumiSDK_ShowVideo")
+            if not ok then
+                print("YoumiSDK_ShowVideo error")
+            end
+        end
         GoldBoxView.new():addTo(self)
     end)
+    
+
+    -- self._boxBtn = cc.uiloader:seekNodeByName(self._mainNode,"mBoxBtn")
+    -- CsbContainer:decorateBtnNoTrans(self._boxBtn,function()
+    --     GoldBoxView.new():addTo(self)
+    -- end)
     -- 宝箱上的剩余时间
-    self:countBoxTime()
+    self:refreshBoxState()
     self.timeBoxHandler = scheduler.scheduleGlobal(function()
         self:countBoxTime()
     end, 1) 
 
     addMessage(self, "REFRESHGOLD", self.refreshGold)
-    addMessage(self, "MapScene_CountBoxTime", self.countBoxTime)
+    addMessage(self, "MapScene_getBoxReward", self.getBoxReward)
     addMessage(self, "Refresh_Energy", self.refreshEnergy)
     addMessage(self, "MapScene_RefreshPage", self.refreshPage)
     addMessage(self, "MapScene_PushRoleGetView", self.pushRoleGetView)
@@ -125,16 +147,16 @@ function MapScene:ctor()
         print("MapScene:ctor runShipUpgradeAni")
     end
 
-    -- 12关打过之后获得索隆
-    if game.myStarNum>=helperCfg[2].needStar and game.helper[2]==0 then
+    -- 12关后获得索隆
+    if common:getNowMaxStage()==13 and game.helper[2]==0 then
         game.helper[2] = 1
         UserDefaultUtil:saveHelperLevel()
         self:refreshPage()
 
         RoleGetPushView.new(2):addTo(self)
     end
-    -- 获得乌索普
-    if game.myStarNum>=helperCfg[2].needStar+helperCfg[4].needStar and game.helper[4]==0 then
+    -- 30关打过之后获得乌索普
+    if common:getNowMaxStage()==31 and game.helper[4]==0 then
         game.helper[4] = 1
         UserDefaultUtil:saveHelperLevel()
         self:refreshPage()
@@ -147,20 +169,31 @@ function MapScene:ctor()
     GameUtil_PlayMusic(GAME_MUSIC.bgMusic)
 end
 
-function MapScene:countBoxTime( )
+function MapScene:refreshBoxState()
     if game.boxLeftTime>0 then
         self._boxBtn:setEnabled(false)
+        CsbContainer:setNodesVisible(self._boxNode, {
+            mBoxLeftTimeLabel = true,
+            mShineNode = false,
+        })
+        self:countBoxTime()
     else
         self._boxBtn:setEnabled(true)
+        self._boxAni:gotoFrameAndPlay(0,50,true)
     end
-
-    CsbContainer:setNodesVisible(self._mainNode, {
-        mBoxLeftTimeLabel = game.boxLeftTime>0
-    })
-    CsbContainer:setStringForLabel(self._mainNode, {
-        mBoxLeftTimeLabel = common:formatSecond(game.boxLeftTime),
-    })
-    
+end
+function MapScene:getBoxReward( )
+    self._boxBtn:setEnabled(false)
+    self._boxAni:gotoFrameAndPlay(50,70,false)
+end
+function MapScene:countBoxTime()
+    if game.boxLeftTime>0 then
+        CsbContainer:setStringForLabel(self._boxNode, {
+            mBoxLeftTimeLabel = common:formatSecond(game.boxLeftTime),
+        })
+    else
+        self:refreshBoxState()
+    end
 end
 
 function MapScene:pushRoleGetView( data )
@@ -323,7 +356,7 @@ function MapScene:addStageNode(i)
                 _moveY = event.y
                 return true
             elseif event.name=="ended" then
-                if math.abs(_moveY-event.y)<1 then
+                if math.abs(_moveY-event.y)<50 then
                     game.nowStage = i
                     MapDetailView.new():addTo(self)
                 end
@@ -331,36 +364,41 @@ function MapScene:addStageNode(i)
         end)
         _stageSprite:setTouchEnabled(true)
     -- boss关有介绍
-    elseif stageCfg[i].bossId~=nil then
+    else
         local _graySprite = cc.uiloader:seekNodeByName(_node,"mGraySprite")
         local _bossSprite = cc.uiloader:seekNodeByName(_node,"mBossSprite")
-        local _moveY = 0
-        local _monsterId = stageCfg[i].bossId
-        _graySprite:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
-            if event.name == "began" then
-                _moveY = event.y
-                return true
-            elseif event.name=="ended" then
-                if math.abs(_moveY-event.y)<1 then
-                    MessagePopView.new(monsterCfg[_monsterId].des):addTo(self)
+        if stageCfg[i].bossId~=nil then
+            _bossSprite:setVisible(true)
+            local _moveY = 0
+            local _monsterId = stageCfg[i].bossId
+            _graySprite:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
+                if event.name == "began" then
+                    _moveY = event.y
+                    return true
+                elseif event.name=="ended" then
+                    if math.abs(_moveY-event.y)<1 then
+                        MessagePopView.new(monsterCfg[_monsterId].des):addTo(self)
+                    end
                 end
-            end
-        end)
-        _bossSprite:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
-            if event.name == "began" then
-                _moveY = event.y
-                return true
-            elseif event.name=="ended" then
-                if math.abs(_moveY-event.y)<1 then
-                    MessagePopView.new(monsterCfg[_monsterId].des):addTo(self)
+            end)
+            _bossSprite:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
+                if event.name == "began" then
+                    _moveY = event.y
+                    return true
+                elseif event.name=="ended" then
+                    if math.abs(_moveY-event.y)<1 then
+                        MessagePopView.new(monsterCfg[_monsterId].des):addTo(self)
+                    end
                 end
-            end
-        end)
-        _graySprite:setTouchEnabled(true)
-        _bossSprite:setTouchEnabled(true)
-        CsbContainer:setSpritesPic(_node, {
-            mBossSprite = monsterCfg[_monsterId].pic
-        })
+            end)
+            _graySprite:setTouchEnabled(true)
+            _bossSprite:setTouchEnabled(true)
+            CsbContainer:setSpritesPic(_node, {
+                mBossSprite = monsterCfg[_monsterId].pic
+            })
+        else
+            _bossSprite:setVisible(false)
+        end
     end
 
     -- 按钮图片和动画

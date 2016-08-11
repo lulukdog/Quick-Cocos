@@ -43,6 +43,7 @@ function FightManager:init()
 	self.nowMonsterTb = common:parseStrOnlyWithComma(stageCfg[game.nowStage].monsterId)
 	self.lifeNum = self._nowMaxLife --玩家当前最大生命
 	self:resetFightData()
+	self:refreshRoundAndLife()
 	self:changeFightBg()
 end
 
@@ -54,12 +55,16 @@ function FightManager:resetFightData()
 		self.nowMonsterId = 0
 		return
 	end
-    sendMessage({msg="GAMESCENE_REFRESH_ROUND"})
 	self.attackNum = 0 --玩家1次攻击伤害
 	self.defNum = 0 -- 玩家1次防御
 	self.enemyLife = monsterCfg[self.nowMonsterId].life -- 敌人血量
-
-	sendMessage({msg="GAMESCENE_REFRESH_LIFE"})
+end
+function FightManager:refreshRoundAndLife( )
+	sendMessage({msg="GAMESCENE_REFRESH_LEFTNUM"})
+	if self.nowMonsterId~=0 then
+		sendMessage({msg="GAMESCENE_REFRESH_ROUND"})
+		sendMessage({msg="GAMESCENE_REFRESH_LIFE"})
+	end
 end
 -- boss几回合后攻击
 function FightManager:getLeftRound()
@@ -228,7 +233,6 @@ end
 -- 打败一个怪物后重置数据
 function FightManager:beatOneEnemy()
 	self.nowMonster = self.nowMonster + 1
-	sendMessage({msg="GAMESCENE_REFRESH_LEFTNUM"})
 	self:resetFightData()
 end
 -- 获取当前怪物
@@ -295,6 +299,8 @@ function FightManager:calStarAndExp()
 	game.nowShipExp = game.nowShipExp + self.shipExp
 	game.myGold = game.myGold + self.winGold
 	game.myEnergy = game.myEnergy + self.winEnergy
+	game.countTime = math.max(0,game.countTime-self.winEnergy*game.addOneEnergyTime)
+	UserDefaultUtil:SaveEnergy()
 	UserDefaultUtil:saveGold()
 	-- 船升级
 	if game.nowShipLevel<#shipCfg and game.nowShipExp>=shipCfg[game.nowShipLevel].needExp then

@@ -63,6 +63,7 @@ function UserDefaultUtil:GetBoxLeftTime()
 end
 -- 通关后记录当前关卡
 function UserDefaultUtil:SaveNowMaxStage()
+    common:javaSaveUserData("NowMaxStage",common:getNowMaxStage())
     local _maxStage = common:encInt(common:getNowMaxStage()) 
     cc.UserDefault:getInstance():setIntegerForKey(game.PLAYERID.."NowMaxStage",_maxStage)
     cc.UserDefault:getInstance():flush()
@@ -112,13 +113,14 @@ end
 
 -- 记录帮手等级
 function UserDefaultUtil:saveHelperLevel()
+    common:javaSaveUserData("HelperLevel",table.concat(game.helper,"_"))
     local helperLevelStr = common:table_to_string(game.helper)
     helperLevelStr = common:encString(helperLevelStr)
-    cc.UserDefault:getInstance():setStringForKey(game.PLAYERID.."Helper",helperLevelStr)
+    cc.UserDefault:getInstance():setStringForKey(game.PLAYERID.."HelperLevel",helperLevelStr)
     cc.UserDefault:getInstance():flush()
 end
 function UserDefaultUtil:getHelperLevel()
-    local helperLevelStr = cc.UserDefault:getInstance():getStringForKey(game.PLAYERID.."Helper")
+    local helperLevelStr = cc.UserDefault:getInstance():getStringForKey(game.PLAYERID.."HelperLevel")
     -- print("UserDefaultUtil:getHelperLevel  "..helperLevelStr)
     if helperLevelStr=="" then
         return nil
@@ -173,6 +175,7 @@ function UserDefaultUtil:getSound()
 end
 -- 记录船的等级
 function UserDefaultUtil:saveShipLevel()
+    common:javaSaveUserData("ShipLevel",tostring(game.nowShipLevel))
     local _shipLevel = common:encInt(game.nowShipLevel) 
     cc.UserDefault:getInstance():setIntegerForKey(game.PLAYERID.."ShipLevel",_shipLevel)
     cc.UserDefault:getInstance():flush()

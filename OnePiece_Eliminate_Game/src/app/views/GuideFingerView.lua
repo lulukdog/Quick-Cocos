@@ -14,7 +14,7 @@ end)
 
 function GuideFingerView:ctor()
 
-	self._mainNode = CsbContainer:createCsb("GuideFingerView.csb"):addTo(self)
+    self._mainNode = CsbContainer:createCsb("GuideFingerView.csb"):addTo(self)
 
     local _nextBtn = cc.uiloader:seekNodeByName(self._mainNode, "mNextBtn")
     CsbContainer:decorateBtnNoTrans(_nextBtn,function()

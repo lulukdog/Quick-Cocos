@@ -488,12 +488,7 @@ function GridManager:judgeNoEliminateCell( )
 	end
 	return isRefresh
 end
--- 没有可消除的物块时，刷新全部物块
-function GridManager:noCanLinkCell( )
-	if self:judgeNoEliminateCell() then
-		self:refreshAllCell()
-	end
-end
+
 -- 刷新全部物块
 function GridManager:refreshAllCell( )
 	for col=1,game.GRID_COLS do

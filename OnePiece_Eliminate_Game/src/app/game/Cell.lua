@@ -261,7 +261,7 @@ function Cell:bombFlight()
     local sprite = display.newSprite(_picName):addTo(self)
     sprite:setAnchorPoint(0.5,0)
    	sprite:setPosition(0,self.sprite:getContentSize().height * -0.5)
-    sprite:playAnimationOnce(display.getAnimationCache("bomb"),true)
+    sprite:playAnimationForever(display.getAnimationCache("bomb"))
 
 end
 

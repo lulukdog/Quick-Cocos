@@ -20,6 +20,7 @@ local GuideView = import("..views.GuideView")
 local GuideFingerView = import("..views.GuideFingerView")
 local GuideFingerPushView = import("..views.GuideFingerPushView")
 local StoryView = import("..views.StoryView")
+local common = import("app.common")
 
 local helperCfg = require("data.data_helper")
 local GameConfig = require("data.GameConfig")
@@ -34,6 +35,11 @@ end)
 
 function GameScene:ctor()
     self._mainNode = CsbContainer:createCsb("GameScene.csb"):addTo(self)
+    self._mainAni = cc.CSLoader:createTimeline("GameScene.csb")
+    self._mainNode:runAction(self._mainAni)
+
+    self._roleLastLife = -1 -- 自己上一次的血量
+    self._enemyLastLife = -1 -- 敌人上一次的血量
 
     addMessage(self, "WIN",self.pushWinPage)
     addMessage(self, "LOSE",self.pushLosePage)
@@ -41,6 +47,8 @@ function GameScene:ctor()
     addMessage(self, "GAMESCENE_REFRESH_LIFE",self.refreshLife)
     addMessage(self, "GAMESCENE_REFRESH_ROUND",self.refreshRound)
     addMessage(self, "GAMESCENE_REFRESH_LEFTNUM",self.refreshLeftNum)
+    addMessage(self, "GAMESCENE_COMBO_ANI",self.runComboAni)
+    addMessage(self, "GameScene_LongLinkAni",self.longLinkAni)
 
     addMessage(self, "GAMESCENE_REFRESH_HELPER",self.refreshHelper)
     addMessage(self, "GAMESCENE_CHANGE_FIGHTBG",self.refreshFightBg)
@@ -106,8 +114,24 @@ function GameScene:ctor()
     self:refreshLeftNum()
     self:refreshHelper()
     self:refreshGoal()
+
+    -- 统计关卡_战斗次数_胜利次数
+    common:javaSaveUserData("NowStage",tostring(game.nowStage))
 end
 
+-- 长连的时候背后的火焰动画
+function GameScene:longLinkAni( data)
+    local _flag = data.showFlag
+    if _flag==true then
+        self._mainAni:gotoFrameAndPlay(100,129,true)
+    else
+        self._mainAni:gotoFrameAndPlay(0,1,true)
+    end
+end
+-- 主角大招屏幕晃动
+function GameScene:runComboAni( )
+    self._mainAni:gotoFrameAndPlay(0,85,false)
+end
 -- 战斗胜利弹窗
 function GameScene:pushWinPage()
   BattleWinView.new():addTo(self)
@@ -276,6 +300,23 @@ function GameScene:refreshLife()
   local enemyLifePer = math.max((FightManager.enemyLife/FightManager:getNowEnemyMaxLife())*100,0)
   enemyLifePer = math.min(enemyLifePer,100)
   enemyLifeBar:setPercent(enemyLifePer)
+
+  -- 减血动画
+  if self._roleLastLife~=-1 and self._roleLastLife>FightManager.lifeNum then
+      local _lastPer = math.max((self._roleLastLife/FightManager:getNowRoleMaxLife())*100,0)
+      _lastPer = math.min(_lastPer,100)
+      local _beginF,_endF = math.floor(100-_lastPer)+260, math.floor(100-mainRoleLifePer)+260
+      self._mainAni:gotoFrameAndPlay(_beginF,_endF,false)
+  end
+  
+  if self._enemyLastLife~=-1 and self._enemyLastLife>FightManager.enemyLife then
+      local _lastPer = math.max((self._enemyLastLife/FightManager:getNowEnemyMaxLife())*100,0)
+      _lastPer = math.min(_lastPer,100)
+      local _beginF,_endF = math.floor(100-_lastPer)+150, math.floor(100-enemyLifePer)+150
+      self._mainAni:gotoFrameAndPlay(_beginF,_endF,false)
+  end
+  self._roleLastLife = FightManager.lifeNum -- 自己上一次的血量
+  self._enemyLastLife = FightManager.enemyLife -- 敌人上一次的血量
 end
 
 --刷新回合数，敌人死后刷新敌人类型

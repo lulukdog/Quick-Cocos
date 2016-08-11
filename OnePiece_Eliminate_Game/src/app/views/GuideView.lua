@@ -49,6 +49,8 @@ function GuideView:onGuide()
             mCollectLabel = guideCfg[game.guideStep].dialog,
         })
     end
+    local _ani = cc.CSLoader:createTimeline("GuideView.csb")
+    self._mainNode:runAction(_ani)
 
     if game.nowStage==1 and (game.guideStep==1 or game.guideStep==2 or game.guideStep==3) then
         CsbContainer:setNodesVisible(self._mainNode, {
@@ -58,9 +60,9 @@ function GuideView:onGuide()
             mAnyPointNode = game.guideStep==1,
             mCollectNode = false,
         })
-        if game.guideStep==2 then
-            local _ani = cc.CSLoader:createTimeline("GuideView.csb")
-            self._mainNode:runAction(_ani)
+        if game.guideStep==1 then
+            _ani:gotoFrameAndPlay(80,160,true)
+        elseif game.guideStep==2 then
             _ani:gotoFrameAndPlay(0,60,true)
         end
     elseif game.nowStage==2 and (game.guideStep==4 or game.guideStep==5 or game.guideStep==6 or game.guideStep==7) then
@@ -70,13 +72,13 @@ function GuideView:onGuide()
             mEnemyRound = game.guideStep==4 or game.guideStep==6,
             mCollectNode = false,
         })
-        if game.guideStep==7 then
+        if game.guideStep==4 or game.guideStep==6 then
+            _ani:gotoFrameAndPlay(80,160,true)
+        elseif game.guideStep==7 then
             local _maskNode = cc.uiloader:seekNodeByName(self._mainNode, "mMaskNode")
             _maskNode:setPosition(106*2,0)
         end
         if game.guideStep==5 or game.guideStep==7 then
-            local _ani = cc.CSLoader:createTimeline("GuideView.csb")
-            self._mainNode:runAction(_ani)
             _ani:gotoFrameAndPlay(0,60,true)
         end
     elseif game.nowStage==9 and game.guideStep==13 then

@@ -153,6 +153,21 @@ function CsbContainer:decorateBtnNoTrans(btn,callBackFunc)
         end
     end)
 end
+-- 给node注册监听事件，当做button用
+function CsbContainer:nodeToBtn( node,callBackFunc )
+	node:addNodeEventListener(cc.NODE_TOUCH_EVENT,function(event)
+        if event.name=="began" then
+        	if game.SoundOn==true then
+	            audio.playSound(GAME_SOUND.tapButton)
+	        end
+            return true
+        elseif event.name=="ended" then
+            if callBackFunc then
+	            callBackFunc()
+	        end
+        end
+    end)
+end
 
 -- 设置label显示文字
 function CsbContainer:setStringForLabel(mainNode, labelMap)

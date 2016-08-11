@@ -394,6 +394,7 @@ function FightView:enemyAni(data)
 			cc.CallFunc:create(function()
 				self._enemyAni:gotoFrameAndPlay(GameConfig.Enemy[aniStr].frameBegin,GameConfig.Enemy[aniStr].frameEnd,false)
 				sendMessage({msg="LINKNUMVIEW_ONCE_END_ANI",aniTag = GameConfig.LinkNum.enemyBeat2})
+				sendMessage({msg="GAMESCENE_COMBO_ANI"})
 			end),
 			cc.DelayTime:create((GameConfig.Enemy[aniStr].frameEnd-GameConfig.Enemy[aniStr].frameBegin)/GAME_FRAME_RATE),
 			cc.CallFunc:create(function()
@@ -423,11 +424,15 @@ function FightView:enemyAni(data)
 			cc.CallFunc:create(function()
 				local nowEnemyCsb = FightManager:getNowEnemyCsb()
 				if nowEnemyCsb~=nil then
-					self._enemyNode:removeFromParent()
-					self:addEnemy(nowEnemyCsb)
-					FightManager:changeFightBg()
-					sendMessage({msg ="GAMESCENE_ENABLE"})
+					scheduler.performWithDelayGlobal(function()
+						FightManager:refreshRoundAndLife()
+						self._enemyNode:removeFromParent()
+						self:addEnemy(nowEnemyCsb)
+						FightManager:changeFightBg()
+						sendMessage({msg ="GAMESCENE_ENABLE"})
+					end, 0.4)
 				else
+					FightManager:refreshRoundAndLife()
 					-- 战斗胜利计算星星数和获得经验
 					FightManager:calStarAndExp()
 					print("WIN")

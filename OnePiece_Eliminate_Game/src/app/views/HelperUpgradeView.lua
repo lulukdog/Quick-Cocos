@@ -32,8 +32,9 @@ function HelperUpgradeView:ctor(roleNum)
 	end)
 
     local level = game.helper[roleNum]
+    local directLabel = skillCfg[level]["skill"..roleNum] or ""
     CsbContainer:setStringForLabel(self._mainNode, {
-        mDirectLabel = skillCfg[level]["skill"..roleNum],
+        mDirectLabel = directLabel,
         mLinkLabel = skillCfg[level]["attr"..roleNum],
     })
     local _directPic = GameConfig.HelperUpgradeCfg.attackDirect

@@ -44,13 +44,12 @@ game.helper = {
 	1,0,0,0,0,0 -- level
 } -- 帮手等级
 game.helperOnFight = {} -- 哪个帮手在出战
-game.myStarNum = 0 -- 玩家拥有的星星总数
 game.myGold = 0 -- 自己的游戏币数量
 game.myEnergy = 50 -- 自己的体力值
 game.countTime = 0 -- 恢复满体力剩余时间（秒）
 game.count50EnergyTime = 0 -- 购买50体力倒计时
 game.energy50Time = 1800 -- 50体力购买恢复时间
-game.addOneEnergyTime = 3600 -- 体力涨1需要的间隔时间
+game.addOneEnergyTime = 10 -- 体力涨1需要的间隔时间
 game.stageStars={} --每关对应的星星数
 game.stageMaxScore = {}--每关对应的最高分
 game.getScores = 0 -- 当前关卡获得的积分数

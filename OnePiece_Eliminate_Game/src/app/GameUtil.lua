@@ -16,7 +16,7 @@ end
 
 function fitScreenNode( node )
 	if display.right>=1080 then
-		node:setScale(1.4)
+        node:setScale(display.right/750)
     elseif display.right <750 then
         node:setScale(display.top/1334)
 	end

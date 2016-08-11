@@ -58,6 +58,9 @@ function GuideFingerPushView:onGuide()
         _fingerSprite:setPositionY(-80)
         _fingerSprite:setRotation(0)
         self._guideNode:setPosition(-200,225)
+        -- 防止使用索隆没有钱
+        game.myGold = game.myGold + 200
+        UserDefaultUtil:saveGold()
     elseif game.guideStep==15 then
         self._guideNode:setPosition(80,-510)
     elseif game.guideStep==16 then

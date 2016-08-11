@@ -150,6 +150,9 @@ function SelectHelperView:onStart(isConfirm)
 	game.helperOnFight = common:table_deep_copy(self.helperOnShowTb)
 	self.helperOnShowTb = {}
 
+	local _concatStr = table.concat(game.helperOnFight,"_")
+	common:javaSaveUserData("HelperUse",_concatStr)
+
 	-- 选中的帮助角色扣钱
 	game.myGold = self._myGold
 	UserDefaultUtil:saveGold()

@@ -45,6 +45,7 @@ function BattleFailPopView:ctor()
 end
 
 function BattleFailPopView:onRebirthBtn( per )
+    common:javaSaveUserData("Rebirth",tostring(per))
     FightManager:setRoleLifePercent(per)
     sendMessage({msg="GAMESCENE_REFRESH_LIFE"})
     self:removeFromParent()

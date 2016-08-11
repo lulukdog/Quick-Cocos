@@ -33,7 +33,7 @@ local GameConfig = {
 		beat = {frameBegin = 221,frameEnd = 293},
 		beat2 = {frameBegin = 294,frameEnd = 390},
 		attack = {frameBegin = 160,frameEnd = 220},
-		die = {frameBegin = 60,frameEnd = 100},
+		die = {frameBegin = 60,frameEnd = 99},
 	},
 	Attack2AniEnd = {
 		luffie = 80,
@@ -46,7 +46,7 @@ local GameConfig = {
 		Red = cc.c3b(255, 0, 0),
 	},
 	GoldTb = {
-		10,20,50,100,500
+		3000,20000,45000,100000
 	},
 	EnergyTb = {
 		10,20,50,999999
@@ -137,6 +137,33 @@ local GameConfig = {
 		attackLink = "scsh.png",
 		defDirect = "zify.png",
 		defLink = "scfy.png",
+	},
+	AdvType = {
+		energy = 1,
+		shanzhiHelper = 2,
+		rewardBox = 3,
+	},
+	RMBGoldCfg = {
+		[1] = 100,
+		[2] = 600,
+		[3] = 1200,
+		[4] = 3000,
+	},
+	RMBEnergyCfg = {
+		[1] = 600,
+		[2] = 1200,
+		[4] = 3000,
+	},
+	BuyGoldCfg = {
+		[1] = 3000,
+		[6] = 20000,
+		[12] = 45000,
+		[30] = 100000,
+	},
+	BuyEnergyCfg = {
+		[6] = 10,
+		[12] = 20,
+		[30] = 999999,
 	},
 }
 

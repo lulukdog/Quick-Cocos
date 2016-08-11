@@ -16,13 +16,16 @@ end)
 function RoleGetPushView:ctor(roleNum)
 
 	self._mainNode = CsbContainer:createPushCsb("RoleGetPushView.csb"):addTo(self)
+    self._mainAni = cc.CSLoader:createTimeline("RoleGetPushView.csb")
+    self._mainNode:runAction(self._mainAni)
+    self._mainAni:gotoFrameAndPlay(0,45,true)
 
-    print("RoleGetPushView:ctor")
-
-    scheduler.performWithDelayGlobal(function()
+    local closeBtn = cc.uiloader:seekNodeByName(self._mainNode,"mCloseBtn")
+    CsbContainer:decorateBtnNoTrans(closeBtn,function()
         self:removeFromParent()
         self._mainNode = nil
-    end,2)
+    end)
+    print("RoleGetPushView:ctor")
 
     CsbContainer:setSpritesPic(self._mainNode, {
         mRoleSprite = helperCfg[roleNum].detailPic,

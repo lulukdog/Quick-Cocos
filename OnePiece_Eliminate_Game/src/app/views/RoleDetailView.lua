@@ -42,7 +42,7 @@ function RoleDetailView:ctor(btnNum)
 			sendMessage({msg="GuideFingerPushView_onNext"})
 		end
 
-		if (game.helper[btnNum]+1) > 20 then
+		if (game.helper[btnNum]+1) > #skillCfg then
 			MessagePopView.new(3):addTo(self)
 			return
 		end
@@ -87,14 +87,15 @@ function RoleDetailView:refreshPage()
 	end
 	
 	CsbContainer:setNodesVisible(self._mainNode, {
-		mMaxNode = lvNum>=20,
-		mCostNode = lvNum<20,
+		mMaxNode = lvNum>=#skillCfg,
+		mCostNode = lvNum<#skillCfg,
 	})
 
+	local skillName = skillCfg[lvNum]["skill"..self.btnNum] or ""
 	CsbContainer:setStringForLabel(self._mainNode,{
         mNameLabel = self.roleCfg.name,
         mLevelLabel = "Lv"..game.helper[self.btnNum],
-        mSkillLabel = self.roleCfg.skillDes..skillCfg[lvNum]["skill"..self.btnNum],
+        mSkillLabel = self.roleCfg.skillDes..skillName,
         mAttrLabel = self.roleCfg.attrDes..skillCfg[lvNum]["attr"..self.btnNum],
     })
     CsbContainer:setSpritesPic(self._mainNode,{
