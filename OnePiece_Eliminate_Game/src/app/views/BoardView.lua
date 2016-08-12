@@ -51,9 +51,9 @@ function BoardView:ctor(gameOverCallback)
     end
 
     if self._hintCount>=9 and self._isInhint==false then
-        self._isInhint = true
         local _hintOrderTb = self.gridMgr:getOrderedHintTable()
         if #_hintOrderTb>0 then
+            self._isInhint = true
             for i=1,2 do
                 local _p1 = cc.p(_hintOrderTb[i]:getGridPosition())
                 local _p2 = cc.p(_hintOrderTb[i+1]:getGridPosition())
@@ -61,10 +61,8 @@ function BoardView:ctor(gameOverCallback)
             end
         else
             -- 没有可消除的物块时，刷新全部物块
-            if self.gridMgr:judgeNoEliminateCell() then
-                MessagePopView.new(9):addTo(self)
-                self.gridMgr:refreshAllCell()
-            end
+            sendMessage({msg="GameScene_NoLinkTip"})
+            self.gridMgr:refreshAllCell()
         end
     end
   end,3)

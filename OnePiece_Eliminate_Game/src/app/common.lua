@@ -102,40 +102,6 @@ function common:formatSecond( second )
     return string.format("%02d:%02d:%02d",h,m,s)
 end
 
--- 获取开机时间
-function common:getElapsedTime()
-    if device.platform == "android" then
-        local args = {}
-        local className = "org/cocos2dx/sdk/EyeCat"
-        local ok, _elapsedTime = luaj.callStaticMethod(className, "eye_getElapsedTime", args, "()Ljava/lang/String;")
-        print("common:getElapsedTime():",_elapsedTime)
-        if not ok then
-            return os.time()
-        else
-            return math.ceil(tonumber(_elapsedTime)/1000)
-        end
-    elseif device.platform == "windows" then
-        return os.time()
-    end
-end
-
--- 保存统计计费点
-function common:javaSaveUserData(key,value)
-    if device.platform == "android" then
-        local args = {
-            key,
-            tostring(value),
-        }
-        local className = "org/cocos2dx/sdk/EyeCat"
-        local ok = luaj.callStaticMethod(className, "eye_saveUserData", args, "(Ljava/lang/String;Ljava/lang/String;)V")
-        print("common:javaSaveUserData")
-        if not ok then
-            print("common:javaSaveUserData error")
-        end
-    elseif device.platform == "windows" then
-        print("common:javaSaveUserData key "..key.." value "..value)
-    end
-end
 -------------------table util---------------------
 function common:is_table_same(tb_1,tb_2)
     for k, v in pairs(tb_1) do
@@ -315,11 +281,80 @@ function common:getNowEnergyLabel()
 end
 
 
---------------- 全局方法 ----------------------
-function common.showVideoListener(result)
-    print("common.showVideoListener")
-    if result=="video_success" then
-        print("common.showVideoListener".."video_success")
+--------------- 调用安卓方法 ----------------------
+-- 观看视频
+function common:javaOnVideo(luaCallFunc)
+    print("ccommon:javaOnVideo")
+    -- 观看视频
+    if device.platform == "android" then
+        local args = {
+            luaCallFunc,
+        }
+        local className = "org/cocos2dx/sdk/YoumiSDK"
+        local ok = luaj.callStaticMethod(className, "YoumiSDK_ShowVideo", args, "(I)V")
+        print("YoumiSDK_ShowVideo")
+        if not ok then
+            print("YoumiSDK_ShowVideo error")
+        end
+    end
+end
+
+-- 获取开机时间
+function common:getElapsedTime()
+    if device.platform == "android" then
+        local args = {}
+        local className = "org/cocos2dx/sdk/EyeCat"
+        local ok, _elapsedTime = luaj.callStaticMethod(className, "eye_getElapsedTime", args, "()Ljava/lang/String;")
+        print("common:getElapsedTime():",_elapsedTime)
+        if not ok then
+            return os.time()
+        else
+            return math.ceil(tonumber(_elapsedTime)/1000)
+        end
+    elseif device.platform == "windows" then
+        return os.time()
+    end
+end
+
+-- 保存统计计费点
+function common:javaSaveUserData(key,value)
+    if device.platform == "android" then
+        local args = {
+            key,
+            tostring(value),
+        }
+        local className = "org/cocos2dx/sdk/EyeCat"
+        local ok = luaj.callStaticMethod(className, "eye_saveUserData", args, "(Ljava/lang/String;Ljava/lang/String;)V")
+        print("common:javaSaveUserData")
+        if not ok then
+            print("common:javaSaveUserData error")
+        end
+    elseif device.platform == "windows" then
+        print("common:javaSaveUserData key "..key.." value "..value)
+    end
+end
+
+-- 支付
+function common:javaOnUseMoney(luaCallFunc,moneyCount)
+    local args = {
+        "jinbi",
+        moneyCount,
+        1,
+        luaCallFunc,
+        1,
+    }
+    print("BuyGoldView:buyItem")
+    if device.platform == "android" then
+        -- Java 类的名称
+        local className = "org/cocos2dx/sdk/EyeCat"
+        -- 调用 Java 方法
+        print("BuyGoldView:buyItem"..className)
+        local ok, ret = luaj.callStaticMethod(className, "wxpee", args, "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;II)V")
+        if not ok then
+            print("luaj error:", ret)
+        else
+            print("ret:", ret)
+        end
     end
 end
 

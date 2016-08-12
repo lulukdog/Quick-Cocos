@@ -468,35 +468,44 @@ function GridManager:canLinkCell( row,col )
 	return canLinkTb
 end
 -- 判断是否无可消除物块
-function GridManager:judgeNoEliminateCell( )
-	local isRefresh = false
-	for col=1,game.GRID_COLS do
-      	for row=1,game.GRID_ROWS do
-			local linkTb = self:canLinkCell(row,col)
-			if #linkTb>0 then
-				if #linkTb==1 and linkTb[1].id~=nil then
-					local _row,_col = self:getRowAndCol(linkTb[1])
-					local _linkTb = self:canLinkCell(_row,_col)
-					if #_linkTb==1 and _linkTb[1].id~=nil and linkTb[1].id==_linkTb[1].id then
-						isRefresh = true
-					end
-				else
-					return false
-				end
-			end
-		end
-	end
-	return isRefresh
-end
+-- function GridManager:judgeNoEliminateCell( )
+-- 	local isRefresh = false
+-- 	for col=1,game.GRID_COLS do
+--       	for row=1,game.GRID_ROWS do
+-- 			local linkTb = self:canLinkCell(row,col)
+-- 			if #linkTb>0 then
+-- 				if #linkTb==1 and linkTb[1].id~=nil then
+-- 					local _row,_col = self:getRowAndCol(linkTb[1])
+-- 					local _linkTb = self:canLinkCell(_row,_col)
+-- 					if #_linkTb==1 and _linkTb[1].id~=nil and linkTb[1].id==_linkTb[1].id then
+-- 						isRefresh = true
+-- 					end
+-- 				else
+-- 					return false
+-- 				end
+-- 			end
+-- 		end
+-- 	end
+-- 	return isRefresh
+-- end
 
 -- 刷新全部物块
 function GridManager:refreshAllCell( )
+	local _midPos = gridToPoint(4,4)
 	for col=1,game.GRID_COLS do
       	for row=1,game.GRID_ROWS do
       		local cell = self:find(row, col)
       		if cell and cell:isInRefreshTb() then
-      			cell.id = self:randomId()
-      			cell:refreshPic()
+      			-- 动画：向中间物块飞过去然后再飞回来
+      			local _oriPos = gridToPoint(row, col)
+      			cell:runAction(cc.Sequence:create(
+      				cc.MoveTo:create(0.3,_midPos),
+      				cc.CallFunc:create(function( )
+      					cell.id = self:randomId()
+      					cell:refreshPic()
+      				end),
+      				cc.MoveTo:create(0.3,_oriPos)
+      			))
       		end
       	end
   	end

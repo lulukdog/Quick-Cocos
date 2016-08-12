@@ -142,6 +142,7 @@ local GameConfig = {
 		energy = 1,
 		shanzhiHelper = 2,
 		rewardBox = 3,
+		winTwiceCoin = 4,
 	},
 	RMBGoldCfg = {
 		[1] = 100,

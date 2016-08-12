@@ -49,6 +49,7 @@ function GameScene:ctor()
     addMessage(self, "GAMESCENE_REFRESH_LEFTNUM",self.refreshLeftNum)
     addMessage(self, "GAMESCENE_COMBO_ANI",self.runComboAni)
     addMessage(self, "GameScene_LongLinkAni",self.longLinkAni)
+    addMessage(self, "GameScene_NoLinkTip",self.noLinkTip)
 
     addMessage(self, "GAMESCENE_REFRESH_HELPER",self.refreshHelper)
     addMessage(self, "GAMESCENE_CHANGE_FIGHTBG",self.refreshFightBg)
@@ -117,6 +118,11 @@ function GameScene:ctor()
 
     -- 统计关卡_战斗次数_胜利次数
     common:javaSaveUserData("NowStage",tostring(game.nowStage))
+end
+
+-- 没有可滑物块提示
+function GameScene:noLinkTip( )
+    MessagePopView.new(9):addTo(self)
 end
 
 -- 长连的时候背后的火焰动画
@@ -305,14 +311,14 @@ function GameScene:refreshLife()
   if self._roleLastLife~=-1 and self._roleLastLife>FightManager.lifeNum then
       local _lastPer = math.max((self._roleLastLife/FightManager:getNowRoleMaxLife())*100,0)
       _lastPer = math.min(_lastPer,100)
-      local _beginF,_endF = math.floor(100-_lastPer)+260, math.floor(100-mainRoleLifePer)+260
+      local _beginF,_endF = math.floor((100-_lastPer)*0.5)+260, math.floor((100-mainRoleLifePer)*0.5)+260
       self._mainAni:gotoFrameAndPlay(_beginF,_endF,false)
   end
   
   if self._enemyLastLife~=-1 and self._enemyLastLife>FightManager.enemyLife then
       local _lastPer = math.max((self._enemyLastLife/FightManager:getNowEnemyMaxLife())*100,0)
       _lastPer = math.min(_lastPer,100)
-      local _beginF,_endF = math.floor(100-_lastPer)+150, math.floor(100-enemyLifePer)+150
+      local _beginF,_endF = math.floor((100-_lastPer)*0.5)+150, math.floor((100-enemyLifePer)*0.5)+150
       self._mainAni:gotoFrameAndPlay(_beginF,_endF,false)
   end
   self._roleLastLife = FightManager.lifeNum -- 自己上一次的血量

@@ -7,6 +7,7 @@
 --]]
 ----------------------------------------------------------------------------------
 local GameConfig = require("data.GameConfig")
+local common = require("app.common")
 
 local BuyGoldView = class("BuyGoldView", function()
     return display.newNode()
@@ -57,28 +58,7 @@ end
 
 function BuyGoldView:buyItem(btnNum)
     local _rmbCount = GameConfig.RMBGoldCfg[btnNum]
-    local args = {
-        "jinbi",
-        _rmbCount,
-        1,
-        buyGold_callback,
-        1,
-    }
-    print("BuyGoldView:buyItem")
-    if device.platform == "android" then
-
-        -- Java 类的名称
-        local className = "org/cocos2dx/sdk/EyeCat"
-        -- 调用 Java 方法
-        print("BuyGoldView:buyItem"..className)
-        local ok, ret = luaj.callStaticMethod(className, "wxpee", args, "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;II)V")
-        if not ok then
-            print("luaj error:", ret)
-        else
-            print("ret:", ret)
-        end
-    end
-    
+    common:javaOnUseMoney(buyGold_callback,_rmbCount)
 end
 
 return BuyGoldView

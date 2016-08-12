@@ -101,18 +101,6 @@ function MapScene:ctor()
     self._boxAni = cc.CSLoader:createTimeline("RewardBoxNode.csb")
     self._boxNode:runAction(self._boxAni)
     CsbContainer:decorateBtnNoTrans(self._boxBtn, function()
-        -- 观看视频
-        if device.platform == "android" then
-            local args = {
-                common.showVideoListener,
-            }
-            local className = "org/cocos2dx/sdk/YoumiSDK"
-            local ok = luaj.callStaticMethod(className, "YoumiSDK_ShowVideo", args, "(I)V")
-            print("YoumiSDK_ShowVideo")
-            if not ok then
-                print("YoumiSDK_ShowVideo error")
-            end
-        end
         GoldBoxView.new():addTo(self)
     end)
     

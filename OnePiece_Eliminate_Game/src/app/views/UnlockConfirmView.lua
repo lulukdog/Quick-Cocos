@@ -16,6 +16,41 @@ local UnlockConfirmView = class("UnlockConfirmView", function()
     return display.newNode()
 end)
 
+function UnlockConfirmView_video( result )
+    if result=="success" then
+        common:javaSaveUserData("AdvVideo",tostring(GameConfig.AdvType.shanzhiHelper))
+        sendMessage({msg="UnlockConfirmView_buySuccess",helperNum=5})
+    else
+        MessagePopView.new(10):addTo(self)
+    end
+end
+
+function UnlockConfirm_namei( result )
+    if result == "fail" then
+        MessagePopView.new(8):addTo(self)
+    else
+        sendMessage({msg="UnlockConfirmView_buySuccess",helperNum=3})
+    end
+end
+function UnlockConfirm_qiaoba( result )
+    if result == "fail" then
+        MessagePopView.new(8):addTo(self)
+    else
+        print("UnlockConfirm_qiaobaVideo")
+        sendMessage({msg="UnlockConfirmView_buySuccess",helperNum=6})
+    end
+end
+
+function UnlockConfirmView:buyHelperSuccess(data)
+    local helperNum = data.helperNum
+    print("UnlockConfirmView:buyHelperSuccess")
+    game.helper[helperNum] = 1
+    UserDefaultUtil:saveHelperLevel()
+    sendMessage({msg="UnlockRoleView_refreshUnlockNode"})
+    sendMessage({msg="MapScene_RefreshPage"})
+    sendMessage({msg="MapScene_PushRoleGetView",_btnNum=helperNum})
+end
+
 function UnlockConfirmView:ctor(btnNum)
 
 	self._mainNode = CsbContainer:createPushCsb("UnlockConfirmView.csb"):addTo(self)
@@ -36,29 +71,17 @@ function UnlockConfirmView:ctor(btnNum)
         if game.helper[btnNum]==0 then
             -- 统计视频次数
             if btnNum==5 then
-                common:javaSaveUserData("AdvVideo",tostring(GameConfig.AdvType.shanzhiHelper))
-
-                -- 观看视频
-                if device.platform == "android" then
-                    local args = {}
-                    local className = "org/cocos2dx/sdk/TapjoySDK"
-                    local ok = luaj.callStaticMethod(className, "Tapjoy_ShowVideo", args, "()V")
-                    print("Tapjoy_ShowVideo")
-                    if not ok then
-                        print("Tapjoy_ShowVideo error")
-                    end
-                end
+                common:javaOnVideo(UnlockConfirmView_video)
+            -- 娜美
+            elseif btnNum==3 then
+                common:javaOnUseMoney(UnlockConfirm_namei,100)
+            -- 乔巴
+            elseif btnNum==6 then
+                common:javaOnUseMoney(UnlockConfirm_qiaoba,100)
             end
-
-            game.helper[btnNum] = 1
-            UserDefaultUtil:saveHelperLevel()
-            sendMessage({msg="UnlockRoleView_refreshUnlockNode"})
-            sendMessage({msg="MapScene_RefreshPage"})
-
-            -- 弹出人物获得页面
-            RoleGetPushView.new(btnNum):addTo(self:getParent())
-            
-
+            if device.platform == "windows" then
+                sendMessage({msg="UnlockConfirmView_buySuccess",helperNum=btnNum})
+            end
             self:removeFromParent()
             self._mainNode = nil
         end
@@ -67,6 +90,9 @@ function UnlockConfirmView:ctor(btnNum)
         CsbContainer:refreshBtnView(confirmBtn, "kanshipin_btn.png", "kanshipin_btn.png")
     end
 
+    addMessage(self, "UnlockConfirmView_buySuccess", self.buyHelperSuccess)
 end
+
+
 
 return UnlockConfirmView

@@ -430,7 +430,7 @@ function FightView:enemyAni(data)
 						self:addEnemy(nowEnemyCsb)
 						FightManager:changeFightBg()
 						sendMessage({msg ="GAMESCENE_ENABLE"})
-					end, 0.4)
+					end, 0.2)
 				else
 					FightManager:refreshRoundAndLife()
 					-- 战斗胜利计算星星数和获得经验

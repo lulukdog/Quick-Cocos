@@ -15,10 +15,18 @@ local BattleWinView = class("BattleWinView", function()
     return display.newNode()
 end)
 
+function BattleWin_Video( result )
+	if result=="success" then
+		sendMessage({msg="BattleWinView_VideoSuccess"})
+    else
+        MessagePopView.new(10):addTo(self)
+    end
+end
+
 function BattleWinView:ctor()
 
-	self._mainNode = CsbContainer:createPushCsb("WinPopPage.csb"):addTo(self)
-	self._mainAni = cc.CSLoader:createTimeline("WinPopPage.csb")
+	self._mainNode = CsbContainer:createPushCsb("WinPopPage_NoShare.csb"):addTo(self)
+	self._mainAni = cc.CSLoader:createTimeline("WinPopPage_NoShare.csb")
 	self._mainNode:runAction(self._mainAni)
 	local starAni = GameConfig.WinAniFrame["star"..FightManager.starNum]
 	self._mainAni:gotoFrameAndPlay(1,starAni.firstEnd,false)
@@ -45,15 +53,20 @@ function BattleWinView:ctor()
 		-- 失败权重清0
 		game.stageLoseTimes[game.nowStage] = 0
 		
+		removeMessageByTarget(self)
 		app:enterScene("MapScene", nil, "fade", 0.6, display.COLOR_WHITE)
 	end)
 
 	local advBtn = cc.uiloader:seekNodeByName(self._mainNode,"mViewAdvBtn")
 	CsbContainer:decorateBtn(advBtn,function()
 		print("view adv")
-		advBtn:setEnabled(false)
-		CsbContainer:setStringForLabel(self._mainNode, {mGoldLabel = "+"..(FightManager.winGold*2)})
-		game.myGold = game.myGold + FightManager.winGold
+		common:javaOnVideo(BattleWin_Video)
+		if device.platform == "windows" then
+			cc.uiloader:seekNodeByName(self._mainNode,"mViewAdvBtn"):setEnabled(false)
+			CsbContainer:setStringForLabel(self._mainNode, {mGoldLabel = "+"..(FightManager.winGold*2)})
+			game.myGold = game.myGold + FightManager.winGold
+			UserDefaultUtil:saveGold()
+		end
 	end)
 	
 	CsbContainer:setNodesVisible(self._mainNode, {
@@ -71,6 +84,19 @@ function BattleWinView:ctor()
 
 	-- 统计关卡_战斗次数_胜利次数
 	common:javaSaveUserData("BattleWin",tostring(game.nowStage))
+
+	addMessage(self, "BattleWinView_VideoSuccess", self.videoSuccess)
+end
+
+-- 观看视频成功的回调
+function BattleWinView:videoSuccess()
+	-- 统计视频次数
+	common:javaSaveUserData("AdvVideo",tostring(GameConfig.AdvType.winTwiceCoin))
+	
+   	cc.uiloader:seekNodeByName(self._mainNode,"mViewAdvBtn"):setEnabled(false)
+	CsbContainer:setStringForLabel(self._mainNode, {mGoldLabel = "+"..(FightManager.winGold*2)})
+	game.myGold = game.myGold + FightManager.winGold
+	UserDefaultUtil:saveGold()
 end
 
 return BattleWinView
