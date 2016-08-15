@@ -92,9 +92,9 @@ end
 function BattleWinView:videoSuccess()
 	-- 统计视频次数
 	common:javaSaveUserData("AdvVideo",tostring(GameConfig.AdvType.winTwiceCoin))
-	
    	cc.uiloader:seekNodeByName(self._mainNode,"mViewAdvBtn"):setEnabled(false)
 	CsbContainer:setStringForLabel(self._mainNode, {mGoldLabel = "+"..(FightManager.winGold*2)})
+	CsbContainer:setColorForNodes(self._mainNode, {mGoldLabel = cc.c3b(255, 0, 0)})
 	game.myGold = game.myGold + FightManager.winGold
 	UserDefaultUtil:saveGold()
 end

@@ -77,6 +77,8 @@ function GuideView:onGuide()
         elseif game.guideStep==7 then
             local _maskNode = cc.uiloader:seekNodeByName(self._mainNode, "mMaskNode")
             _maskNode:setPosition(106*2,0)
+            local _dialogNode = cc.uiloader:seekNodeByName(self._mainNode, "mDialogNode")
+            _dialogNode:setPosition(-200,-100)
         end
         if game.guideStep==5 or game.guideStep==7 then
             _ani:gotoFrameAndPlay(0,60,true)

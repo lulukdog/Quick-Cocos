@@ -56,6 +56,8 @@ function GameScene:ctor()
 
     addMessage(self, "GAMESCENE_ENABLE",self.gameEnable)
     addMessage(self, "GAMESCENE_DISABLE",self.gameDisable)
+    addMessage(self, "GameScene_PauseEnable",self.pauseEnable)
+    addMessage(self, "GameScene_PauseDisable",self.pauseDisable)
 
     addMessage(self, "StoryView_Exit",self.storyViewExit)
 
@@ -367,6 +369,18 @@ end
 function GameScene:gameDisable()
     CsbContainer:setNodesVisible(self._mainNode, {
         mNotouch = true,
+        mNotouch2 = true,
+    })
+end
+
+-- 遮住暂停按钮防止bug
+function GameScene:pauseEnable()
+    CsbContainer:setNodesVisible(self._mainNode, {
+        mNotouch2 = false,
+    })
+end
+function GameScene:pauseDisable()
+    CsbContainer:setNodesVisible(self._mainNode, {
         mNotouch2 = true,
     })
 end

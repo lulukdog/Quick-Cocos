@@ -292,6 +292,8 @@ function BoardView:onTouchEvent(event)
     if event.name == "began" then
 
         if cell then
+            -- 防止bug
+            sendMessage({msg="GameScene_PauseDisable"})
             -- print("BoardView:onTouchEvent began cell id "..cell.id)
             -- 不可点击的障碍物
             if cell:canClick()==false then
@@ -380,7 +382,8 @@ function BoardView:onTouchEvent(event)
         sendMessage({msg="FIGHTVIEW_CELL_ANI",cellId=cell.id,count=table.nums(self.linkData)})
 
     elseif event.name == "ended" then
-
+        -- 防止bug
+        sendMessage({msg="GameScene_PauseEnable"})
         -- 点击爆炸物
         if cell and cell:isBomb() and cell:getBombTouching() then
             self.gridMgr:bombCross(cell)

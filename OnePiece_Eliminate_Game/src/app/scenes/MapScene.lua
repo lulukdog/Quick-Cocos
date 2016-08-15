@@ -155,6 +155,10 @@ function MapScene:ctor()
 
     -- 播放音效
     GameUtil_PlayMusic(GAME_MUSIC.bgMusic)
+
+    -- 从后台回来刷新宝箱时间
+    self._foregroundListener = cc.EventListenerCustom:create(app.APP_ENTER_FOREGROUND_EVENT,handler(self, self.onEnterForeground))
+    cc.Director:getInstance():getEventDispatcher():addEventListenerWithFixedPriority(self._foregroundListener, 1)
 end
 
 function MapScene:refreshBoxState()
@@ -506,12 +510,22 @@ function MapScene:addWaveAni( addNode,addNum )
     end
 end
 
+-- 从后台回来调用，刷新时间
+function MapScene:onEnterForeground()
+    local elapsedTime,countTime = UserDefaultUtil:GetBoxLeftTime()
+    print("MapScene:onEnterForeground elapsedTime,countTime"..common:getElapsedTime()..","..elapsedTime..","..countTime)
+    local diffTime = math.max((common:getElapsedTime() - elapsedTime),0)
+    game.boxLeftTime = math.max((countTime-diffTime),0)
+    self:countBoxTime()
+end
+
 function MapScene:onExit()
     print("MapScene:onExit")
     removeMessageByTarget(self)
     scheduler.unscheduleGlobal(self._stageScheduler)
     scheduler.unscheduleGlobal(self._birdScheduler)
     scheduler.unscheduleGlobal(self.timeBoxHandler)
+    cc.Director:getInstance():getEventDispatcher():removeEventListener(self._foregroundListener)
     if self._moveScheduler~=nil then
         scheduler.unscheduleGlobal(self._moveScheduler)
     end

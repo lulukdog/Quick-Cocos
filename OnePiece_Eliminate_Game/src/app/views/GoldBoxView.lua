@@ -24,7 +24,7 @@ function GoldBoxView:ctor()
         -- 统计视频次数
         common:javaSaveUserData("AdvVideo",tostring(GameConfig.AdvType.rewardBox))
 
-        game.boxLeftTime = 10
+        game.boxLeftTime = game.boxRewardTime
         UserDefaultUtil:SaveBoxLeftTime()
         game.myGold = game.myGold+_boxGold
         sendMessage({msg="REFRESHGOLD"})

@@ -65,6 +65,4 @@ function MyApp:run()
     self:enterScene("LoadingScene")
 end
 
-
-
 return MyApp
