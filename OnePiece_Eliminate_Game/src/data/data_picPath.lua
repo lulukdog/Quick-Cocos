@@ -30,6 +30,10 @@ local picPath = {
 	"RoleDetailView/xingguang1.png",
 	"RoleDetailView/xingguang2.png",
 	"RoleDetailView/xingguang3.png",
+
+	"GoldBoxView/jinbilingqu_bg.png",
+	"GoldBoxView/lingqu_btn.png",
+	"GoldBoxView/lingqu_p_btn.png",
 }
 
 return picPath

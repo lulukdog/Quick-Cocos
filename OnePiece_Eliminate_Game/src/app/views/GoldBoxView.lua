@@ -23,18 +23,16 @@ function GoldBoxView:ctor()
 	CsbContainer:decorateBtn(getBtn,function()
         -- 统计视频次数
         common:javaSaveUserData("AdvVideo",tostring(GameConfig.AdvType.rewardBox))
-
         game.boxLeftTime = game.boxRewardTime
         UserDefaultUtil:SaveBoxLeftTime()
         game.myGold = game.myGold+_boxGold
         sendMessage({msg="REFRESHGOLD"})
         sendMessage({msg="MapScene_getBoxReward"})
-		self:removeFromParent()
-		self._mainNode = nil
+        self:removeFromParent()
+        self._mainNode = nil
 	end)
 
     CsbContainer:setStringForLabel(self._mainNode, {mGoldLabel=_boxGold})
-
 end
 
 return GoldBoxView

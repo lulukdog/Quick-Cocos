@@ -143,6 +143,7 @@ local GameConfig = {
 		shanzhiHelper = 2,
 		rewardBox = 3,
 		winTwiceCoin = 4,
+		loseHalfRebirth = 5,
 	},
 	RMBGoldCfg = {
 		[1] = 100,

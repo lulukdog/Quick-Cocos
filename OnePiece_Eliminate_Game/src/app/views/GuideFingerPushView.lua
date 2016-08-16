@@ -53,6 +53,8 @@ function GuideFingerPushView:onGuide()
         self._guideNode:setPosition(-116,180)
     elseif game.guideStep==12 then
         self._guideNode:setPosition(100,-430)
+        local _dialogNode = cc.uiloader:seekNodeByName(self._mainNode, "mDialogNode")
+        _dialogNode:setPosition(-150,-50)
     elseif game.guideStep==14 then
         local _fingerSprite = cc.uiloader:seekNodeByName(self._mainNode, "mFingerSprite")
         _fingerSprite:setPositionY(-80)
@@ -63,6 +65,8 @@ function GuideFingerPushView:onGuide()
         UserDefaultUtil:saveGold()
     elseif game.guideStep==15 then
         self._guideNode:setPosition(80,-510)
+        local _dialogNode = cc.uiloader:seekNodeByName(self._mainNode, "mDialogNode")
+        _dialogNode:setPosition(-100,-50)
     elseif game.guideStep==16 then
         local size = fitScreenSize(cc.size(200,50))
         self._mainNode:setPosition(size.width,size.height)

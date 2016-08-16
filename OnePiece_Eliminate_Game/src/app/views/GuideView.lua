@@ -90,6 +90,7 @@ function GuideView:onGuide()
             mCollectNode = true,
             mPointToCollect = true
         })
+        _ani:gotoFrameAndPlay(80,160,true)
     else
         self:onExit()
     end

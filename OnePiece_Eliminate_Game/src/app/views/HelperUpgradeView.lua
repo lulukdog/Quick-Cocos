@@ -31,6 +31,11 @@ function HelperUpgradeView:ctor(roleNum)
 		self._mainNode = nil
 	end)
 
+    -- 如果是路飞不显示直接伤害
+    if roleNum == 1 then
+        cc.uiloader:seekNodeByName(self._mainNode, "mDirectNode"):setVisible(false)
+    end
+
     local level = game.helper[roleNum]
     local directLabel = skillCfg[level]["skill"..roleNum] or ""
     CsbContainer:setStringForLabel(self._mainNode, {

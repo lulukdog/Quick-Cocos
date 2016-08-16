@@ -49,7 +49,7 @@ game.myEnergy = 50 -- 自己的体力值
 game.countTime = 0 -- 恢复满体力剩余时间（秒）
 game.count50EnergyTime = 0 -- 购买50体力倒计时
 game.energy50Time = 1800 -- 50体力购买恢复时间
-game.addOneEnergyTime = 1200 -- 体力涨1需要的间隔时间
+game.addOneEnergyTime = 300 -- 体力涨1需要的间隔时间
 game.stageStars={} --每关对应的星星数
 game.stageMaxScore = {}--每关对应的最高分
 game.getScores = 0 -- 当前关卡获得的积分数
@@ -58,6 +58,7 @@ game.guideStep = 1 --当前引导步数
 game.firstEnterGame = true --第一次进入游戏直接跳转到关卡不去地图
 game.boxLeftTime = 0 --每次开启宝箱的剩余时间
 game.boxRewardTime = 6*3600 --开启宝箱的间隔时间
+game.usedHalfRebirth = false --是否已使用了看视频回半血
 
 game.MusicOn = true
 game.SoundOn = true

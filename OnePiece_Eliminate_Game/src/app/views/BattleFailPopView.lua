@@ -9,10 +9,21 @@
 local FightManager = require("app.game.FightManager")
 local stageCfg = require("data.data_stage")
 local common = require("app.common")
+local GameConfig = require("data.GameConfig")
 
 local BattleFailPopView = class("BattleFailPopView", function()
     return display.newNode()
 end)
+
+function BattleFail_Video(result)
+    print("BattleFail_Video")
+    if result=="success" then
+        print("BattleFail_Video success")
+        -- 统计视频次数
+        common:javaSaveUserData("AdvVideo",tostring(GameConfig.AdvType.loseHalfRebirth))
+        sendMessage({msg="BattleFailPopView_halfRebirth"})
+    end
+end
 
 function BattleFailPopView:ctor()
 
@@ -26,7 +37,7 @@ function BattleFailPopView:ctor()
 
     local halfRebirtBtn = cc.uiloader:seekNodeByName(self._mainNode,"mHalfRebirthBtn")
     CsbContainer:decorateBtn(halfRebirtBtn,function()
-        self:onRebirthBtn(0.5)
+        common:javaOnVideo(BattleFail_Video)
     end)
 
     local allRebirthBtn = cc.uiloader:seekNodeByName(self._mainNode,"mAllRebirthBtn")
@@ -42,12 +53,21 @@ function BattleFailPopView:ctor()
     CsbContainer:setStringForLabel(self._mainNode, {
         mRebirtGoldLabel = stageCfg[game.nowStage].rebirthGold
     })
+    CsbContainer:setNodesVisible(self._mainNode, {mHalfNode = game.usedHalfRebirth==false})
+    addMessage(self, "BattleFailPopView_halfRebirth", self.onVideoSuccess)
+end
+
+function BattleFailPopView:onVideoSuccess()
+    print("BattleFailPopView:onVideoSuccess")
+    game.usedHalfRebirth = true
+    self:onRebirthBtn(0.5)
 end
 
 function BattleFailPopView:onRebirthBtn( per )
     common:javaSaveUserData("Rebirth",tostring(per))
     FightManager:setRoleLifePercent(per)
     sendMessage({msg="GAMESCENE_REFRESH_LIFE"})
+    removeMessageByTarget(self)
     self:removeFromParent()
     self._mainNode = nil
 end

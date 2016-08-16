@@ -101,14 +101,10 @@ function MapScene:ctor()
     self._boxAni = cc.CSLoader:createTimeline("RewardBoxNode.csb")
     self._boxNode:runAction(self._boxAni)
     CsbContainer:decorateBtnNoTrans(self._boxBtn, function()
+        common:javaOnVideo(GoldBoxView_video)
         GoldBoxView.new():addTo(self)
     end)
-    
 
-    -- self._boxBtn = cc.uiloader:seekNodeByName(self._mainNode,"mBoxBtn")
-    -- CsbContainer:decorateBtnNoTrans(self._boxBtn,function()
-    --     GoldBoxView.new():addTo(self)
-    -- end)
     -- 宝箱上的剩余时间
     self:refreshBoxState()
     self.timeBoxHandler = scheduler.scheduleGlobal(function()

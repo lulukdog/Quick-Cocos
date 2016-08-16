@@ -86,7 +86,10 @@ function GameUtil_resetMusic()
 end
 
 function GameUtil_PlayMusic(musicName,isLoop)
-    local _loop = isLoop and isLoop or true
+    local _loop = true
+    if isLoop~=nil then
+        _loop = isLoop
+    end
     if game.MusicOn==true then
         audio.playMusic(musicName,_loop)
     else

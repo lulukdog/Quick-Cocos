@@ -28,6 +28,7 @@ function FightManager:init()
 	self.highestScore = 0 -- 当前关卡最高分
 	self.roundSum = 0 -- 总回合数，计算最后积分加成用
 	game.getScores = 0
+	game.usedHalfRebirth = false -- 开始战斗的时候本局是还没有使用复活的
 
 	self.in_dun_skill = 0 -- 盾的技能持续4回合，是否在4回合内的判断标志
 	self._skillDefNum = 0 -- 使用盾的技能增加的防御值
@@ -35,6 +36,7 @@ function FightManager:init()
 	self._onceRoleHarm = 0 --主角此次被打伤害
 	self._onceEnemyHarm = 0 -- 敌人此次被打伤害
 	self._onceRoleMeat = 0 -- 主角此次加血值
+	self._battleWin = false -- 收集足够后，胜利，敌人不攻击
 
 	game.collectNum = 0
 	
@@ -101,6 +103,10 @@ function FightManager:judgeEnemyAttack( )
 	-- 如果打死一个怪了
 	if self.enemyLife==0 then
 		self.round=0
+		return false
+	end
+	--收集足够后，胜利，敌人不攻击
+	if self._battleWin==true then
 		return false
 	end
 
@@ -331,6 +337,7 @@ function FightManager:judgeWin()
 		-- 收集物
 		if v.id==2 and game.collectNum==v.count then
 			self:calStarAndExp()
+			self._battleWin = true
 			sendMessage({msg="WIN"})
 		end
 	end

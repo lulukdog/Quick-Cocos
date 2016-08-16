@@ -20,21 +20,19 @@ function UnlockConfirmView_video( result )
     if result=="success" then
         common:javaSaveUserData("AdvVideo",tostring(GameConfig.AdvType.shanzhiHelper))
         sendMessage({msg="UnlockConfirmView_buySuccess",helperNum=5})
-    else
-        MessagePopView.new(10):addTo(self)
     end
 end
 
 function UnlockConfirm_namei( result )
     if result == "fail" then
-        MessagePopView.new(8):addTo(self)
+        print("UnlockConfirm namei fail")
     else
         sendMessage({msg="UnlockConfirmView_buySuccess",helperNum=3})
     end
 end
 function UnlockConfirm_qiaoba( result )
     if result == "fail" then
-        MessagePopView.new(8):addTo(self)
+        print("UnlockConfirm qiaoba fail")
     else
         print("UnlockConfirm_qiaobaVideo")
         sendMessage({msg="UnlockConfirmView_buySuccess",helperNum=6})
