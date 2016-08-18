@@ -126,12 +126,12 @@ local GameConfig = {
 		[3] = "pic/attr_juzi.png",
 		[4] = "pic/attr_dangong.png",
 	},
-	-- 无限体力文字说明
-	BuyInfEnergyLabel = "是否购买无限体力",
+	-- 无限能量文字说明
+	BuyInfEnergyLabel = "是否购买无限能量",
 	-- 金币不足购买金币
 	NotEnoughGold = "金币不足请购买金币",
-	-- 体力不足购买体力
-	NotEnoughEnergy = "体力不足请购买体力",
+	-- 能量不足购买能量
+	NotEnoughEnergy = "能量不足请购买能量",
 	HelperUpgradeCfg = {
 		attackDirect = "zish.png",
 		attackLink = "scsh.png",

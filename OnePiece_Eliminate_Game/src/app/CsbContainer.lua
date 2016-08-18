@@ -66,10 +66,10 @@ function CsbContainer:createLoadingCsb( filename )
 	if _node then
 		_node:setPosition(display.cx,display.cy)
 		_node:setAnchorPoint(cc.p(0.5,0.5))
-		if display.right>=750 then
+		if display.right>=720 then
 			_node:setScale(display.right/1080)
 		else 
-			_node:setScale(0.55)
+			_node:setScale(display.top/1920)
 		end
 	end
 	return _node

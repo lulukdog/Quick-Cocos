@@ -102,6 +102,19 @@ function GridManager:del(row,col)
 		self.data_[index] = game.CELL_TYPE_UNKNOWN
 	end
 end
+
+function GridManager:delBombSkillAll(row,col)
+	local index = (row - 1) * game.GRID_COLS + col
+	if self.data_[index] and self.data_[index]~=game.CELL_TYPE_UNKNOWN then
+		-- 判断对周围有生命的cell的影响
+		self:affectAroundCell(row,col)
+		-- 播消失的动画
+		self.data_[index]:playSkillBombDisappearAllAni()
+		--print(string.format("row===%d,col======%d,index=========%d", row,col,index))
+		self.data_[index] = game.CELL_TYPE_UNKNOWN
+	end
+end
+
 -- 从gridManager里删除收集物
 function GridManager:delCollector(row,col)
 	local index = (row - 1) * game.GRID_COLS + col
@@ -572,24 +585,31 @@ function GridManager:cancelHightLight()
       	end
   	end
 end
--- 收集收集物
-function GridManager:collectCell()
-	local row = 1
-	for col=1,game.GRID_COLS do
-		local _cell = self:find(row,col)
-		-- 改cell是收集物
-		if _cell and _cell.id==stageCfg[game.nowStage].collectId then
-			self:delCollector(row, col)
-            game.getScores = game.getScores + _cell:getScore()
-			_cell:removeFromParent()
-			
-			game.collectNum = game.collectNum + 1
-			sendMessage({msg="GAMESCENE_REFRESH_LEFTNUM"})
-			FightManager:judgeWin()
-			return true
-		end
+-- 收集物cell操作
+function GridManager:cellCollected(row,col)
+	local _cell = self:find(row,col)
+	-- 改cell是收集物
+	if _cell and _cell.id==stageCfg[game.nowStage].collectId then
+		self:delCollector(row, col)
+	    game.getScores = game.getScores + _cell:getScore()
+		_cell:removeFromParent()
+		
+		game.collectNum = game.collectNum + 1
+		sendMessage({msg="GAMESCENE_REFRESH_LEFTNUM"})
+		FightManager:judgeWin()
+		return true
 	end
 	return false
+end
+-- 收集收集物
+function GridManager:collectCell()
+	local row,_hasCollectCell = 1,false
+	for col=1,game.GRID_COLS do
+		if self:cellCollected(row,col) == true then
+			_hasCollectCell = true
+		end
+	end
+	return _hasCollectCell
 end
 
 -- 物块扫光
@@ -615,6 +635,27 @@ function GridManager:bombBlink()
       		end
       	end
   	end
+end
+
+-- 炸弹技能，摧毁所有物块
+function GridManager:skillBombAll()
+	local cellIdTb = {}
+	for col=1,game.GRID_COLS do
+      	for row=1,game.GRID_ROWS do
+      		local _cell = self:find(row, col)
+      		if _cell then 
+	      		if  _cell.id==stageCfg[game.nowStage].collectId then
+	      			self:cellCollected(row, col)
+	      		elseif _cell:isInRefreshTb() then
+	      			self:delBombSkillAll(row, col)
+	      			table.insert(cellIdTb,_cell.id)
+	      		end
+	      	end
+      	end
+  	end
+  	self:refreshAffectCell()
+  	FightManager:calActNum( cellIdTb )
+  	self:runBombRoleAni(cellIdTb)
 end
 
 return GridManager

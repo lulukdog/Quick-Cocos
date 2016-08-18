@@ -43,7 +43,7 @@ function BoardView:ctor(gameOverCallback)
   self._hintCount=0 --操作之后的倒计时
   self._isInhint = false --当前是否在提示中，方式不断添加提示线
   self._hintHanlder = scheduler.scheduleGlobal(function( )
-    self._hintCount = self._hintCount + 3
+  self._hintCount = self._hintCount + 3
     
     -- 6秒没有操作的话添加扫光
     if self._hintCount>=6 then
@@ -74,7 +74,7 @@ function BoardView:createCell()
           local cellId = self.gridMgr:initCellId(j,i)
           self:addCell(j,i,cellId)
       end
-   end
+  end
 end
 
 function BoardView:addCell(row, col, id, initPoint)
@@ -450,6 +450,14 @@ end
 
 function BoardView:gameResume()
   self.boardLayer:setTouchEnabled(true)
+end
+
+-- 祭出大招，超级大炸弹，除了铁块之外全都给我爆掉
+function BoardView:onSkillBombAll( )
+  self._hintCount = 0
+  self.chainLayer:removeAllChain()
+  self.gridMgr:skillBombAll()
+  self:cellDropFill()
 end
 
 function BoardView:onExit()

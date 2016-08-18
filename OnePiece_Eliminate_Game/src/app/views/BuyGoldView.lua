@@ -40,6 +40,7 @@ function BuyGoldView:buyGold( btnNum )
         game.myGold = game.myGold + GameConfig.GoldTb[btnNum]
         UserDefaultUtil:saveGold()
         sendMessage({msg="REFRESHGOLD"})
+        sendMessage({msg="SelectHelperView_refreshGold",gold=GameConfig.GoldTb[btnNum]})
     end
 end
 
@@ -53,6 +54,7 @@ function buyGold_callback(result)
         game.myGold = game.myGold + GameConfig.BuyGoldCfg[tonumber(result)/100]
         UserDefaultUtil:saveGold()
         sendMessage({msg="REFRESHGOLD"})
+        sendMessage({msg="SelectHelperView_refreshGold",gold=GameConfig.BuyGoldCfg[tonumber(result)/100]})
     end
 end
 

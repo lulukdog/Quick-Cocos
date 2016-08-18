@@ -61,6 +61,7 @@ function BattleWinView:ctor()
 	CsbContainer:decorateBtn(advBtn,function()
 		print("view adv")
 		common:javaOnVideo(BattleWin_Video)
+		game.needPlayAd = false
 		if device.platform == "windows" then
 			cc.uiloader:seekNodeByName(self._mainNode,"mViewAdvBtn"):setEnabled(false)
 			CsbContainer:setStringForLabel(self._mainNode, {mGoldLabel = "+"..(FightManager.winGold*2)})

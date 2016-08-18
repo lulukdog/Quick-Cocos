@@ -68,7 +68,7 @@ local data_story = {
 [12] ={
 	id = 12,
 	pic = "wusuopuStory.png",
-	dialog = "大伙儿，不好了海盗进村了！乌索普海贼团冲锋！",
+	dialog = "大伙儿，不好了海盗进村了！\n乌索普海贼团冲锋！",
 	pos = 2
 },
 [13] ={

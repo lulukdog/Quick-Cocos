@@ -120,6 +120,8 @@ function GameScene:ctor()
 
     -- 统计关卡_战斗次数_胜利次数
     common:javaSaveUserData("NowStage",tostring(game.nowStage))
+
+    game.needPlayAd = true
 end
 
 -- 没有可滑物块提示
@@ -282,7 +284,11 @@ end
 
 -- 角色帮助按钮
 function GameScene:onHelper( btnNum )
-  --TODO
+  -- 冻结3回合技能
+  -- game.skillFreezeRound = game.FREEZEROUND
+  -- 炸弹技能
+  -- self.boardView:onSkillBombAll()
+
   print("GameScene:onHelper call helper to fight")
   FightManager:calHelperNum( btnNum )
   FightManager:runHelperAni( btnNum )

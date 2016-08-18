@@ -109,7 +109,6 @@ end
 
 -- 防御状态被打不出现被打动画
 function FightView:calRoleBeat()
-	sendMessage({msg="GAMESCENE_REFRESH_LIFE"})
 	if FightManager.lifeNum==0 then
 		sendMessage({msg = "MAIN_ROLE",aniStr = "die"})
 		return
@@ -140,14 +139,19 @@ function FightView:mainRoleAni(data)
 			cc.CallFunc:create(function()
 				print("role's def is "..FightManager.defNum)
 				if FightManager:judgeEnemyAttack()==false then
+					FightManager:refreshRoundAndLife()
 					FightManager:calDun2Skill()
 				end
-				sendMessage({msg="GAMESCENE_REFRESH_LIFE"})
+				-- sendMessage({msg="GAMESCENE_REFRESH_LIFE"})
 				if FightManager.in_dun_skill==0 then
 					self._mainRoleAni:gotoFrameAndPlay(GameConfig.MainRole[aniStr].frameBegin,GameConfig.MainRole[aniStr].frameEnd,true)
 					self._isInShield = true
-				end
+				end				
 			end)
+			-- cc.DelayTime:create((GameConfig.MainRole[aniStr].frameEnd-GameConfig.MainRole[aniStr].frameBegin)/GAME_FRAME_RATE),
+			-- cc.CallFunc:create(function()
+			-- 	FightManager:refreshRoundAndLife()
+			-- end)
 		))
 	elseif aniStr=="shield2" then
 		self._mainRoleNode:runAction(cc.Sequence:create(
@@ -194,6 +198,7 @@ function FightView:mainRoleAni(data)
 			cc.CallFunc:create(function()
 				if FightManager:judgeEnemyAttack()==false then
 					FightManager:calDun2Skill()
+					FightManager:refreshRoundAndLife()
 				end
 				-- print(" attack stand")
 				self:judgeStandOrShield2()
@@ -215,6 +220,7 @@ function FightView:mainRoleAni(data)
 			cc.CallFunc:create(function()
 				if FightManager:judgeEnemyAttack()==false then
 					FightManager:calDun2Skill()
+					FightManager:refreshRoundAndLife()
 				end
 				-- print(" attack stand")
 				self:judgeStandOrShield2()
@@ -234,6 +240,7 @@ function FightView:mainRoleAni(data)
 				sendMessage({msg="GAMESCENE_REFRESH_LIFE"})
 				if FightManager:judgeEnemyAttack()==false then
 					FightManager:calDun2Skill()
+					FightManager:refreshRoundAndLife()
 				end
 				-- print("meat stand")
 				self:judgeStandOrShield2()
@@ -241,13 +248,18 @@ function FightView:mainRoleAni(data)
 		))
 	elseif aniStr=="beat" then
 		if self._isInShield == true or FightManager.in_dun_skill>0 then
-			-- 播放破防动画
-			if FightManager._onceRoleHarm>0 and FightManager.in_dun_skill==0 then
-				sendMessage({msg = "MAIN_ROLE",aniStr = "shieldBroken"})
-			elseif FightManager._onceRoleHarm>0 and FightManager.in_dun_skill>0 then
-				sendMessage({msg = "MAIN_ROLE",aniStr = "shieldBroken2"})
-			end
-			self:calRoleBeat()
+			self._mainRoleNode:runAction(cc.Sequence:create(
+				cc.DelayTime:create(0.55),
+				cc.CallFunc:create(function()
+					-- 播放破防动画
+					if FightManager._onceRoleHarm>0 and FightManager.in_dun_skill==0 then
+						sendMessage({msg = "MAIN_ROLE",aniStr = "shieldBroken"})
+					elseif FightManager._onceRoleHarm>0 and FightManager.in_dun_skill>0 then
+						sendMessage({msg = "MAIN_ROLE",aniStr = "shieldBroken2"})
+					end
+					self:calRoleBeat()
+				end)
+			))
 		else
 			self._mainRoleNode:runAction(cc.Sequence:create(
 				cc.DelayTime:create(0.55),
@@ -323,7 +335,9 @@ function FightView:mainRoleComboAni(data)
 		cc.DelayTime:create(_delayTime),
 		cc.CallFunc:create(function()
 			-- print("combo stand")
-			FightManager:judgeEnemyAttack()
+			if FightManager:judgeEnemyAttack()==false then
+				FightManager:refreshRoundAndLife()
+			end
 			FightManager:calDun2Skill()
 			self:judgeStandOrShield2()
 		end)
@@ -358,7 +372,8 @@ function FightView:enemyAni(data)
 			end),
 			cc.DelayTime:create((GameConfig.Enemy[aniStr].frameEnd-GameConfig.Enemy[aniStr].frameBegin)/GAME_FRAME_RATE),
 			cc.CallFunc:create(function()
-				-- sendMessage({msg ="MAIN_ROLE",aniStr = "stand"})
+				sendMessage({msg ="MAIN_ROLE",aniStr = "stand"})
+				FightManager:refreshRoundAndLife()
 				self._enemyAni:gotoFrameAndPlay(GameConfig.Enemy.stand.frameBegin,GameConfig.Enemy.stand.frameEnd,true)
 			end)
 		))
@@ -372,8 +387,8 @@ function FightView:enemyAni(data)
 			end),
 			cc.DelayTime:create((GameConfig.Enemy[aniStr].frameEnd-GameConfig.Enemy[aniStr].frameBegin)/GAME_FRAME_RATE),
 			cc.CallFunc:create(function()
-				sendMessage({msg="GAMESCENE_REFRESH_LIFE"})
 				FightManager:resetAttackNum()
+				sendMessage({msg="GAMESCENE_REFRESH_LIFE"})
 				if FightManager.enemyLife==0 then
 					sendMessage({msg = "ENEMY_ROLE",aniStr = "die"})
 					return
@@ -398,8 +413,8 @@ function FightView:enemyAni(data)
 			end),
 			cc.DelayTime:create((GameConfig.Enemy[aniStr].frameEnd-GameConfig.Enemy[aniStr].frameBegin)/GAME_FRAME_RATE),
 			cc.CallFunc:create(function()
-				sendMessage({msg="GAMESCENE_REFRESH_LIFE"})
 				FightManager:resetAttackNum()
+				sendMessage({msg="GAMESCENE_REFRESH_LIFE"})
 				if FightManager.enemyLife==0 then
 					sendMessage({msg = "ENEMY_ROLE",aniStr = "die"})
 					return

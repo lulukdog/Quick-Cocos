@@ -69,6 +69,12 @@ end
 
 function buyEnergy_video( result )
     if result=="success" then
+        game.myEnergy = game.myEnergy + 50
+        game.countTime = math.max(0,game.countTime-50*game.addOneEnergyTime)
+        UserDefaultUtil:SaveEnergy()
+        sendMessage({msg="Refresh_Energy"})
+        sendMessage({msg="BuyEnergyView_refreshTime"})
+
         game.count50EnergyTime = game.energy50Time
         UserDefaultUtil:Save50EnergyCount()
         sendMessage({msg="BuyEnergyView_countTime"})

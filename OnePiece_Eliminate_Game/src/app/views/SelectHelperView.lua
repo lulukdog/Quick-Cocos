@@ -9,6 +9,7 @@
 local GuideFingerPushView = import(".GuideFingerPushView")
 local CommonConfirmView = import(".CommonConfirmView")
 local BuyEnergyView = import(".BuyEnergyView")
+local BuyGoldView = import(".BuyGoldView")
 
 local GameConfig = require("data.GameConfig")
 local helperCfg = require("data.data_helper")
@@ -137,6 +138,14 @@ function SelectHelperView:ctor(isFromBattlePage)
 	-- 自己的金币数
 	self._myGold = game.myGold
 	self:refreshPage()
+
+	addMessage(self, "SelectHelperView_refreshGold", self.refreshGold)
+end
+
+function SelectHelperView:refreshGold(data)
+	local _gold = data.gold
+	self._myGold = self._myGold + _gold
+	self:refreshPage()
 end
 
 function SelectHelperView:refreshPage()
@@ -232,7 +241,10 @@ function SelectHelperView:onFightOrCancel( btnNum,isCancel )
 			self._myGold = self._myGold - _useCost
 			self:refreshPage()
 		else
-			MessagePopView.new(2):addTo(self)
+			-- MessagePopView.new(2):addTo(self)
+			CommonConfirmView.new(GameConfig.NotEnoughGold,function()
+				BuyGoldView.new():addTo(self)
+			end):addTo(self)
 			return
 		end
 	else

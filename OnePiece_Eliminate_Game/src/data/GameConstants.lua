@@ -23,6 +23,7 @@ game.CELL_TYPE_UNKNOWN = 0
 game.CAN_LINK_NUM = 6 --cell有的种类
 game.BOMB_LINK_NUM = 7 --生成炸弹的长连数
 game.BOMBID = 7 -- 炸弹cell的id
+game.IRONID = 9 -- 铁块cell的id
 game.MAXENERGY = 50 --最大体力值
 game.MAXSTAGE = 100 --最大关卡数
 game.MAXGUIDESTEP = 16 --最大引导步数16
@@ -32,6 +33,7 @@ game.ITEM = {
 	ENERGY = 3,
 }
 game.MAPHEIGHT = 8400
+game.FREEZEROUND = 3 -- 冻结3回合技能
 
 --[[
 ============变量部分==============
@@ -59,6 +61,8 @@ game.firstEnterGame = true --第一次进入游戏直接跳转到关卡不去地
 game.boxLeftTime = 0 --每次开启宝箱的剩余时间
 game.boxRewardTime = 6*3600 --开启宝箱的间隔时间
 game.usedHalfRebirth = false --是否已使用了看视频回半血
+game.skillFreezeRound = 0 -- 使用技能冻结3回合冻结的回合数
+game.needPlayAd = false -- 是否播放自己的广告内容
 
 game.MusicOn = true
 game.SoundOn = true

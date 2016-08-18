@@ -29,6 +29,7 @@ function MapScene:ctor()
 	self._mainNode = CsbContainer:createMapCsb("MapScene.csb"):addTo(self)
     self._mapNode = cc.uiloader:seekNodeByName(self._mainNode, "Map")
         
+    self._nowBuyHelperNum = 0 -- 当前可购买的是那个帮手
     -- 加上滑动层
     self._touchLayer = display.newLayer():addTo(self)
     self._touchLayer:setTouchSwallowEnabled(false)
@@ -129,6 +130,7 @@ function MapScene:ctor()
         game.isShipUpgrade = false
         self:runShipUpgradeAni()
         print("MapScene:ctor runShipUpgradeAni")
+        game.needPlayAd = false
     end
 
     -- 12关后获得索隆
@@ -155,6 +157,17 @@ function MapScene:ctor()
     -- 从后台回来刷新宝箱时间
     self._foregroundListener = cc.EventListenerCustom:create(app.APP_ENTER_FOREGROUND_EVENT,handler(self, self.onEnterForeground))
     cc.Director:getInstance():getEventDispatcher():addEventListenerWithFixedPriority(self._foregroundListener, 1)
+
+    -- 弹出自己的广告
+    if game.needPlayAd==true then
+        self:pushAdv()
+    end
+end
+
+function MapScene:pushAdv( )
+    if self._nowBuyHelperNum~=0 then
+        UnlockConfirmView.new(self._nowBuyHelperNum):addTo(self)
+    end
 end
 
 function MapScene:refreshBoxState()
@@ -208,24 +221,23 @@ function MapScene:refreshPage()
         mBuyInfEnergyBtn = game.myEnergy<5000,
     })
     -- 设置当前可购买的是哪个人
-    local _nowBuyHelperNum = 0
     for i=1,#GameConfig.BuyHelper do
         if game.helper[GameConfig.BuyHelper[i]]==0 then
-            _nowBuyHelperNum = GameConfig.BuyHelper[i]
+            self._nowBuyHelperNum = GameConfig.BuyHelper[i]
             break
         end
     end
     CsbContainer:setNodesVisible(self._mainNode, {
-        mBuyHelperBtn = _nowBuyHelperNum~=0,
+        mBuyHelperBtn = self._nowBuyHelperNum~=0,
     })
     -- 购买人物按钮
-    if _nowBuyHelperNum~=0 then
+    if self._nowBuyHelperNum~=0 then
         local buyHelperBtn = cc.uiloader:seekNodeByName(self._mainNode,"mBuyHelperBtn")
         CsbContainer:decorateBtnNoTrans(buyHelperBtn,function()
-            UnlockConfirmView.new(_nowBuyHelperNum):addTo(self)
+            UnlockConfirmView.new(self._nowBuyHelperNum):addTo(self)
         end)
-        CsbContainer:refreshBtnView(buyHelperBtn,GameConfig.BuyHelperPic[_nowBuyHelperNum],GameConfig.BuyHelperPic[_nowBuyHelperNum])
-        CsbContainer:setSpritesPic(self._mainNode, {mBuyHelperWordSprite = GameConfig.BuyHelperWordPic[_nowBuyHelperNum]})
+        CsbContainer:refreshBtnView(buyHelperBtn,GameConfig.BuyHelperPic[self._nowBuyHelperNum],GameConfig.BuyHelperPic[self._nowBuyHelperNum])
+        CsbContainer:setSpritesPic(self._mainNode, {mBuyHelperWordSprite = GameConfig.BuyHelperWordPic[self._nowBuyHelperNum]})
     end
 end
 

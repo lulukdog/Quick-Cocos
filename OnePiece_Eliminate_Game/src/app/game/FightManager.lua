@@ -51,6 +51,7 @@ end
 
 function FightManager:resetFightData()
 	self.round = 0
+	game.skillFreezeRound = 0
 
 	self.nowMonsterId = tonumber(self.nowMonsterTb[self.nowMonster])
 	if self.nowMonsterId==nil then
@@ -87,10 +88,15 @@ function FightManager:getGoalLeftNum()
 end
 
 function FightManager:addRound()
-	self.round = self.round+1
-	self.roundSum = self.roundSum + 1
-	print("FightManager:addRound roundSum "..self.roundSum)
-	sendMessage({msg="GAMESCENE_REFRESH_ROUND"})
+	if game.skillFreezeRound>0 then
+		game.skillFreezeRound = game.skillFreezeRound - 1
+		print("FightManager:addRound skillFreezeRound "..game.skillFreezeRound)
+	else
+		self.round = self.round+1
+		self.roundSum = self.roundSum + 1
+		print("FightManager:addRound roundSum "..self.roundSum)
+	end
+	-- sendMessage({msg="GAMESCENE_REFRESH_ROUND"})
 end
 -- 防御技能计算回合数
 function FightManager:calDun2Skill()
@@ -112,10 +118,10 @@ function FightManager:judgeEnemyAttack( )
 
 	if self.round>=monsterCfg[self.nowMonsterId].interval then
 		sendMessage({msg ="GAMESCENE_DISABLE"})
+		self.round = 0
 		scheduler.performWithDelayGlobal(function()
 			self:enemyAttack()
-			self.round = 0
-			sendMessage({msg="GAMESCENE_REFRESH_ROUND"})
+			-- sendMessage({msg="GAMESCENE_REFRESH_ROUND"})
 		end, 0.3)
 		return true
 	else

@@ -198,6 +198,38 @@ function Cell:playDisappearAni( )
 	GameConfig.FlyDelayTime = GameConfig.FlyDelayTime+GameConfig.FlyDelayInterval
 end
 
+function Cell:playSkillBombDisappearAllAni()
+	-- 计算cell积分
+	game.getScores = game.getScores + cellCfg[self.id].score
+
+	local cellParent = self:getParent()
+	local x,y = self:getPosition()
+	local sprite = display.newSprite("#disappear01.png")
+	sprite:setPosition(cc.p(x,y))
+	sprite:addTo(cellParent)
+	sprite:setLocalZOrder(-1)
+	sprite:setScale(1.3)
+	sprite:runAction(cc.Sequence:create(
+		cc.DelayTime:create(0.1),
+		cc.CallFunc:create(function()
+			sprite:playAnimationOnce(display.getAnimationCache("disappear"),true)
+		end)
+	))
+
+	self.sprite:setTexture(cellCfg[self.id].iconSelected)
+	self:setLocalZOrder(10)
+	self:runAction(cc.Sequence:create(
+		cc.DelayTime:create(0.67),
+		cc.CallFunc:create(function()
+			self:removeAllChildren()
+			self:removeFromParent()
+		end)
+	))
+	
+	transition.execute(self, cc.MoveTo:create(0.4, GameConfig.MainRole.pos), {delay = 0.3})
+	transition.execute(self, cc.ScaleTo:create(0.3, 0.5), {delay = 0.3})
+end
+
 -- 有生命的cell被影响的时候换成另一个cell
 function Cell:minusLife()
 	if self.id==10 or self.id==11 or self.id==12 then
