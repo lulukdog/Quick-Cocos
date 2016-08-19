@@ -20,6 +20,9 @@ local GuideView = import("..views.GuideView")
 local GuideFingerView = import("..views.GuideFingerView")
 local GuideFingerPushView = import("..views.GuideFingerPushView")
 local StoryView = import("..views.StoryView")
+local CostConfirmView = import("..views.CostConfirmView")
+local BigSkillPreView = import("..views.BigSkillPreView")
+
 local common = import("app.common")
 
 local helperCfg = require("data.data_helper")
@@ -43,6 +46,7 @@ function GameScene:ctor()
 
     addMessage(self, "WIN",self.pushWinPage)
     addMessage(self, "LOSE",self.pushLosePage)
+    addMessage(self, "GameScene_pushBigSkillPreView",self.pushBigSkillPreView)
 
     addMessage(self, "GAMESCENE_REFRESH_LIFE",self.refreshLife)
     addMessage(self, "GAMESCENE_REFRESH_ROUND",self.refreshRound)
@@ -50,6 +54,7 @@ function GameScene:ctor()
     addMessage(self, "GAMESCENE_COMBO_ANI",self.runComboAni)
     addMessage(self, "GameScene_LongLinkAni",self.longLinkAni)
     addMessage(self, "GameScene_NoLinkTip",self.noLinkTip)
+    addMessage(self, "GameScene_BigSkillAni",self.bigSkillAni)
 
     addMessage(self, "GAMESCENE_REFRESH_HELPER",self.refreshHelper)
     addMessage(self, "GAMESCENE_CHANGE_FIGHTBG",self.refreshFightBg)
@@ -150,6 +155,11 @@ end
 function GameScene:pushLosePage()
   BattleFailPopView.new():addTo(self)
 end
+-- 大招确定弹窗
+function GameScene:pushBigSkillPreView(data)
+    print("GameScene:pushBigSkillPreView"..data.tag)
+    BigSkillPreView.new(data.tag):addTo(self)
+end
 -- 刷新战斗背景
 function GameScene:refreshFightBg(data)
     local _picPath = data.bgPic
@@ -177,7 +187,7 @@ function GameScene:refreshHelper()
     end
   end
 
-  for i=1,4 do
+  for i=1,2 do
     CsbContainer:setNodesVisible(self._mainNode,{
       ["mHasHelperBtn"..i] = game.helperOnFight[i]~=nil,
       ["mHelperBtn"..i] = game.helperOnFight[i]==nil,
@@ -220,6 +230,25 @@ function GameScene:storyViewExit()
     self:guideStep()
 end
 
+-- 大招需要购买
+function BigSkill_callback(result)
+  print("BigSkill_callback"..result)
+  if result ~= "fail" then
+      if tonumber(result)/100 == 5 then
+          sendMessage({msg="GameScene_pushBigSkillPreView",tag=GameConfig.BigSkillCfg.bombAll})
+      else
+          sendMessage({msg="GameScene_pushBigSkillPreView",tag=GameConfig.BigSkillCfg.freezeRound})
+      end
+  end
+end
+
+function GameScene:bigSkillAni(data)
+    if data.tag == GameConfig.BigSkillCfg.bombAll then
+        self.boardView:onSkillBombAll()
+    else
+        game.skillFreezeRound = game.FREEZEROUND
+    end
+end
 function GameScene:createHub()
     -- 暂停按钮
     local pauseButton = cc.uiloader:seekNodeByName(self._mainNode,"pauseBtn")
@@ -229,14 +258,14 @@ function GameScene:createHub()
     end)
 
     -- 呼叫帮忙按钮
-    for i=1,4 do
+    for i=1,2 do
       local helperBtn = cc.uiloader:seekNodeByName(self._mainNode,"mHelperBtn"..i)
       CsbContainer:decorateBtnNoTrans(helperBtn,function()
           SelectHelperView.new(true):addTo(self)
       end)
     end
     -- 有人物的帮忙按钮
-    for i=1,4 do
+    for i=1,2 do
       local helperBtn = cc.uiloader:seekNodeByName(self._mainNode,"mHasHelperBtn"..i)
       CsbContainer:decorateBtn(helperBtn,function()
           if game.guideStep==16 then
@@ -245,6 +274,40 @@ function GameScene:createHub()
           self:onHelper(i)
       end)
     end
+    -- 消除全部的大招技能，和冰冻住回合数的技能
+    local _skillBombAllBtn = cc.uiloader:seekNodeByName(self._mainNode,"mSkillBombAllBtn")
+    CsbContainer:decorateBtn(_skillBombAllBtn,function()
+        if device.platform == "android" then
+            CostConfirmView.new(GameConfig.BigSkillCfg.bombAllTip,function()
+                common:javaOnUseMoney(BigSkill_callback,GameConfig.BigSkillCfg.bombAllCost*100)
+            end,GameConfig.BigSkillCfg.bombAllCost):addTo(self)
+        end
+        
+        if device.platform == "windows" then
+            CostConfirmView.new(GameConfig.BigSkillCfg.bombAllTip,function()
+                -- 炸弹技能
+                local data = {tag=GameConfig.BigSkillCfg.bombAll}
+                BigSkillPreView.new(data.tag):addTo(self)
+            end,GameConfig.BigSkillCfg.bombAllCost):addTo(self)
+        end
+    end)
+
+    local _freezeRoundBtn = cc.uiloader:seekNodeByName(self._mainNode,"mFreezeRoundBtn")
+    CsbContainer:decorateBtn(_freezeRoundBtn,function()
+        if device.platform == "android" then
+            CostConfirmView.new(GameConfig.BigSkillCfg.freezeRoundTip,function()
+                common:javaOnUseMoney(BigSkill_callback,GameConfig.BigSkillCfg.freezeRoundCost*100)
+            end,GameConfig.BigSkillCfg.freezeRoundCost):addTo(self)
+        end
+
+        if device.platform=="windows" then
+            CostConfirmView.new(GameConfig.BigSkillCfg.freezeRoundTip,function()
+                -- 冻结3回合技能
+                local data = {tag=GameConfig.BigSkillCfg.freezeRound}
+                BigSkillPreView.new(data.tag):addTo(self)
+            end,GameConfig.BigSkillCfg.freezeRoundCost):addTo(self)
+        end
+    end)
     -- boss回合数按钮和boss对应的cellId按钮
     local _roundBtn = cc.uiloader:seekNodeByName(self._mainNode,"mBossRoundBtn")
     local _cellBtn = cc.uiloader:seekNodeByName(self._mainNode,"mEnemyAttrBtn")
@@ -284,11 +347,6 @@ end
 
 -- 角色帮助按钮
 function GameScene:onHelper( btnNum )
-  -- 冻结3回合技能
-  -- game.skillFreezeRound = game.FREEZEROUND
-  -- 炸弹技能
-  -- self.boardView:onSkillBombAll()
-
   print("GameScene:onHelper call helper to fight")
   FightManager:calHelperNum( btnNum )
   FightManager:runHelperAni( btnNum )

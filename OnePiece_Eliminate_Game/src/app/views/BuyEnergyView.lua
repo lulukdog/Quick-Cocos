@@ -56,9 +56,7 @@ function BuyEnergyView:countTime()
 end
 
 function buyEnergy_callback(result)
-    if result == "fail" then
-        MessagePopView.new(8):addTo(self)
-    else
+    if result ~= "fail" then
         game.myEnergy = game.myEnergy + GameConfig.BuyEnergyCfg[tonumber(result)/100]
         game.countTime = math.max(0,game.countTime-GameConfig.BuyEnergyCfg[tonumber(result)/100]*game.addOneEnergyTime)
         UserDefaultUtil:SaveEnergy()

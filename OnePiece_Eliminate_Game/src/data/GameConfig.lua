@@ -145,6 +145,7 @@ local GameConfig = {
 		winTwiceCoin = 4,
 		loseHalfRebirth = 5,
 	},
+	-- 短信对应的钱数是 实际价格*100
 	RMBGoldCfg = {
 		[1] = 100,
 		[2] = 600,
@@ -166,6 +167,14 @@ local GameConfig = {
 		[6] = 10,
 		[12] = 20,
 		[30] = 999999,
+	},
+	BigSkillCfg = {
+		bombAll = 1,
+		freezeRound = 2,
+		bombAllTip = "召唤爆裂炮弹摧毁全屏方块",
+		freezeRoundTip = "定住敌人3回合无法行动",
+		bombAllCost = 5,
+		freezeRoundCost = 3,
 	},
 }
 

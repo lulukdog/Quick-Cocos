@@ -47,9 +47,7 @@ end
 
 
 function buyGold_callback(result)
-    if result == "fail" then
-        MessagePopView.new(8):addTo(self)
-    else
+    if result ~= "fail" then
         print("buyGold_callback"..result)
         game.myGold = game.myGold + GameConfig.BuyGoldCfg[tonumber(result)/100]
         UserDefaultUtil:saveGold()

@@ -38,6 +38,7 @@ function SelectHelperView:ctor(isFromBattlePage)
 
 	local closeBtn = cc.uiloader:seekNodeByName(self._mainNode,"mCloseBtn")
 	CsbContainer:decorateBtn(closeBtn,function()
+		removeMessageByTarget(self)
 		self:removeFromParent()
 		self._mainNode = nil
 	end)
@@ -116,7 +117,7 @@ function SelectHelperView:ctor(isFromBattlePage)
 		end)
 	end
 	-- 点击头像取消帮忙角色
-	for i=1,4 do
+	for i=1,2 do
 		local cancelBtn = cc.uiloader:seekNodeByName(self._mainNode,"mFightHelperBtn"..i)
 		CsbContainer:decorateBtnNoTrans(cancelBtn,function()
 			if self._isFromBattlePage==false then
@@ -170,6 +171,7 @@ function SelectHelperView:onStart(isConfirm)
 		sendMessage({msg ="GAMESCENE_REFRESH_HELPER"})
 	end
 
+	removeMessageByTarget(self)
 	self:removeFromParent()
 	self._mainNode = nil
 end
@@ -178,7 +180,7 @@ end
 function SelectHelperView:setHelperOnFight( btnNum,isCancel )
 	local heplerNum = self.helperTb[btnNum]
 	if isCancel==false then
-		if #self.helperOnShowTb>=4  then
+		if #self.helperOnShowTb>=2  then
 			print("this helper can't on fight")
 		else
 			table.insert(self.helperOnShowTb,heplerNum)
@@ -218,7 +220,7 @@ end
 -- 刷新上面显示的出战角色
 function SelectHelperView:refreshShowHelper()
 	--显示几个出战英雄
-	for i=1,4 do
+	for i=1,2 do
 		CsbContainer:setNodesVisible(self._mainNode,{
 			["mFightHelperBtn"..i] = i<=#self.helperOnShowTb
 		})

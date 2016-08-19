@@ -25,6 +25,12 @@ local MapScene = class("MapScene", function()
 	return display.newScene("MapScene")
 end)
 
+function GoldBoxView_video(result)
+    if result== "success" then
+        sendMessage({msg="MapScene_pushGoldBoxView"})
+    end
+end
+
 function MapScene:ctor()
 	self._mainNode = CsbContainer:createMapCsb("MapScene.csb"):addTo(self)
     self._mapNode = cc.uiloader:seekNodeByName(self._mainNode, "Map")
@@ -103,7 +109,9 @@ function MapScene:ctor()
     self._boxNode:runAction(self._boxAni)
     CsbContainer:decorateBtnNoTrans(self._boxBtn, function()
         common:javaOnVideo(GoldBoxView_video)
-        GoldBoxView.new():addTo(self)
+        if device.platform=="windows" then
+            GoldBoxView.new():addTo(self)
+        end
     end)
 
     -- 宝箱上的剩余时间
@@ -117,6 +125,7 @@ function MapScene:ctor()
     addMessage(self, "Refresh_Energy", self.refreshEnergy)
     addMessage(self, "MapScene_RefreshPage", self.refreshPage)
     addMessage(self, "MapScene_PushRoleGetView", self.pushRoleGetView)
+    addMessage(self, "MapScene_pushGoldBoxView", self.pushGoldBoxView)
 
     local _skipShipUpgrade = false -- 是否跳过船舱升级画面，新手引导阶段就跳过
     -- 新手引导
@@ -199,6 +208,9 @@ end
 
 function MapScene:pushRoleGetView( data )
     RoleGetPushView.new(data._btnNum):addTo(self)
+end
+function MapScene:pushGoldBoxView()
+    GoldBoxView.new():addTo(self)
 end
 
 function MapScene:runShipUpgradeAni()
