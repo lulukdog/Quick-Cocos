@@ -173,6 +173,52 @@ function common:string_to_table( str )
     end
     return result
 end
+
+function common:serialize(obj)  
+    local lua = ""  
+    local t = type(obj)  
+    if t == "number" then  
+        lua = lua .. obj  
+    elseif t == "boolean" then  
+        lua = lua .. tostring(obj)  
+    elseif t == "string" then  
+        lua = lua .. string.format("%q", obj)  
+    elseif t == "table" then  
+        lua = lua .. "{\n"  
+        for k, v in pairs(obj) do  
+            lua = lua .. "[" .. self:serialize(k) .. "]=" .. self:serialize(v) .. ",\n"  
+        end  
+        local metatable = getmetatable(obj)  
+        if metatable ~= nil and type(metatable.__index) == "table" then  
+            for k, v in pairs(metatable.__index) do  
+                lua = lua .. "[" .. self:serialize(k) .. "]=" .. self:serialize(v) .. ",\n"  
+            end  
+        end  
+        lua = lua .. "}"  
+    elseif t == "nil" then  
+        return nil  
+    else  
+        error("can not serialize a " .. t .. " type.")  
+    end  
+    return lua  
+end  
+  
+function common:unserialize(lua)  
+    local t = type(lua)  
+    if t == "nil" or lua == "" then  
+        return nil  
+    elseif t == "number" or t == "string" or t == "boolean" then  
+        lua = tostring(lua)  
+    else  
+        error("can not unserialize a " .. t .. " type.")  
+    end  
+    lua = "return " .. lua  
+    local func = loadstring(lua)  
+    if func == nil then  
+        return nil  
+    end  
+    return func()  
+end  
 --------------- encrypt util ----------------------
 function common:encInt(intValue)
     local _enc = bit.bxor(intValue,ENC_KEY)
@@ -280,21 +326,49 @@ function common:getNowEnergyLabel()
     return game.myEnergy.."/"..game.MAXENERGY
 end
 
+-- 更新版本号计算
+function common:chageVersionStrToTb( versionStr )
+    local _tb = {}
+    local firstPoint = string.find(versionStr, "%.")
+    local firstNum = string.sub(versionStr,1,firstPoint-1)
+    table.insert(_tb,firstNum)
+    local secondPoint = string.find(versionStr, "%.",firstPoint+1)
+    local secondNum = string.sub(versionStr,firstPoint+1,secondPoint-1)
+    table.insert(_tb,secondNum)
+    local thirdNum = string.sub(versionStr,secondPoint+1,string.len(versionStr))
+    table.insert(_tb,thirdNum)
+    return _tb
+end
 
 --------------- 调用安卓方法 ----------------------
+-- 错误代码    描述
+-- -1  不支持的参数类型或返回值类型
+-- -2  无效的签名
+-- -3  没有找到指定的方法
+-- -4  Java 方法执行时抛出了异常
+-- -5  Java 虚拟机出错
+-- -6  Java 虚拟机出错
+
 -- 观看视频
 function common:javaOnVideo(luaCallFunc)
-    print("ccommon:javaOnVideo")
+    -- print("ccommon:javaOnVideo")
+    -- luaCallFunc("success")
+    -- 运营商的包直接成功
+    if game.TOMOBILE == true then
+        luaCallFunc("success")
+        return
+    end    
+
     -- 观看视频
     if device.platform == "android" then
         local args = {
             luaCallFunc,
         }
         local className = "org/cocos2dx/sdk/YoumiSDK"
-        local ok = luaj.callStaticMethod(className, "YoumiSDK_ShowVideo", args, "(I)V")
+        local ok,ret = luaj.callStaticMethod(className, "YoumiSDK_ShowVideo", args, "(I)V")
         print("YoumiSDK_ShowVideo")
         if not ok then
-            print("YoumiSDK_ShowVideo error")
+            print("YoumiSDK_ShowVideo error "..ret)
         end
     end
 end
@@ -311,31 +385,45 @@ function common:getElapsedTime()
         else
             return math.ceil(tonumber(_elapsedTime)/1000)
         end
+    elseif device.platform == "ios" then
+        local args = {}
+        local ok, _elapsedTime = luaoc.callStaticMethod("CatEye", "eye_getElapsedTime", args)
+        print("common:getElapsedTime():",_elapsedTime)
+        if not ok then
+            return os.time()
+        else
+            return math.ceil(tonumber(_elapsedTime))
+        end
     elseif device.platform == "windows" then
         return os.time()
     end
 end
 
 -- 保存统计计费点
-function common:javaSaveUserData(key,value)
+function common:javaSaveUserData(jsonStr)
     if device.platform == "android" then
         local args = {
-            key,
-            tostring(value),
+            jsonStr
         }
         local className = "org/cocos2dx/sdk/EyeCat"
-        local ok = luaj.callStaticMethod(className, "eye_saveUserData", args, "(Ljava/lang/String;Ljava/lang/String;)V")
+        local ok,ret = luaj.callStaticMethod(className, "eye_saveUserData", args, "(Ljava/lang/String;)V")
         print("common:javaSaveUserData")
         if not ok then
-            print("common:javaSaveUserData error")
+            print("common:javaSaveUserData error "..ret)
         end
     elseif device.platform == "windows" then
-        print("common:javaSaveUserData key "..key.." value "..value)
+        print("common:javaSaveUserData jsonStr "..jsonStr)
     end
 end
 
 -- 支付
 function common:javaOnUseMoney(luaCallFunc,moneyCount)
+	-- 运营商的包直接成功
+    if game.TOMOBILE == true then
+        luaCallFunc(moneyCount.."_2")
+        return
+    end    
+
     local args = {
         "jinbi",
         moneyCount,
@@ -343,20 +431,35 @@ function common:javaOnUseMoney(luaCallFunc,moneyCount)
         luaCallFunc,
         1,
     }
-    print("BuyGoldView:buyItem")
+    print("common:javaOnUseMoney")
     if device.platform == "android" then
         -- Java 类的名称
         local className = "org/cocos2dx/sdk/EyeCat"
         -- 调用 Java 方法
-        print("BuyGoldView:buyItem"..className)
+        print("common:javaOnUseMoney android "..className)
         local ok, ret = luaj.callStaticMethod(className, "wxpee", args, "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;II)V")
         if not ok then
             print("luaj error:", ret)
         else
             print("ret:", ret)
         end
+    elseif device.platform == "ios" then
+        -- appstore的商品ID
+        local rmbCount = tonumber(moneyCount)/100
+        local appStoreProductId = "com.cateyes.app.rmb"..rmbCount
+        local args = {
+            productId = appStoreProductId,
+            callFunc = luaCallFunc,
+            moneyCount = rmbCount,
+        }
+        local ok, ret = luaoc.callStaticMethod("CatEye", "eye_pay", args)
+        print("common:javaOnUseMoney() ios :",ret)
+        if not ok then
+            print("luaoc error:", ret)
+        end
     end
 end
+--------------- 跟网络有关的部分 --------------------------------
 
 
 return common

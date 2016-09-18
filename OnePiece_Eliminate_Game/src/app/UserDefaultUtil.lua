@@ -63,7 +63,8 @@ function UserDefaultUtil:GetBoxLeftTime()
 end
 -- 通关后记录当前关卡
 function UserDefaultUtil:SaveNowMaxStage()
-    common:javaSaveUserData("NowMaxStage",common:getNowMaxStage())
+    local jsonStr = json.encode({user_stage={nowmaxstage=common:getNowMaxStage()}})
+    common:javaSaveUserData(jsonStr)
     local _maxStage = common:encInt(common:getNowMaxStage()) 
     cc.UserDefault:getInstance():setIntegerForKey(game.PLAYERID.."NowMaxStage",_maxStage)
     cc.UserDefault:getInstance():flush()
@@ -111,9 +112,55 @@ function UserDefaultUtil:getStageMaxScore()
     return common:string_to_table(maxScoreStr)
 end
 
+-- 未联网的时候缓存复活购买信息
+function UserDefaultUtil:saveRecordRebirthBuy()
+    local recordRebirthBuy = common:serialize(game.recordRebirthBuy)
+    cc.UserDefault:getInstance():setStringForKey(game.PLAYERID.."RecordRebirthBuy",recordRebirthBuy)
+    cc.UserDefault:getInstance():flush()
+end
+function UserDefaultUtil:getRecordRebirthBuy()
+    local recordRebirthBuy = cc.UserDefault:getInstance():getStringForKey(game.PLAYERID.."RecordRebirthBuy")
+    -- print("UserDefaultUtil:getRecordRebirthBuy  "..recordRebirthBuy)
+    if recordRebirthBuy=="" then
+        return nil
+    end
+    return common:unserialize(recordRebirthBuy)
+end
+-- 统计失败金币复活消耗金币
+function UserDefaultUtil:recordRebirthCost( costNum )
+    local _tb = {
+        type=3,
+        amount=costNum,
+        leftcoin=game.myGold,
+    }
+    local jsonStr = json.encode({shop_buy=_tb})
+    -- 如果没有有联网
+    if network.getInternetConnectionStatus()==0 then
+        table.insert(game.recordRebirthBuy,{shop_buy=_tb})
+        self:saveRecordRebirthBuy()
+    else
+        common:javaSaveUserData(jsonStr)
+        for i,v in ipairs(game.recordRebirthBuy) do
+            local _jsonStr = json.encode(v)
+            common:javaSaveUserData(_jsonStr)
+        end
+        game.recordRebirthBuy = {}
+        self:saveRecordRebirthBuy()
+    end
+end
+
 -- 记录帮手等级
-function UserDefaultUtil:saveHelperLevel()
-    common:javaSaveUserData("HelperLevel",table.concat(game.helper,"_"))
+function UserDefaultUtil:saveHelperLevel(helperNum,costNum)
+    local _tb = {
+        type=2,
+        item=helperNum,
+        level=game.helper[helperNum],
+        amount=costNum~=nil and costNum or 0,
+        leftcoin=game.myGold,
+    }
+    local jsonStr = json.encode({shop_buy=_tb})
+    common:javaSaveUserData(jsonStr)
+
     local helperLevelStr = common:table_to_string(game.helper)
     helperLevelStr = common:encString(helperLevelStr)
     cc.UserDefault:getInstance():setStringForKey(game.PLAYERID.."HelperLevel",helperLevelStr)
@@ -127,6 +174,46 @@ function UserDefaultUtil:getHelperLevel()
     end
     helperLevelStr = common:decString(helperLevelStr)
     return common:string_to_table(helperLevelStr)
+end
+-- 未联网的时候缓存伙伴使用记录
+function UserDefaultUtil:saveRecordHeplerUse()
+    local recordHelperUseStr = common:serialize(game.recordHelperUse)
+    cc.UserDefault:getInstance():setStringForKey(game.PLAYERID.."RecordHelperUse",recordHelperUseStr)
+    cc.UserDefault:getInstance():flush()
+end
+function UserDefaultUtil:getRecordHeplerUse()
+    local recordHelperUseStr = cc.UserDefault:getInstance():getStringForKey(game.PLAYERID.."RecordHelperUse")
+    -- print("UserDefaultUtil:getRecordHeplerUse  "..recordHelperUseStr)
+    if recordHelperUseStr=="" then
+        return nil
+    end
+    return common:unserialize(recordHelperUseStr)
+end
+-- 统计使用伙伴消耗
+function UserDefaultUtil:recordHerlperUse( herlperTb,costTb )
+    for i,v in ipairs(herlperTb) do
+        local _tb = {
+            type=1,
+            item=v,
+            amount=costTb[i],
+            leftcoin=game.myGold
+        }
+        local jsonStr = json.encode({shop_buy=_tb})
+
+        -- 如果没有有联网
+        if network.getInternetConnectionStatus()==0 then
+            table.insert(game.recordHelperUse,{shop_buy=_tb})
+            self:saveRecordHeplerUse()
+        else
+            common:javaSaveUserData(jsonStr)
+            for i,v in ipairs(game.recordHelperUse) do
+                local _jsonStr = json.encode(v)
+                common:javaSaveUserData(_jsonStr)
+            end
+            game.recordHelperUse = {}
+            self:saveRecordHeplerUse()
+        end
+    end
 end
 
 -- 记录金币
@@ -175,7 +262,9 @@ function UserDefaultUtil:getSound()
 end
 -- 记录船的等级
 function UserDefaultUtil:saveShipLevel()
-    common:javaSaveUserData("ShipLevel",tostring(game.nowShipLevel))
+    local jsonStr = json.encode({user_ship_level={level=game.nowShipLevel,type=game.nowShip}})
+    common:javaSaveUserData(jsonStr)
+
     local _shipLevel = common:encInt(game.nowShipLevel) 
     cc.UserDefault:getInstance():setIntegerForKey(game.PLAYERID.."ShipLevel",_shipLevel)
     cc.UserDefault:getInstance():flush()
@@ -247,4 +336,76 @@ function UserDefaultUtil:getFirstGame()
     local firstGame = cc.UserDefault:getInstance():getIntegerForKey(game.PLAYERID.."FirstGame")
     -- print("UserDefaultUtil:getFirstGame  "..firstGame)
     return firstGame
+end
+-- 记录是否买过一元购
+function UserDefaultUtil:saveOneYuan()
+    if game.boughtOneYuan==true then
+        cc.UserDefault:getInstance():setIntegerForKey(game.PLAYERID.."OneYuan",1)
+    else
+        cc.UserDefault:getInstance():setIntegerForKey(game.PLAYERID.."OneYuan",2)
+    end
+    cc.UserDefault:getInstance():flush()
+end
+function UserDefaultUtil:getOneYuan()
+    local oneYuan = cc.UserDefault:getInstance():getIntegerForKey(game.PLAYERID.."OneYuan")
+    -- print("UserDefaultUtil:getFirstGame  "..firstGame)
+    return oneYuan
+end
+
+-- 缓存战斗结果信息
+function UserDefaultUtil:saveRecordResult()
+    local recordResult = common:serialize(game.recordResult)
+    cc.UserDefault:getInstance():setStringForKey(game.PLAYERID.."RecordResult",recordResult)
+    cc.UserDefault:getInstance():flush()
+end
+function UserDefaultUtil:getRecordResult()
+    local recordResult = cc.UserDefault:getInstance():getStringForKey(game.PLAYERID.."RecordResult")
+    -- print("UserDefaultUtil:getRecordResult  "..recordResult)
+    if recordResult=="" then
+        return nil
+    end
+    return common:unserialize(recordResult)
+end
+-- 战斗结果信息
+function UserDefaultUtil:recordResult(_result,_stage,_rebirthtype)
+    local _tb = {
+        result=_result,
+        nowstage=_stage,
+        rebirthtype=_rebirthtype,
+    }
+    local jsonStr = json.encode({user_stage_result=_tb})
+    -- 如果没有有联网
+    if network.getInternetConnectionStatus()==0 then
+        table.insert(game.recordResult,{user_stage_result=_tb})
+        self:saveRecordResult()
+    else
+        common:javaSaveUserData(jsonStr)
+        for i,v in ipairs(game.recordResult) do
+            local _jsonStr = json.encode(v)
+            common:javaSaveUserData(_jsonStr)
+        end
+        game.recordResult = {}
+        self:saveRecordResult()
+    end
+end
+
+function UserDefaultUtil:recordRecharge(_money,_channel,_status,_itemType)
+    local _tb = {
+        money=_money,
+        leftcoin = game.myGold,
+        leftenergy = game.myEnergy,
+        channel=_channel,
+        status=_status,
+        itemtype=_itemType,
+    }
+    local jsonStr = json.encode({recharge=_tb})
+    common:javaSaveUserData(jsonStr)
+end
+
+function UserDefaultUtil:recordCreateRole(roleName)
+    local _tb = {
+        username=roleName,
+    }
+    local jsonStr = json.encode({create_role=_tb})
+    common:javaSaveUserData(jsonStr)
 end

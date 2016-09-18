@@ -47,6 +47,12 @@ function CsbContainer:fitScreen( csbNode )
 		fitScreenNode(_topAniNode)
 		_topAniNode:setPosition(display.cx,display.top)
 	end
+
+	local _aniBottomNode = cc.uiloader:seekNodeByName(csbNode,"AniBottomNode")
+	if _aniBottomNode then
+		fitScreenNode(_aniBottomNode)
+		_aniBottomNode:setPosition(display.cx,display.bottom)
+	end
 end
 
 function CsbContainer:createPushCsb( filename )

@@ -43,6 +43,7 @@ function GameScene:ctor()
 
     self._roleLastLife = -1 -- 自己上一次的血量
     self._enemyLastLife = -1 -- 敌人上一次的血量
+    self._showCellSplash = true -- 物块飞向人物爆炸播放控制不播放太多
 
     addMessage(self, "WIN",self.pushWinPage)
     addMessage(self, "LOSE",self.pushLosePage)
@@ -55,6 +56,8 @@ function GameScene:ctor()
     addMessage(self, "GameScene_LongLinkAni",self.longLinkAni)
     addMessage(self, "GameScene_NoLinkTip",self.noLinkTip)
     addMessage(self, "GameScene_BigSkillAni",self.bigSkillAni)
+    addMessage(self, "GameScene_CellFlySplashAni",self.cellFlySplashAni)
+    addMessage(self, "GameScene_CellFlySplashAniOnce",self.cellFlySplashAniOnce)
 
     addMessage(self, "GAMESCENE_REFRESH_HELPER",self.refreshHelper)
     addMessage(self, "GAMESCENE_CHANGE_FIGHTBG",self.refreshFightBg)
@@ -80,9 +83,9 @@ function GameScene:ctor()
     self.pauseView:addTo(self)
 
     self.fightView = FightView.new(handler(self, self.gameOverCallback))
-    local _fightViewNode = cc.uiloader:seekNodeByName(self._mainNode,"mFightViewNode")
-    if _fightViewNode then
-        self.fightView:addTo(_fightViewNode)
+    self._fightViewNode = cc.uiloader:seekNodeByName(self._mainNode,"mFightViewNode")
+    if self._fightViewNode then
+        self.fightView:addTo(self._fightViewNode)
     end
 
     self.linkNumView = LinkNumView.new(handler(self, self.gameOverCallback))
@@ -123,10 +126,22 @@ function GameScene:ctor()
     self:refreshHelper()
     self:refreshGoal()
 
-    -- 统计关卡_战斗次数_胜利次数
-    common:javaSaveUserData("NowStage",tostring(game.nowStage))
-
     game.needPlayAd = true
+    -- 全屏消大招5关内不能用，冻结14关不能用
+    local _skillBombAllBtn = cc.uiloader:seekNodeByName(self._mainNode,"mSkillBombAllBtn")
+    local _freezeRoundBtn = cc.uiloader:seekNodeByName(self._mainNode,"mFreezeRoundBtn")
+    if common:getNowMaxStage()<5 then
+        CsbContainer:refreshBtnView(_skillBombAllBtn, "shell_boom2.png", "shell_boom2.png")
+    else
+        -- 两个大招的动画
+        self:addSkillAni("mSkillBombAniNode")
+    end
+    -- 全屏消大招5关内不能用，冻结14关不能用
+    if common:getNowMaxStage()<14 then
+        CsbContainer:refreshBtnView(_freezeRoundBtn, "shell_chain2.png", "shell_chain2.png")
+    else
+        self:addSkillAni("mSkillFreezeAniNode")
+    end
 end
 
 -- 没有可滑物块提示
@@ -158,7 +173,12 @@ end
 -- 大招确定弹窗
 function GameScene:pushBigSkillPreView(data)
     print("GameScene:pushBigSkillPreView"..data.tag)
-    BigSkillPreView.new(data.tag):addTo(self)
+    scheduler.performWithDelayGlobal(function()
+        BigSkillPreView.new(data.tag):addTo(self)
+        if game.guideStep==11 or game.guideStep==20 then
+            self:guideStep()
+        end
+    end, 0.5)
 end
 -- 刷新战斗背景
 function GameScene:refreshFightBg(data)
@@ -219,8 +239,14 @@ function GameScene:guideStep( )
         if game.nowStage<=2 or game.nowStage==9 then
             GuideView.new():addTo(self)
         elseif game.nowStage==5 then 
-            GuideFingerView.new():addTo(self)
-        elseif game.guideStep==16 then
+            if game.guideStep== 10 or game.guideStep== 11 then
+                GuideFingerPushView.new():addTo(self)
+            else
+                GuideFingerView.new():addTo(self)
+            end
+        elseif game.guideStep==18 then
+            GuideFingerPushView.new():addTo(self)
+        elseif game.nowStage==14 and (game.guideStep==19 or game.guideStep==20) then
             GuideFingerPushView.new():addTo(self)
         end
     end
@@ -231,23 +257,77 @@ function GameScene:storyViewExit()
 end
 
 -- 大招需要购买
-function BigSkill_callback(result)
-  print("BigSkill_callback"..result)
-  if result ~= "fail" then
-      if tonumber(result)/100 == 5 then
+function BigSkill_callback(_result)
+  print("BigSkill_callback".._result)
+  local resultCfg = common:parseStrOnlyWithUnderline(_result)
+  if resultCfg[1] ~= "fail" then
+      local result = resultCfg[1]
+      local payMethod = resultCfg[2]
+      UserDefaultUtil:recordRecharge(tonumber(result)/100,payMethod,1,4)
+
+      if tonumber(result)/100 == 6 then
           sendMessage({msg="GameScene_pushBigSkillPreView",tag=GameConfig.BigSkillCfg.bombAll})
       else
           sendMessage({msg="GameScene_pushBigSkillPreView",tag=GameConfig.BigSkillCfg.freezeRound})
       end
+  else
+      local result = resultCfg[2]
+      local payMethod = resultCfg[3]
+      UserDefaultUtil:recordRecharge(tonumber(result)/100,payMethod,-1,4)
   end
 end
 
 function GameScene:bigSkillAni(data)
     if data.tag == GameConfig.BigSkillCfg.bombAll then
-        self.boardView:onSkillBombAll()
+        self._mainAni:gotoFrameAndPlay(350,530,false)
+        scheduler.performWithDelayGlobal(function()
+            self.boardView:onSkillBombAll()
+        end,180/GAME_FRAME_RATE)
     else
         game.skillFreezeRound = game.FREEZEROUND
+        self._mainAni:gotoFrameAndPlay(560,685,false)
+        scheduler.performWithDelayGlobal(function()
+            -- 使用了冻住回合的技能加图片
+            CsbContainer:setNodesVisible(self._mainNode, {
+                mFreezeSkillRoundSprite=game.skillFreezeRound>0,
+                roundLabel=game.skillFreezeRound==0,
+                freezeLabel=game.skillFreezeRound>0,
+            })
+            CsbContainer:setStringForLabel(self._mainNode,{
+              freezeLabel = game.skillFreezeRound,
+            })
+        end,125/GAME_FRAME_RATE)
     end
+end
+-- 滑块飞上去之后爆炸的效果
+function GameScene:cellFlySplashAni()
+    local bombSpr = display.newSprite("#body_1.png"):addTo(self._fightViewNode)
+    local toPos = cc.p(-210,0) 
+    toPos.x = toPos.x + math.random(-40,40)
+    toPos.y = toPos.y + math.random(20,100)
+    bombSpr:setPosition(toPos)
+    bombSpr:playAnimationOnce(display.getAnimationCache("bodySplash"),true)
+end
+-- 只执行一次滑块飞上去之后爆炸的效果
+function GameScene:cellFlySplashAniOnce()
+    if self._showCellSplash==true then
+        self._showCellSplash=false
+        for i=1,10 do
+            self:cellFlySplashAni()
+        end
+        scheduler.performWithDelayGlobal(function()
+            self._showCellSplash = true
+        end, 1)
+    end
+end
+
+-- 加大招背景动画
+function GameScene:addSkillAni( nodeName )
+    local _node = cc.uiloader:seekNodeByName(self._mainNode, nodeName)
+    local aniNode= cc.uiloader:load("GameSceneSkillBgAni.csb"):addTo(_node)
+    local ani = cc.CSLoader:createTimeline("GameSceneSkillBgAni.csb")
+    aniNode:runAction(ani)
+    ani:gotoFrameAndPlay(0,60,true)
 end
 function GameScene:createHub()
     -- 暂停按钮
@@ -268,7 +348,7 @@ function GameScene:createHub()
     for i=1,2 do
       local helperBtn = cc.uiloader:seekNodeByName(self._mainNode,"mHasHelperBtn"..i)
       CsbContainer:decorateBtn(helperBtn,function()
-          if game.guideStep==16 then
+          if game.guideStep==18 then
               sendMessage({msg="GuideFingerPushView_onNext"})
           end 
           self:onHelper(i)
@@ -276,38 +356,65 @@ function GameScene:createHub()
     end
     -- 消除全部的大招技能，和冰冻住回合数的技能
     local _skillBombAllBtn = cc.uiloader:seekNodeByName(self._mainNode,"mSkillBombAllBtn")
-    CsbContainer:decorateBtn(_skillBombAllBtn,function()
-        if device.platform == "android" then
-            CostConfirmView.new(GameConfig.BigSkillCfg.bombAllTip,function()
-                common:javaOnUseMoney(BigSkill_callback,GameConfig.BigSkillCfg.bombAllCost*100)
-            end,GameConfig.BigSkillCfg.bombAllCost):addTo(self)
-        end
-        
-        if device.platform == "windows" then
-            CostConfirmView.new(GameConfig.BigSkillCfg.bombAllTip,function()
-                -- 炸弹技能
-                local data = {tag=GameConfig.BigSkillCfg.bombAll}
-                BigSkillPreView.new(data.tag):addTo(self)
-            end,GameConfig.BigSkillCfg.bombAllCost):addTo(self)
-        end
-    end)
+    if _skillBombAllBtn~=nil then
+        CsbContainer:decorateBtn(_skillBombAllBtn,function()
+            if common:getNowMaxStage()<5 then
+                MessagePopView.new(12):addTo(self)
+                return
+            end
+            -- 新手引导不用花钱
+            if game.nowStage==5 and game.guideStep==10 then
+                sendMessage({msg="GameScene_pushBigSkillPreView",tag=GameConfig.BigSkillCfg.bombAll})
+                sendMessage({msg="GuideFingerPushView_onNext"})
+                return
+            end
+
+            if device.platform == "android" or device.platform == "ios" then
+                CostConfirmView.new(GameConfig.BigSkillCfg.bombAllTip,function()
+                    common:javaOnUseMoney(BigSkill_callback,GameConfig.BigSkillCfg.bombAllCost*100)
+                end,GameConfig.BigSkillCfg.bombAllCost):addTo(self)
+            end
+            
+            if device.platform == "windows" then
+                CostConfirmView.new(GameConfig.BigSkillCfg.bombAllTip,function()
+                    -- 炸弹技能
+                    local data = {tag=GameConfig.BigSkillCfg.bombAll}
+                    BigSkillPreView.new(data.tag):addTo(self)
+                end,GameConfig.BigSkillCfg.bombAllCost):addTo(self)
+            end
+        end)
+    end
 
     local _freezeRoundBtn = cc.uiloader:seekNodeByName(self._mainNode,"mFreezeRoundBtn")
-    CsbContainer:decorateBtn(_freezeRoundBtn,function()
-        if device.platform == "android" then
-            CostConfirmView.new(GameConfig.BigSkillCfg.freezeRoundTip,function()
-                common:javaOnUseMoney(BigSkill_callback,GameConfig.BigSkillCfg.freezeRoundCost*100)
-            end,GameConfig.BigSkillCfg.freezeRoundCost):addTo(self)
-        end
+    if _freezeRoundBtn~=nil then
+        CsbContainer:decorateBtn(_freezeRoundBtn,function()
+            if common:getNowMaxStage()<14 then
+                MessagePopView.new(13):addTo(self)
+                return
+            end
+            -- 新手引导不用花钱
+            if game.nowStage==14 and game.guideStep==19 then
+                sendMessage({msg="GameScene_pushBigSkillPreView",tag=GameConfig.BigSkillCfg.freezeRound})
+                sendMessage({msg="GuideFingerPushView_onNext"})
+                return
+            end
 
-        if device.platform=="windows" then
-            CostConfirmView.new(GameConfig.BigSkillCfg.freezeRoundTip,function()
-                -- 冻结3回合技能
-                local data = {tag=GameConfig.BigSkillCfg.freezeRound}
-                BigSkillPreView.new(data.tag):addTo(self)
-            end,GameConfig.BigSkillCfg.freezeRoundCost):addTo(self)
-        end
-    end)
+            if device.platform == "android" or device.platform == "ios" then
+                CostConfirmView.new(GameConfig.BigSkillCfg.freezeRoundTip,function()
+                    common:javaOnUseMoney(BigSkill_callback,GameConfig.BigSkillCfg.freezeRoundCost*100)
+                end,GameConfig.BigSkillCfg.freezeRoundCost):addTo(self)
+            end
+
+            if device.platform=="windows" then
+                CostConfirmView.new(GameConfig.BigSkillCfg.freezeRoundTip,function()
+                    -- 冻结3回合技能
+                    local data = {tag=GameConfig.BigSkillCfg.freezeRound}
+                    BigSkillPreView.new(data.tag):addTo(self)
+                end,GameConfig.BigSkillCfg.freezeRoundCost):addTo(self)
+            end
+        end)
+    end
+
     -- boss回合数按钮和boss对应的cellId按钮
     local _roundBtn = cc.uiloader:seekNodeByName(self._mainNode,"mBossRoundBtn")
     local _cellBtn = cc.uiloader:seekNodeByName(self._mainNode,"mEnemyAttrBtn")
@@ -391,10 +498,35 @@ function GameScene:refreshLife()
   self._enemyLastLife = FightManager.enemyLife -- 敌人上一次的血量
 end
 
+-- 加上最后一回合的火焰
+function GameScene:addLastRoundAni()
+  local _aniNode = cc.uiloader:seekNodeByName(self._mainNode, "mLastRoundAniNode")
+  if _aniNode:getChildByTag(1)==nil then
+      print("GameScene:addLastRoundAni")
+      local fireNode = cc.uiloader:load("LastRoundAniNode.csb")
+      _aniNode:addChild(fireNode, 1, 1)
+      local fireAni = cc.CSLoader:createTimeline("LastRoundAniNode.csb")
+      fireNode:runAction(fireAni)
+      fireAni:gotoFrameAndPlay(0,30,true)
+  end
+end
 --刷新回合数，敌人死后刷新敌人类型
 function GameScene:refreshRound()
+  -- 加上最后一回合的火焰
+  if FightManager:getLeftRound()==1 then
+      self:addLastRoundAni()
+  else
+      cc.uiloader:seekNodeByName(self._mainNode, "mLastRoundAniNode"):removeAllChildren()
+  end
+  -- 使用了冻住回合的技能加图片
+  CsbContainer:setNodesVisible(self._mainNode, {
+      mFreezeSkillRoundSprite=game.skillFreezeRound>0,
+      roundLabel=game.skillFreezeRound==0,
+      freezeLabel=game.skillFreezeRound>0,
+  })
   CsbContainer:setStringForLabel(self._mainNode,{
     roundLabel = FightManager:getLeftRound(),
+    freezeLabel = game.skillFreezeRound,
   })
   -- 刷新敌人的属性
   local _cellBtn = cc.uiloader:seekNodeByName(self._mainNode,"mEnemyAttrBtn")

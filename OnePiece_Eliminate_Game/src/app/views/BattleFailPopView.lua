@@ -19,8 +19,9 @@ function BattleFail_Video(result)
     print("BattleFail_Video")
     if result=="success" then
         print("BattleFail_Video success")
-        -- 统计视频次数
-        common:javaSaveUserData("AdvVideo",tostring(GameConfig.AdvType.loseHalfRebirth))
+        -- 统计关卡_战斗次数_胜利次数
+        UserDefaultUtil:recordResult(2,game.nowStage,2)
+       
         sendMessage({msg="BattleFailPopView_halfRebirth"})
     end
 end
@@ -38,6 +39,9 @@ function BattleFailPopView:ctor()
     local halfRebirtBtn = cc.uiloader:seekNodeByName(self._mainNode,"mHalfRebirthBtn")
     CsbContainer:decorateBtn(halfRebirtBtn,function()
         common:javaOnVideo(BattleFail_Video)
+        if device.platform=="windows" then
+            self:onVideoSuccess()
+        end
     end)
 
     local allRebirthBtn = cc.uiloader:seekNodeByName(self._mainNode,"mAllRebirthBtn")
@@ -45,6 +49,10 @@ function BattleFailPopView:ctor()
         local _rebirthGold = stageCfg[game.nowStage].rebirthGold
         if common:goldCost(_rebirthGold) then
             self:onRebirthBtn(1)
+            -- 记录消耗
+            UserDefaultUtil:recordRebirthCost(_rebirthGold)
+            -- 记录统计
+            UserDefaultUtil:recordResult(2,game.nowStage,1)
         else
             MessagePopView.new(2):addTo(self)
         end
@@ -64,7 +72,6 @@ function BattleFailPopView:onVideoSuccess()
 end
 
 function BattleFailPopView:onRebirthBtn( per )
-    common:javaSaveUserData("Rebirth",tostring(per))
     FightManager:setRoleLifePercent(per)
     sendMessage({msg="GAMESCENE_REFRESH_LIFE"})
     removeMessageByTarget(self)

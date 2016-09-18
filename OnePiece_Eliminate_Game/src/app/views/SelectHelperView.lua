@@ -44,7 +44,7 @@ function SelectHelperView:ctor(isFromBattlePage)
 	end)
 	local startBtn = cc.uiloader:seekNodeByName(self._mainNode,"mStartBtn")
 	CsbContainer:decorateBtnNoTrans(startBtn,function()
-		if game.helper[2]>0 and game.nowStage==13 and game.guideStep==15 then
+		if game.helper[2]>0 and game.nowStage==13 and game.guideStep==17 then
 			sendMessage({msg="GuideFingerPushView_onNext"})
 		end 
 
@@ -101,7 +101,7 @@ function SelectHelperView:ctor(isFromBattlePage)
 		end)
 		local fightCellBtn = cc.uiloader:seekNodeByName(self._mainNode,"mFightCellBtn"..i)
 		CsbContainer:decorateBtnNoTrans(fightCellBtn,function()
-			if game.helper[2]>0 and game.nowStage==13 and game.guideStep==14 then
+			if game.helper[2]>0 and game.nowStage==13 and game.guideStep==16 then
 				sendMessage({msg="GuideFingerPushView_onNextGuide"})
 			end 
 			self:onFightOrCancel(i,false)
@@ -127,12 +127,12 @@ function SelectHelperView:ctor(isFromBattlePage)
 	end
 
 	-- 新手引导
-	if game.helper[2]>0 and game.nowStage==13 and game.guideStep==14 then
+	if game.helper[2]>0 and game.nowStage==13 and game.guideStep==16 then
 		-- TODO 金币不够
 		if game.myGold>500 then
 			GuideFingerPushView.new():addTo(self)
 		else
-			game.guideStep = game.MAXGUIDESTEP+1
+			game.guideStep = 19
 		end
 	end
 
@@ -160,12 +160,18 @@ function SelectHelperView:onStart(isConfirm)
 	game.helperOnFight = common:table_deep_copy(self.helperOnShowTb)
 	self.helperOnShowTb = {}
 
-	local _concatStr = table.concat(game.helperOnFight,"_")
-	common:javaSaveUserData("HelperUse",_concatStr)
-
 	-- 选中的帮助角色扣钱
 	game.myGold = self._myGold
 	UserDefaultUtil:saveGold()
+
+	-- 花钱之后统计使用伙伴消耗，剩余金钱等
+	local costTb = {}
+	for i,v in ipairs(game.helperOnFight) do
+		local helperLevel = game.helper[v]
+		local _useCost = tonumber(common:parseStrWithComma(skillCfg[helperLevel].useCost)[1].count)
+		costTb[i] = _useCost
+	end
+	UserDefaultUtil:recordHerlperUse(game.helperOnFight,costTb)
 
 	if isConfirm==true then
 		sendMessage({msg ="GAMESCENE_REFRESH_HELPER"})

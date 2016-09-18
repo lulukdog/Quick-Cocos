@@ -8,7 +8,9 @@
 ----------------------------------------------------------------------------------
 local helperCfg = require("data.data_helper")
 local GameConfig = require("data.GameConfig")
-local UnlockConfirmView = import(".UnlockConfirmView")
+local UnlockShanzhiView = import(".UnlockShanzhiView")
+local UnlockNameiView = import(".UnlockNameiView")
+local UnlockQiaobaView = import(".UnlockQiaobaView")
 local GuideFingerPushView = import(".GuideFingerPushView")
 local RoleDetailView = import(".RoleDetailView")
 
@@ -42,7 +44,7 @@ function UnlockRoleView:ctor()
 		local onRoleBtn = cc.uiloader:seekNodeByName(self._mainNode,"onRole"..i)
 		if onRoleBtn~=nil then
 			CsbContainer:decorateBtnNoTrans(onRoleBtn,function()
-				if game.guideStep==11 then
+				if game.guideStep==13 then
 					sendMessage({msg="GuideFingerPushView_onNext"})
 				end 
 				RoleDetailView.new(i):addTo(self)
@@ -53,7 +55,7 @@ function UnlockRoleView:ctor()
 	addMessage(self, "UnlockRoleView_refreshUnlockNode",self.refreshUnlockNode)
 
 	-- 新手引导
-	if game.guideStep==11 then
+	if game.guideStep==13 then
 		GuideFingerPushView.new():addTo(self)
 	end
 end
@@ -72,7 +74,15 @@ function UnlockRoleView:refreshUnlockNode(  )
 end
 
 function UnlockRoleView:onUnlock( btnNum )
-	UnlockConfirmView.new(btnNum):addTo(self)
+	if btnNum==5 then
+	    UnlockShanzhiView.new():addTo(self)
+	-- 娜美
+	elseif btnNum==3 then
+	    UnlockNameiView.new():addTo(self)
+	-- 乔巴
+	elseif btnNum==6 then
+	    UnlockQiaobaView.new():addTo(self)
+	end
 end
 
 return UnlockRoleView

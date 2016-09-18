@@ -39,6 +39,9 @@ function GuideFingerView:onGuide()
         CsbContainer:setSpritesPic(self._mainNode, {
             mSprite = "GameScene/zanting.png",
         })
+    elseif game.guideStep==10 then
+        sendMessage({msg="StoryView_Exit"})
+        self:onExit()
     else
         self:onExit()
     end

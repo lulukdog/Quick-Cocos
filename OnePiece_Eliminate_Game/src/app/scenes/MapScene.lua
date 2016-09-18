@@ -1,8 +1,7 @@
-local BubbleButton = import("..views.BubbleButton")
+
 local MapDetailView = import("..views.MapDetailView")
 local ShipUpgradeView = import("..views.ShipUpgradeView")
 local UnlockRoleView = import("..views.UnlockRoleView")
-local UnlockConfirmView = import("..views.UnlockConfirmView")
 local Ship2PopView = import("..views.Ship2PopView")
 local SetView = import("..views.SetView")
 local BuyGoldView = import("..views.BuyGoldView")
@@ -10,9 +9,18 @@ local BuyEnergyView = import("..views.BuyEnergyView")
 local GuideFingerPushView = import("..views.GuideFingerPushView")
 local StageNode = import("..views.StageNode")
 local UpgradePushView = import("..views.UpgradePushView")
-local RoleGetPushView = import("..views.RoleGetPushView")
+local NameiGetPushView = import("..views.NameiGetPushView")
+local SuolongGetPushView = import("..views.SuolongGetPushView")
+local WusuopuGetPushView = import("..views.WusuopuGetPushView")
+local ShanzhiGetPushView = import("..views.ShanzhiGetPushView")
+local QiaobaGetPushView = import("..views.QiaobaGetPushView")
 local GoldBoxView = import("..views.GoldBoxView")
+local OneYuanPushView = import("..views.OneYuanPushView")
 local CommonConfirmView = import("..views.CommonConfirmView")
+local UnlockShanzhiView = import("..views.UnlockShanzhiView")
+local UnlockNameiView = import("..views.UnlockNameiView")
+local UnlockQiaobaView = import("..views.UnlockQiaobaView")
+local ShipGetPushView = import("..views.ShipGetPushView")
 
 local common = require("app.common")
 local scheduler = require("framework.scheduler")
@@ -25,9 +33,24 @@ local MapScene = class("MapScene", function()
 	return display.newScene("MapScene")
 end)
 
-function GoldBoxView_video(result)
-    if result== "success" then
-        sendMessage({msg="MapScene_pushGoldBoxView"})
+function mapScene_buyInfEnergy( result )
+    print("mapScene_buyInfEnergy ".._result)
+    local resultCfg = common:parseStrOnlyWithUnderline(_result)
+    if resultCfg[1] ~= "fail" then
+        local result = resultCfg[1]
+        local payMethod = resultCfg[2]
+
+        game.myEnergy = game.myEnergy + GameConfig.EnergyTb[4]
+        game.countTime = math.max(0,game.countTime-GameConfig.EnergyTb[4]*game.addOneEnergyTime)
+        UserDefaultUtil:SaveEnergy()
+        scheduler.performWithDelayGlobal(function()
+            sendMessage({msg="Refresh_Energy"})
+            sendMessage({msg="MapScene_RefreshPage"})
+        end, 0.5)
+    else
+        local result = resultCfg[2]
+        local payMethod = resultCfg[3]
+        UserDefaultUtil:recordRecharge(tonumber(result)/100,payMethod,-1,2)
     end
 end
 
@@ -64,7 +87,7 @@ function MapScene:ctor()
     -- 解锁角色按钮
     local roleBtn = cc.uiloader:seekNodeByName(self._mainNode,"mRoleBtn")
     CsbContainer:decorateBtnNoTrans(roleBtn,function()
-        if game.guideStep==10 then
+        if game.guideStep==12 then
             sendMessage({msg="GuideFingerPushView_onNext"})
         end
         UnlockRoleView.new():addTo(self)
@@ -84,23 +107,59 @@ function MapScene:ctor()
     CsbContainer:decorateBtnNoTrans(buyEnergyBtn,function()
         BuyEnergyView.new():addTo(self)
     end)
+
+    -- 广告按钮上的动画
+    local shipSp = display.newSprite("#Adani01.png")
+    shipSp:playAnimationForever(display.getAnimationCache("Adani"))
+    shipSp:setScale(2)
+    local helperSp = display.newSprite("#Adani01.png")
+    helperSp:playAnimationForever(display.getAnimationCache("Adani"))
+    helperSp:setScale(2)
+    self._boxSp = display.newSprite("#Adani01.png")
+    self._boxSp:playAnimationForever(display.getAnimationCache("Adani"))
+    self._boxSp:setScale(2.8)
+    local energySp = display.newSprite("#Adani01.png")
+    energySp:playAnimationForever(display.getAnimationCache("Adani"))
+    energySp:setScale(2)
+    local oneYuanSp = display.newSprite("#Adani01.png")
+    oneYuanSp:playAnimationForever(display.getAnimationCache("Adani"))
+    oneYuanSp:setScale(2)
     -- 购买船的按钮
     local buyShipBtn = cc.uiloader:seekNodeByName(self._mainNode,"mBuyShipBtn")
     CsbContainer:decorateBtnNoTrans(buyShipBtn,function()
         Ship2PopView.new():addTo(self)
     end)
+    local buyShipNode = cc.uiloader:seekNodeByName(self._mainNode,"mBuyShipNode")
+    buyShipNode:addChild(shipSp)
     -- 购买无限体力按钮
     local buyInfEnergyBtn = cc.uiloader:seekNodeByName(self._mainNode,"mBuyInfEnergyBtn")
     CsbContainer:decorateBtnNoTrans(buyInfEnergyBtn,function()
         CommonConfirmView.new(GameConfig.BuyInfEnergyLabel,function()
-            game.myEnergy = game.myEnergy + GameConfig.EnergyTb[4]
-            game.countTime = math.max(0,game.countTime-GameConfig.EnergyTb[4]*game.addOneEnergyTime)
-            UserDefaultUtil:SaveEnergy()
-            self:refreshEnergy()
-            self:refreshPage()
+            if device.platform=="windows" then
+                game.myEnergy = game.myEnergy + GameConfig.EnergyTb[4]
+                game.countTime = math.max(0,game.countTime-GameConfig.EnergyTb[4]*game.addOneEnergyTime)
+                UserDefaultUtil:SaveEnergy()
+                self:refreshEnergy()
+                self:refreshPage()
+            else
+                common:javaOnUseMoney(mapScene_buyInfEnergy,3000)
+            end
 
         end):addTo(self)
     end)
+    local energyNode = cc.uiloader:seekNodeByName(self._mainNode,"mBuyInfEnergyNode")
+    energyNode:addChild(energySp)
+    -- 一元购
+    local oneYuanBtn = cc.uiloader:seekNodeByName(self._mainNode,"mBuyOneYuanBtn")
+    CsbContainer:decorateBtnNoTrans(oneYuanBtn,function()
+        OneYuanPushView.new():addTo(self)
+    end)
+    local oneYuanNode = cc.uiloader:seekNodeByName(self._mainNode,"mBuyOneYuanNode")
+    oneYuanNode:addChild(oneYuanSp)
+    
+    -- 人物广告加上闪烁动画
+    local helperNode = cc.uiloader:seekNodeByName(self._mainNode,"mBuyHelperNode")
+    helperNode:addChild(helperSp)
     -- 打开宝箱按钮
     local _boxNode = cc.uiloader:seekNodeByName(self._mainNode, "mBoxNode")
     self._boxNode = cc.uiloader:load("RewardBoxNode.csb"):addTo(_boxNode)
@@ -108,12 +167,9 @@ function MapScene:ctor()
     self._boxAni = cc.CSLoader:createTimeline("RewardBoxNode.csb")
     self._boxNode:runAction(self._boxAni)
     CsbContainer:decorateBtnNoTrans(self._boxBtn, function()
-        common:javaOnVideo(GoldBoxView_video)
-        if device.platform=="windows" then
-            GoldBoxView.new():addTo(self)
-        end
+        GoldBoxView.new():addTo(self)
     end)
-
+    _boxNode:addChild(self._boxSp)
     -- 宝箱上的剩余时间
     self:refreshBoxState()
     self.timeBoxHandler = scheduler.scheduleGlobal(function()
@@ -125,11 +181,12 @@ function MapScene:ctor()
     addMessage(self, "Refresh_Energy", self.refreshEnergy)
     addMessage(self, "MapScene_RefreshPage", self.refreshPage)
     addMessage(self, "MapScene_PushRoleGetView", self.pushRoleGetView)
-    addMessage(self, "MapScene_pushGoldBoxView", self.pushGoldBoxView)
+    addMessage(self, "MapScene_BuyHelperSuccess", self.buyHelperSuccess)
+    addMessage(self, "MapScene_Ship2BuySuccess", self.buyShip2Success)
 
     local _skipShipUpgrade = false -- 是否跳过船舱升级画面，新手引导阶段就跳过
     -- 新手引导
-    if common:getNowMaxStage()==8 and game.guideStep==10 then
+    if common:getNowMaxStage()==8 and game.guideStep==12 then
         GuideFingerPushView.new():addTo(self)
         _skipShipUpgrade = true
     end
@@ -145,18 +202,18 @@ function MapScene:ctor()
     -- 12关后获得索隆
     if common:getNowMaxStage()==13 and game.helper[2]==0 then
         game.helper[2] = 1
-        UserDefaultUtil:saveHelperLevel()
+        UserDefaultUtil:saveHelperLevel(2)
         self:refreshPage()
 
-        RoleGetPushView.new(2):addTo(self)
+        SuolongGetPushView.new():addTo(self)
     end
-    -- 30关打过之后获得乌索普
-    if common:getNowMaxStage()==31 and game.helper[4]==0 then
+    --50关打过之后获得乌索普
+    if common:getNowMaxStage()==51 and game.helper[4]==0 then
         game.helper[4] = 1
-        UserDefaultUtil:saveHelperLevel()
+        UserDefaultUtil:saveHelperLevel(4)
         self:refreshPage()
 
-        RoleGetPushView.new(4):addTo(self)
+        WusuopuGetPushView.new():addTo(self)
     end
     math.newrandomseed()
 
@@ -168,14 +225,49 @@ function MapScene:ctor()
     cc.Director:getInstance():getEventDispatcher():addEventListenerWithFixedPriority(self._foregroundListener, 1)
 
     -- 弹出自己的广告
-    if game.needPlayAd==true then
+    if game.needPlayAd==true and _skipShipUpgrade==false then
         self:pushAdv()
+    end
+end
+
+-- 购买伙伴成功后刷新map页面
+function MapScene:buyHelperSuccess(data)
+    print("MapScene:buyHelperSuccess")
+
+    local helperNum = data.helperNum
+    game.helper[helperNum] = 1
+    UserDefaultUtil:saveHelperLevel(helperNum)
+    scheduler.performWithDelayGlobal(function()
+        sendMessage({msg="UnlockRoleView_refreshUnlockNode"})
+        sendMessage({msg="MapScene_RefreshPage"})
+        sendMessage({msg="MapScene_PushRoleGetView",_btnNum=helperNum})
+    end, 0.2)
+end
+-- 购买万里阳光号成功后刷新map页面
+function MapScene:buyShip2Success()
+    print("MapScene:buyShip2Success")
+    if game.nowShip<#GameConfig.ShipNamePic then
+        game.nowShip = game.nowShip+1
+        UserDefaultUtil:saveShipType()
+        scheduler.performWithDelayGlobal(function()
+            sendMessage({msg = "MapScene_RefreshPage"})
+            sendMessage({msg = "SHIP_UPGRADE_REFRESH"})
+            ShipGetPushView.new():addTo(self)
+        end, 0.2)
     end
 end
 
 function MapScene:pushAdv( )
     if self._nowBuyHelperNum~=0 then
-        UnlockConfirmView.new(self._nowBuyHelperNum):addTo(self)
+        if self._nowBuyHelperNum==5 then
+            UnlockShanzhiView.new():addTo(self)
+        -- 娜美
+        elseif self._nowBuyHelperNum==3 then
+            UnlockNameiView.new():addTo(self)
+        -- 乔巴
+        elseif self._nowBuyHelperNum==6 then
+            UnlockQiaobaView.new():addTo(self)
+        end
     end
 end
 
@@ -187,7 +279,9 @@ function MapScene:refreshBoxState()
             mShineNode = false,
         })
         self:countBoxTime()
+        self._boxSp:setVisible(false)
     else
+        self._boxSp:setVisible(true)
         self._boxBtn:setEnabled(true)
         self._boxAni:gotoFrameAndPlay(0,50,true)
     end
@@ -195,6 +289,7 @@ end
 function MapScene:getBoxReward( )
     self._boxBtn:setEnabled(false)
     self._boxAni:gotoFrameAndPlay(50,70,false)
+    self:refreshBoxState()
 end
 function MapScene:countBoxTime()
     if game.boxLeftTime>0 then
@@ -207,10 +302,17 @@ function MapScene:countBoxTime()
 end
 
 function MapScene:pushRoleGetView( data )
-    RoleGetPushView.new(data._btnNum):addTo(self)
-end
-function MapScene:pushGoldBoxView()
-    GoldBoxView.new():addTo(self)
+    if data._btnNum==2 then
+        SuolongGetPushView.new():addTo(self)
+    elseif data._btnNum==3 then
+        NameiGetPushView.new():addTo(self)
+    elseif data._btnNum==4 then
+        WusuopuGetPushView.new():addTo(self)
+    elseif data._btnNum==5 then
+        ShanzhiGetPushView.new():addTo(self)
+    elseif data._btnNum==6 then
+        QiaobaGetPushView.new():addTo(self)
+    end
 end
 
 function MapScene:runShipUpgradeAni()
@@ -218,21 +320,26 @@ function MapScene:runShipUpgradeAni()
 end
 
 function MapScene:refreshGold()
-    CsbContainer:setStringForLabel(self._mainNode,{
-        mGoldLabel = game.myGold
-    })
+    scheduler.performWithDelayGlobal(function()
+        CsbContainer:setStringForLabel(self._mainNode,{
+            mGoldLabel = game.myGold
+        })
+    end,0.2)
 end
 function MapScene:refreshEnergy()
-    CsbContainer:setStringForLabel(self._mainNode,{
-        mEnergyLabel = common:getNowEnergyLabel()
-    })
+    scheduler.performWithDelayGlobal(function()
+        CsbContainer:setStringForLabel(self._mainNode,{
+            mEnergyLabel = common:getNowEnergyLabel()
+        })
+    end,0.2)
 end
 function MapScene:refreshPage()
     CsbContainer:setNodesVisible(self._mainNode, {
-        mBuyShipBtn = game.nowShip<2,
-        mBuyInfEnergyBtn = game.myEnergy<5000,
+        mBuyShipNode = game.nowShip<2,
+        mBuyInfEnergyNode = game.myEnergy<5000,
     })
     -- 设置当前可购买的是哪个人
+    self._nowBuyHelperNum = 0
     for i=1,#GameConfig.BuyHelper do
         if game.helper[GameConfig.BuyHelper[i]]==0 then
             self._nowBuyHelperNum = GameConfig.BuyHelper[i]
@@ -240,17 +347,27 @@ function MapScene:refreshPage()
         end
     end
     CsbContainer:setNodesVisible(self._mainNode, {
-        mBuyHelperBtn = self._nowBuyHelperNum~=0,
+        mBuyHelperNode = self._nowBuyHelperNum~=0,
     })
     -- 购买人物按钮
     if self._nowBuyHelperNum~=0 then
         local buyHelperBtn = cc.uiloader:seekNodeByName(self._mainNode,"mBuyHelperBtn")
         CsbContainer:decorateBtnNoTrans(buyHelperBtn,function()
-            UnlockConfirmView.new(self._nowBuyHelperNum):addTo(self)
+            if self._nowBuyHelperNum==5 then
+                UnlockShanzhiView.new():addTo(self)
+            -- 娜美
+            elseif self._nowBuyHelperNum==3 then
+                UnlockNameiView.new():addTo(self)
+            -- 乔巴
+            elseif self._nowBuyHelperNum==6 then
+                UnlockQiaobaView.new():addTo(self)
+            end
         end)
         CsbContainer:refreshBtnView(buyHelperBtn,GameConfig.BuyHelperPic[self._nowBuyHelperNum],GameConfig.BuyHelperPic[self._nowBuyHelperNum])
         CsbContainer:setSpritesPic(self._mainNode, {mBuyHelperWordSprite = GameConfig.BuyHelperWordPic[self._nowBuyHelperNum]})
     end
+    -- 刷新一元购按钮
+    CsbContainer:setNodesVisible(self._mainNode, {mBuyOneYuanNode=game.boughtOneYuan==false})
 end
 
 function MapScene:initMapTouch()
@@ -455,13 +572,19 @@ function MapScene:refreshMapTex(posY)
 
         for i=1,8 do
             if (i<_down or i>_up) then
-                CsbContainer:setSpritesPic(self._mainNode, {
-                    ["mapNode"..i] = "empty.png"
+                -- CsbContainer:setSpritesPic(self._mainNode, {
+                --     ["mapNode"..i] = "empty.png"
+                -- })
+                CsbContainer:setNodesVisible(self._mainNode, {
+                    ["mapNode"..i] = false
                 })
             elseif i>=_down and i<=_up then
-                local picNum = 9-i
-                CsbContainer:setSpritesPic(self._mainNode, {
-                    ["mapNode"..i] = "ditu_all_0"..picNum..".png"
+                -- local picNum = 9-i
+                -- CsbContainer:setSpritesPic(self._mainNode, {
+                --     ["mapNode"..i] = "ditu_all_0"..picNum..".png"
+                -- })
+                CsbContainer:setNodesVisible(self._mainNode, {
+                    ["mapNode"..i] = true
                 })
             end
         end
@@ -533,10 +656,12 @@ end
 -- 从后台回来调用，刷新时间
 function MapScene:onEnterForeground()
     local elapsedTime,countTime = UserDefaultUtil:GetBoxLeftTime()
-    print("MapScene:onEnterForeground elapsedTime,countTime"..common:getElapsedTime()..","..elapsedTime..","..countTime)
-    local diffTime = math.max((common:getElapsedTime() - elapsedTime),0)
-    game.boxLeftTime = math.max((countTime-diffTime),0)
-    self:countBoxTime()
+    if elapsedTime then
+        print("MapScene:onEnterForeground elapsedTime,countTime"..common:getElapsedTime()..","..elapsedTime..","..countTime)
+        local diffTime = math.max((common:getElapsedTime() - elapsedTime),0)
+        game.boxLeftTime = math.max((countTime-diffTime),0)
+        self:countBoxTime()
+    end
 end
 
 function MapScene:onExit()

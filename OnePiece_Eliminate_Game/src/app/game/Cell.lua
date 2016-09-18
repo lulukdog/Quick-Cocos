@@ -181,18 +181,18 @@ function Cell:playDisappearAni( )
 		
 	))
 
-
 	self.sprite:setTexture(cellCfg[self.id].iconSelected)
 	self:setLocalZOrder(10)
 	self:runAction(cc.Sequence:create(
 		
 		cc.DelayTime:create(0.57+GameConfig.FlyDelayTime),
 		cc.CallFunc:create(function()
+			sendMessage({msg="GameScene_CellFlySplashAni"})
 			self:removeAllChildren()
 			self:removeFromParent()
 		end)
 	))
-	
+
 	transition.execute(self, cc.MoveTo:create(0.3, GameConfig.MainRole.pos), {delay = 0.3+GameConfig.FlyDelayTime})
 	transition.execute(self, cc.ScaleTo:create(0.3, 0.5), {delay = 0.3+GameConfig.FlyDelayTime})
 	GameConfig.FlyDelayTime = GameConfig.FlyDelayTime+GameConfig.FlyDelayInterval
@@ -219,14 +219,14 @@ function Cell:playSkillBombDisappearAllAni()
 	self.sprite:setTexture(cellCfg[self.id].iconSelected)
 	self:setLocalZOrder(10)
 	self:runAction(cc.Sequence:create(
-		cc.DelayTime:create(0.67),
+		cc.DelayTime:create(0.57),
 		cc.CallFunc:create(function()
+			sendMessage({msg="GameScene_CellFlySplashAniOnce"})
 			self:removeAllChildren()
 			self:removeFromParent()
 		end)
 	))
-	
-	transition.execute(self, cc.MoveTo:create(0.4, GameConfig.MainRole.pos), {delay = 0.3})
+	transition.execute(self, cc.MoveTo:create(0.3, GameConfig.MainRole.pos), {delay = 0.3})
 	transition.execute(self, cc.ScaleTo:create(0.3, 0.5), {delay = 0.3})
 end
 

@@ -38,7 +38,7 @@ function RoleDetailView:ctor(btnNum)
 
 	local upgradeBtn = cc.uiloader:seekNodeByName(self._mainNode,"mUpgradeBtn")
 	CsbContainer:decorateBtn(upgradeBtn,function()
-		if game.guideStep==12 then
+		if game.guideStep==14 then
 			sendMessage({msg="GuideFingerPushView_onNext"})
 		end
 
@@ -49,7 +49,7 @@ function RoleDetailView:ctor(btnNum)
 
 		if common:goldCost(self.needGold) then
 			game.helper[btnNum] = game.helper[btnNum] + 1
-			UserDefaultUtil:saveHelperLevel()
+			UserDefaultUtil:saveHelperLevel(btnNum,self.needGold)
 			HelperUpgradeView.new(btnNum):addTo(self)
 			self:refreshPage()
 			sendMessage({msg="REFRESHGOLD"})
@@ -66,7 +66,7 @@ function RoleDetailView:ctor(btnNum)
 		mUpgradeBtn = game.helper[btnNum]~=0,
 	})
 
-	if game.guideStep==12 then
+	if game.guideStep==14 then
 		GuideFingerPushView.new():addTo(self)
 	end
 

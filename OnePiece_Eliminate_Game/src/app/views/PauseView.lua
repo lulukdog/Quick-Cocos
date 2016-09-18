@@ -22,6 +22,8 @@ function PauseView:ctor(closeCallback)
 
 	local mBackMapBtn = cc.uiloader:seekNodeByName(self._mainNode,"mBackMapBtn")
 	CsbContainer:decorateBtnNoTrans(mBackMapBtn,function()
+		-- 记录统计
+		UserDefaultUtil:recordResult(3,game.nowStage,0)
 		app:enterScene("MapScene", nil, "fade", 0.6, display.COLOR_WHITE)
 	end)
 

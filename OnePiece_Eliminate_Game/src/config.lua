@@ -48,7 +48,8 @@ GAME_SOUND = {
     winStar 		= "sfx/sound.star.mp3",
 }
 GAME_MUSIC = {
-    bgMusic 	  	= "sfx/denglu.mp3",
+    bgMusic         = "sfx/map.mp3",
+    loadingMusic 	= "sfx/denglu.mp3",
     battleWin 	  	= "sfx/shengli01.mp3",
     zhandou1 	  	= "sfx/zhandou01.mp3",
     zhandou2 	  	= "sfx/zhandou02.mp3",

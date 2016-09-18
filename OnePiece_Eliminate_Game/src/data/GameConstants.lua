@@ -10,6 +10,11 @@
 game = game or {}
 
 --[[
+============版本号，控制更新==============
+--]]
+game.VERSION = "1.0.0"
+
+--[[
 ============常量部分==============
 --]]
 game.CELL_WIDTH        = 106
@@ -26,7 +31,7 @@ game.BOMBID = 7 -- 炸弹cell的id
 game.IRONID = 9 -- 铁块cell的id
 game.MAXENERGY = 50 --最大体力值
 game.MAXSTAGE = 100 --最大关卡数
-game.MAXGUIDESTEP = 16 --最大引导步数16
+game.MAXGUIDESTEP = 20 --最大引导步数16
 game.ITEM = {
 	GOLD = 1,
 	EXP = 2,
@@ -34,6 +39,8 @@ game.ITEM = {
 }
 game.MAPHEIGHT = 8400
 game.FREEZEROUND = 3 -- 冻结3回合技能
+
+game.TOMOBILE = false -- 运营商的包购买看视频等,直接成功
 
 --[[
 ============变量部分==============
@@ -63,11 +70,17 @@ game.boxRewardTime = 6*3600 --开启宝箱的间隔时间
 game.usedHalfRebirth = false --是否已使用了看视频回半血
 game.skillFreezeRound = 0 -- 使用技能冻结3回合冻结的回合数
 game.needPlayAd = false -- 是否播放自己的广告内容
+game.boughtOneYuan = false -- 是否已购买1元购
 
 game.MusicOn = true
 game.SoundOn = true
 
 game.PLAYERID = ""
+
+-------------------- 不联网的时候缓存的统计数据 -----------------------
+game.recordHelperUse = {} -- 统计伙伴使用，如果发送给平台一次后清空全部
+game.recordRebirthBuy = {} -- 统计复活购买信息
+game.recordResult = {} -- 统计战斗结果，胜利、失败、返回
 
 -------------------- 游戏中数据不保存 --------------------
 game.collectNum = 0 -- 收集物数量

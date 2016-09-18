@@ -130,7 +130,9 @@ function FightView:mainRoleAni(data)
 	local aniStr = data.aniStr
 	-- 主角攻击增加回合数，3回合后怪物攻击
 	if aniStr~="stand" and aniStr~="beat" and aniStr~="die" and aniStr~="shield2" then
-		FightManager:addRound()
+        if data.helperAni==nil then
+		    FightManager:addRound()
+        end
 	end
 
 	if aniStr=="shield" then

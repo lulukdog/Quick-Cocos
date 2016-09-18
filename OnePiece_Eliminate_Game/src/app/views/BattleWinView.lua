@@ -18,15 +18,18 @@ end)
 function BattleWin_Video( result )
 	if result=="success" then
 		sendMessage({msg="BattleWinView_VideoSuccess"})
-    else
-        MessagePopView.new(10):addTo(self)
+    end
+end
+function BattleWin_Share( result )
+	if result=="success" then
+		sendMessage({msg="BattleWinView_ShareSuccess"})
     end
 end
 
 function BattleWinView:ctor()
 
-	self._mainNode = CsbContainer:createPushCsb("WinPopPage_NoShare.csb"):addTo(self)
-	self._mainAni = cc.CSLoader:createTimeline("WinPopPage_NoShare.csb")
+	self._mainNode = CsbContainer:createPushCsb("WinPopPage.csb"):addTo(self)
+	self._mainAni = cc.CSLoader:createTimeline("WinPopPage.csb")
 	self._mainNode:runAction(self._mainAni)
 	local starAni = GameConfig.WinAniFrame["star"..FightManager.starNum]
 	self._mainAni:gotoFrameAndPlay(1,starAni.firstEnd,false)
@@ -63,12 +66,32 @@ function BattleWinView:ctor()
 		common:javaOnVideo(BattleWin_Video)
 		game.needPlayAd = false
 		if device.platform == "windows" then
-			cc.uiloader:seekNodeByName(self._mainNode,"mViewAdvBtn"):setEnabled(false)
-			CsbContainer:setStringForLabel(self._mainNode, {mGoldLabel = "+"..(FightManager.winGold*2)})
-			game.myGold = game.myGold + FightManager.winGold
-			UserDefaultUtil:saveGold()
+			self:videoSuccess()
 		end
 	end)
+
+	local shareBtn = cc.uiloader:seekNodeByName(self._mainNode,"mShareBtn")
+	if shareBtn then
+		CsbContainer:decorateBtnNoTrans(shareBtn,function()
+		
+			if device.platform == "android" then
+				print("BattleWinView:ctor share")
+			    local args = {
+			    	BattleWin_Share,
+				}
+			    local className = "org/cocos2dx/sdk/YoumengSDK"
+			    local ok,ret = luaj.callStaticMethod(className, "Youmeng_Share", args, "(I)V")
+			    print("Youmeng_Share")
+			    if not ok then
+			        print("BattleWinView Youmeng_Share error "..ret)
+			    end
+			end
+
+			if device.platform == "windows" then
+				self:shareSuccess()
+			end
+		end)
+	end
 	
 	CsbContainer:setNodesVisible(self._mainNode, {
 		mWinEnergyNode = FightManager.winEnergy>0,
@@ -81,23 +104,60 @@ function BattleWinView:ctor()
     	mGoldLabel = "+"..FightManager.winGold,
     	mEnergyLabel = "+"..FightManager.winEnergy,
     	mStageNumLabel = string.format("%03d",game.nowStage),
+    	mShareGoldLabel = "+"..stageCfg[game.nowStage].shareGold,
 	})
 
 	-- 统计关卡_战斗次数_胜利次数
-	common:javaSaveUserData("BattleWin",tostring(game.nowStage))
+	UserDefaultUtil:recordResult(1,game.nowStage,0)
 
 	addMessage(self, "BattleWinView_VideoSuccess", self.videoSuccess)
+	addMessage(self, "BattleWinView_ShareSuccess", self.shareSuccess)
 end
 
 -- 观看视频成功的回调
 function BattleWinView:videoSuccess()
-	-- 统计视频次数
-	common:javaSaveUserData("AdvVideo",tostring(GameConfig.AdvType.winTwiceCoin))
-   	cc.uiloader:seekNodeByName(self._mainNode,"mViewAdvBtn"):setEnabled(false)
+   	local advBtn = cc.uiloader:seekNodeByName(self._mainNode,"mViewAdvBtn")
+   	advBtn:setEnabled(false)
+   	CsbContainer:refreshBtnView(advBtn, "pic/anniu_quse.png", "pic/anniu_quse.png")
+
 	CsbContainer:setStringForLabel(self._mainNode, {mGoldLabel = "+"..(FightManager.winGold*2)})
 	CsbContainer:setColorForNodes(self._mainNode, {mGoldLabel = cc.c3b(255, 0, 0)})
 	game.myGold = game.myGold + FightManager.winGold
 	UserDefaultUtil:saveGold()
+
+	-- 统计视频次数
+	local jsonStr = json.encode({adv_video={
+		type=GameConfig.AdvType.winTwiceCoin,
+	}})
+    common:javaSaveUserData(jsonStr)
+    -- 统计获得金币的地方
+    local jsonStrCoin = json.encode({coin_reward={
+    	type=GameConfig.AdvType.winTwiceCoin,
+		getcoin=FightManager.winGold,
+        leftcoin=game.myGold,
+	}})
+    common:javaSaveUserData(jsonStrCoin)
+end
+
+-- 分享成功的回调
+function BattleWinView:shareSuccess()
+	local shareRewardString = GameConfig.ShareRewardString..stageCfg[game.nowStage].shareGold
+	MessagePopView.new(shareRewardString):addTo(self)
+	CsbContainer:setNodesVisible(self._mainNode, {mShareNode=false})
+	local shareBtn = cc.uiloader:seekNodeByName(self._mainNode,"mShareBtn")
+	shareBtn:setEnabled(false)
+	CsbContainer:refreshBtnView(shareBtn, "pic/anniu_share_quse.png", "pic/anniu_share_quse.png")
+	
+   	game.myGold = game.myGold + stageCfg[game.nowStage].shareGold
+   	UserDefaultUtil:saveGold()
+
+   	-- 统计获得金币的地方
+    local jsonStrCoin = json.encode({coin_reward={
+    	type=5, -- 分享获得金币类型
+		getcoin=stageCfg[game.nowStage].shareGold,
+        leftcoin=game.myGold,
+	}})
+    common:javaSaveUserData(jsonStrCoin)
 end
 
 return BattleWinView

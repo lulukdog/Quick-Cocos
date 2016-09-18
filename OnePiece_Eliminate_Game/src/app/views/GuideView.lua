@@ -83,7 +83,7 @@ function GuideView:onGuide()
         if game.guideStep==5 or game.guideStep==7 then
             _ani:gotoFrameAndPlay(0,60,true)
         end
-    elseif game.nowStage==9 and game.guideStep==13 then
+    elseif game.nowStage==9 and game.guideStep==15 then
         CsbContainer:setNodesVisible(self._mainNode, {
             mGuideNode = false,
             mMaskNode = false,

@@ -71,7 +71,7 @@ function FightManager:refreshRoundAndLife( )
 end
 -- boss几回合后攻击
 function FightManager:getLeftRound()
-	return monsterCfg[self.nowMonsterId].interval-self.round
+	return math.max(1,monsterCfg[self.nowMonsterId].interval-self.round)
 end
 -- boss当前属性
 function FightManager:getEnemyAttr()
@@ -270,7 +270,7 @@ function FightManager:getNowEnemyMaxLife()
 end
 -- 复活设置当前血量
 function FightManager:setRoleLifePercent(per)
-	self.lifeNum = per*self._nowMaxLife
+	self.lifeNum = math.ceil(per*self._nowMaxLife)
 end
 
 -- 战斗胜利计算星星数和获得经验

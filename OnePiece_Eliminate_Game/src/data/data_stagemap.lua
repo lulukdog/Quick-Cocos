@@ -37,15 +37,15 @@ local data_stagemap = {
 },
 [10] ={
 	id = 10,
-	picPath = "cantingnei1_bg.jpg",
+	picPath = "canting1_bg.jpg",
 },
 [11] ={
 	id = 11,
-	picPath = "cantingnei2_bg.jpg",
+	picPath = "canting2_bg.jpg",
 },
 [12] ={
 	id = 12,
-	picPath = "cantingnei3_bg.jpg",
+	picPath = "canting3_bg.jpg",
 },
 [13] ={
 	id = 13,
@@ -97,27 +97,27 @@ local data_stagemap = {
 },
 [25] ={
 	id = 25,
-	picPath = "jiaban1_bg.jpg",
+	picPath = "chuanjiaban1_bg.jpg",
 },
 [26] ={
 	id = 26,
-	picPath = "jiaban2_bg.jpg",
+	picPath = "chuanjiaban2_bg.jpg",
 },
 [27] ={
 	id = 27,
-	picPath = "jiaban3_bg.jpg",
+	picPath = "chuanjiaban3_bg.jpg",
 },
 [28] ={
 	id = 28,
-	picPath = "jiejing1_bg.jpg",
+	picPath = "bieshu1_bg.jpg",
 },
 [29] ={
 	id = 29,
-	picPath = "jiejing2_bg.jpg",
+	picPath = "bieshu2_bg.jpg",
 },
 [30] ={
 	id = 30,
-	picPath = "jiejing3_bg.jpg",
+	picPath = "bieshu3_bg.jpg",
 },
 [31] ={
 	id = 31,
@@ -133,15 +133,15 @@ local data_stagemap = {
 },
 [34] ={
 	id = 34,
-	picPath = "jiujiaban1_bg.jpg",
+	picPath = "jiu_chuanjiaban1_bg.jpg",
 },
 [35] ={
 	id = 35,
-	picPath = "jiujiaban2_bg.jpg",
+	picPath = "jiu_chuanjiaban2_bg.jpg",
 },
 [36] ={
 	id = 36,
-	picPath = "jiujiaban3_bg.jpg",
+	picPath = "jiu_chuanjiaban3_bg.jpg",
 },
 [37] ={
 	id = 37,
@@ -181,15 +181,15 @@ local data_stagemap = {
 },
 [46] ={
 	id = 46,
-	picPath = "shamocity1_bg.jpg",
+	picPath = "shamo_feixu1_bg.jpg",
 },
 [47] ={
 	id = 47,
-	picPath = "shamocity2_bg.jpg",
+	picPath = "shamo_feixu2_bg.jpg",
 },
 [48] ={
 	id = 48,
-	picPath = "shamocity3_bg.jpg",
+	picPath = "shamo_feixu3_bg.jpg",
 },
 [49] ={
 	id = 49,
@@ -217,15 +217,15 @@ local data_stagemap = {
 },
 [55] ={
 	id = 55,
-	picPath = "xuejianzhu1_bg.jpg",
+	picPath = "bingxuecity1_bg.jpg",
 },
 [56] ={
 	id = 56,
-	picPath = "xuejianzhu2_bg.jpg",
+	picPath = "bingxuecity2_bg.jpg",
 },
 [57] ={
 	id = 57,
-	picPath = "xuejianzhu3_bg.jpg",
+	picPath = "bingxuecity3_bg.jpg",
 },
 [58] ={
 	id = 58,

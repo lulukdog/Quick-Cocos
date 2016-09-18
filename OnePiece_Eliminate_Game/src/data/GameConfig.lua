@@ -25,7 +25,7 @@ local GameConfig = {
 		cell_ani5 = {frameBegin = 760,frameEnd = 819},
 		cell_ani6 = {frameBegin = 700,frameEnd = 759},
 		
-		pos = cc.p(175,934), -- 主角屏幕位置,物块飞向主角位置
+		pos = cc.p(175,1034), -- 主角屏幕位置,物块飞向主角位置
 
 	},
 	Enemy = {
@@ -143,7 +143,6 @@ local GameConfig = {
 		shanzhiHelper = 2,
 		rewardBox = 3,
 		winTwiceCoin = 4,
-		loseHalfRebirth = 5,
 	},
 	-- 短信对应的钱数是 实际价格*100
 	RMBGoldCfg = {
@@ -173,9 +172,12 @@ local GameConfig = {
 		freezeRound = 2,
 		bombAllTip = "召唤爆裂炮弹摧毁全屏方块",
 		freezeRoundTip = "定住敌人3回合无法行动",
-		bombAllCost = 5,
+		bombAllCost = 6,
 		freezeRoundCost = 3,
 	},
+	ShareRewardString = "分享成功,获得金币",
+	OneYuanBuyMoney = 100,
+	OneYuanCfg = {money=10000,energy=100,helper=4},
 }
 
 return GameConfig

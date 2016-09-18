@@ -16,6 +16,8 @@ end)
 function ShipUpgradeView:ctor()
 
 	self._mainNode = CsbContainer:createPushCsb("ShipUpgrade.csb"):addTo(self)
+	self._ani = cc.CSLoader:createTimeline("ShipUpgrade.csb")
+	self._mainNode:runAction(self._ani)
 	
 	local upgradeBtn = cc.uiloader:seekNodeByName(self._mainNode,"upgradeBtn")
 	CsbContainer:decorateBtnNoTrans(upgradeBtn,function()
@@ -50,8 +52,13 @@ function ShipUpgradeView:refreshPage()
 
 	CsbContainer:setSpritesPic(self._mainNode, {
 		mShipNameSprite = GameConfig.ShipNamePic[game.nowShip],
-		mShipSprite = GameConfig.ShipPic[game.nowShip],
+		-- mShipSprite = GameConfig.ShipPic[game.nowShip],
 	})
+	if game.nowShip==1 then
+		self._ani:gotoFrameAndPlay(0,81,true)
+	else
+		self._ani:gotoFrameAndPlay(105,190,true)
+	end
 
 	-- 当前船的经验
     local expBar = cc.uiloader:seekNodeByName(self._mainNode,"expBar")

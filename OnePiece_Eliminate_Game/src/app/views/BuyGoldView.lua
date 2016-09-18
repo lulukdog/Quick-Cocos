@@ -34,7 +34,7 @@ end
 
 -- 点击购买相应价格的游戏币
 function BuyGoldView:buyGold( btnNum )
-    if device.platform == "android" then
+    if device.platform == "android" or device.platform == "ios" then
         self:buyItem(btnNum)
     elseif device.platform == "windows" then
         game.myGold = game.myGold + GameConfig.GoldTb[btnNum]
@@ -46,13 +46,22 @@ end
 
 
 
-function buyGold_callback(result)
-    if result ~= "fail" then
-        print("buyGold_callback"..result)
+function buyGold_callback(_result)
+    print("buyGold_callback ".._result)
+    local resultCfg = common:parseStrOnlyWithUnderline(_result)
+    if resultCfg[1] ~= "fail" then
+        local result = resultCfg[1]
+        local payMethod = resultCfg[2]
+
         game.myGold = game.myGold + GameConfig.BuyGoldCfg[tonumber(result)/100]
+        UserDefaultUtil:recordRecharge(tonumber(result)/100,payMethod,1,1)
         UserDefaultUtil:saveGold()
         sendMessage({msg="REFRESHGOLD"})
         sendMessage({msg="SelectHelperView_refreshGold",gold=GameConfig.BuyGoldCfg[tonumber(result)/100]})
+    else
+        local result = resultCfg[2]
+        local payMethod = resultCfg[3]
+        UserDefaultUtil:recordRecharge(tonumber(result)/100,payMethod,-1,1)
     end
 end
 

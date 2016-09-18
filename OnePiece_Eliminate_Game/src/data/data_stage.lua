@@ -17,6 +17,7 @@ local data_stage = {
 	storyId = 1,
 	rebirthGold = 200,
 	boxGold = 100,
+	shareGold = 100
 },
 [2] ={
 	id = 2,
@@ -35,6 +36,7 @@ local data_stage = {
 	starReward3 = "1_110,2_14,3_3",
 	rebirthGold = 200,
 	boxGold = 110,
+	shareGold = 100
 },
 [3] ={
 	id = 3,
@@ -53,6 +55,7 @@ local data_stage = {
 	starReward3 = "1_115,2_20,3_3",
 	rebirthGold = 240,
 	boxGold = 120,
+	shareGold = 100
 },
 [4] ={
 	id = 4,
@@ -71,6 +74,7 @@ local data_stage = {
 	starReward3 = "1_120,2_28,3_3",
 	rebirthGold = 240,
 	boxGold = 130,
+	shareGold = 100
 },
 [5] ={
 	id = 5,
@@ -91,6 +95,7 @@ local data_stage = {
 	storyId = "2,3,4,5,6",
 	rebirthGold = 300,
 	boxGold = 140,
+	shareGold = 100
 },
 [6] ={
 	id = 6,
@@ -110,6 +115,7 @@ local data_stage = {
 	storyId = "7,8,9,10,11",
 	rebirthGold = 300,
 	boxGold = 150,
+	shareGold = 100
 },
 [7] ={
 	id = 7,
@@ -128,6 +134,7 @@ local data_stage = {
 	starReward3 = "1_135,2_64,3_3",
 	rebirthGold = 360,
 	boxGold = 160,
+	shareGold = 100
 },
 [8] ={
 	id = 8,
@@ -146,6 +153,7 @@ local data_stage = {
 	starReward3 = "1_140,2_80,3_3",
 	rebirthGold = 360,
 	boxGold = 170,
+	shareGold = 100
 },
 [9] ={
 	id = 9,
@@ -166,6 +174,7 @@ local data_stage = {
 	starReward3 = "1_145,2_98,3_3",
 	rebirthGold = 400,
 	boxGold = 180,
+	shareGold = 100
 },
 [10] ={
 	id = 10,
@@ -184,6 +193,7 @@ local data_stage = {
 	starReward3 = "1_350,2_118,3_3",
 	rebirthGold = 600,
 	boxGold = 190,
+	shareGold = 100
 },
 [11] ={
 	id = 11,
@@ -202,6 +212,7 @@ local data_stage = {
 	starReward3 = "1_355,2_140,3_3",
 	rebirthGold = 600,
 	boxGold = 200,
+	shareGold = 110
 },
 [12] ={
 	id = 12,
@@ -221,6 +232,7 @@ local data_stage = {
 	storyId = "22,23,24",
 	rebirthGold = 750,
 	boxGold = 220,
+	shareGold = 120
 },
 [13] ={
 	id = 13,
@@ -240,6 +252,7 @@ local data_stage = {
 	storyId = "14,15,16",
 	rebirthGold = 750,
 	boxGold = 240,
+	shareGold = 130
 },
 [14] ={
 	id = 14,
@@ -249,7 +262,7 @@ local data_stage = {
 	initCellWeight2 = "1_20,2_10,3_10,4_10,5_10,6_10",
 	initCellWeight3 = "1_30,2_10,3_10,4_10,5_10,6_10",
 	goal = "1_2",
-	monsterId = "30,31",
+	monsterId = "31,30",
 	starScore1 = 300,
 	starScore2 = 500,
 	starScore3 = 550,
@@ -258,6 +271,7 @@ local data_stage = {
 	starReward3 = "1_370,2_218,3_3",
 	rebirthGold = 900,
 	boxGold = 260,
+	shareGold = 140
 },
 [15] ={
 	id = 15,
@@ -276,6 +290,7 @@ local data_stage = {
 	starReward3 = "1_375,2_248,3_3",
 	rebirthGold = 900,
 	boxGold = 280,
+	shareGold = 150
 },
 [16] ={
 	id = 16,
@@ -295,6 +310,7 @@ local data_stage = {
 	starReward3 = "1_380,2_280,3_3",
 	rebirthGold = 1000,
 	boxGold = 300,
+	shareGold = 160
 },
 [17] ={
 	id = 17,
@@ -313,6 +329,7 @@ local data_stage = {
 	starReward3 = "1_385,2_314,3_3",
 	rebirthGold = 1000,
 	boxGold = 320,
+	shareGold = 170
 },
 [18] ={
 	id = 18,
@@ -331,6 +348,7 @@ local data_stage = {
 	starReward3 = "1_390,2_350,3_3",
 	rebirthGold = 1100,
 	boxGold = 340,
+	shareGold = 180
 },
 [19] ={
 	id = 19,
@@ -349,6 +367,7 @@ local data_stage = {
 	starReward3 = "1_395,2_388,3_3",
 	rebirthGold = 1100,
 	boxGold = 360,
+	shareGold = 190
 },
 [20] ={
 	id = 20,
@@ -367,6 +386,7 @@ local data_stage = {
 	starReward3 = "1_400,2_428,3_3",
 	rebirthGold = 1300,
 	boxGold = 380,
+	shareGold = 200
 },
 [21] ={
 	id = 21,
@@ -386,6 +406,7 @@ local data_stage = {
 	storyId = "12,13",
 	rebirthGold = 1300,
 	boxGold = 400,
+	shareGold = 210
 },
 [22] ={
 	id = 22,
@@ -404,6 +425,7 @@ local data_stage = {
 	starReward3 = "1_610,2_514,3_3",
 	rebirthGold = 1500,
 	boxGold = 420,
+	shareGold = 220
 },
 [23] ={
 	id = 23,
@@ -422,6 +444,7 @@ local data_stage = {
 	starReward3 = "1_615,2_560,3_3",
 	rebirthGold = 1500,
 	boxGold = 440,
+	shareGold = 230
 },
 [24] ={
 	id = 24,
@@ -440,6 +463,7 @@ local data_stage = {
 	starReward3 = "1_620,2_608,3_3",
 	rebirthGold = 1800,
 	boxGold = 460,
+	shareGold = 240
 },
 [25] ={
 	id = 25,
@@ -459,6 +483,7 @@ local data_stage = {
 	starReward3 = "1_625,2_658,3_2",
 	rebirthGold = 1800,
 	boxGold = 480,
+	shareGold = 250
 },
 [26] ={
 	id = 26,
@@ -477,6 +502,7 @@ local data_stage = {
 	starReward3 = "1_630,2_710,3_2",
 	rebirthGold = 2000,
 	boxGold = 500,
+	shareGold = 260
 },
 [27] ={
 	id = 27,
@@ -495,6 +521,7 @@ local data_stage = {
 	starReward3 = "1_635,2_764,3_2",
 	rebirthGold = 2000,
 	boxGold = 520,
+	shareGold = 270
 },
 [28] ={
 	id = 28,
@@ -513,6 +540,7 @@ local data_stage = {
 	starReward3 = "1_640,2_820,3_2",
 	rebirthGold = 2300,
 	boxGold = 540,
+	shareGold = 280
 },
 [29] ={
 	id = 29,
@@ -531,6 +559,7 @@ local data_stage = {
 	starReward3 = "1_645,2_878,3_2",
 	rebirthGold = 2300,
 	boxGold = 560,
+	shareGold = 290
 },
 [30] ={
 	id = 30,
@@ -550,6 +579,7 @@ local data_stage = {
 	starReward3 = "1_650,2_938,3_2",
 	rebirthGold = 2500,
 	boxGold = 580,
+	shareGold = 300
 },
 [31] ={
 	id = 31,
@@ -568,6 +598,7 @@ local data_stage = {
 	starReward3 = "1_955,2_1000,3_2",
 	rebirthGold = 2500,
 	boxGold = 560,
+	shareGold = 310
 },
 [32] ={
 	id = 32,
@@ -587,6 +618,7 @@ local data_stage = {
 	storyId = "19,20,21",
 	rebirthGold = 2800,
 	boxGold = 580,
+	shareGold = 320
 },
 [33] ={
 	id = 33,
@@ -605,6 +637,7 @@ local data_stage = {
 	starReward3 = "1_965,2_1130,3_2",
 	rebirthGold = 2800,
 	boxGold = 600,
+	shareGold = 330
 },
 [34] ={
 	id = 34,
@@ -624,6 +657,7 @@ local data_stage = {
 	starReward3 = "1_970,2_1198,3_2",
 	rebirthGold = 3000,
 	boxGold = 630,
+	shareGold = 340
 },
 [35] ={
 	id = 35,
@@ -642,6 +676,7 @@ local data_stage = {
 	starReward3 = "1_975,2_1268,3_2",
 	rebirthGold = 3000,
 	boxGold = 660,
+	shareGold = 350
 },
 [36] ={
 	id = 36,
@@ -661,6 +696,7 @@ local data_stage = {
 	starReward3 = "1_980,2_1340,3_2",
 	rebirthGold = 3200,
 	boxGold = 680,
+	shareGold = 360
 },
 [37] ={
 	id = 37,
@@ -679,6 +715,7 @@ local data_stage = {
 	starReward3 = "1_985,2_1414,3_2",
 	rebirthGold = 3200,
 	boxGold = 700,
+	shareGold = 370
 },
 [38] ={
 	id = 38,
@@ -699,6 +736,7 @@ local data_stage = {
 	starReward3 = "1_990,2_1490,3_2",
 	rebirthGold = 3500,
 	boxGold = 730,
+	shareGold = 380
 },
 [39] ={
 	id = 39,
@@ -717,6 +755,7 @@ local data_stage = {
 	starReward3 = "1_995,2_1568,3_2",
 	rebirthGold = 3500,
 	boxGold = 760,
+	shareGold = 390
 },
 [40] ={
 	id = 40,
@@ -735,6 +774,7 @@ local data_stage = {
 	starReward3 = "1_1000,2_1648,3_2",
 	rebirthGold = 3800,
 	boxGold = 780,
+	shareGold = 400
 },
 [41] ={
 	id = 41,
@@ -754,6 +794,7 @@ local data_stage = {
 	storyId = "17,18",
 	rebirthGold = 3800,
 	boxGold = 800,
+	shareGold = 410
 },
 [42] ={
 	id = 42,
@@ -772,6 +813,7 @@ local data_stage = {
 	starReward3 = "1_1210,2_1814,3_2",
 	rebirthGold = 4000,
 	boxGold = 830,
+	shareGold = 420
 },
 [43] ={
 	id = 43,
@@ -790,6 +832,7 @@ local data_stage = {
 	starReward3 = "1_1215,2_1900,3_2",
 	rebirthGold = 4000,
 	boxGold = 860,
+	shareGold = 430
 },
 [44] ={
 	id = 44,
@@ -808,6 +851,7 @@ local data_stage = {
 	starReward3 = "1_1220,2_1988,3_2",
 	rebirthGold = 4200,
 	boxGold = 880,
+	shareGold = 440
 },
 [45] ={
 	id = 45,
@@ -827,6 +871,7 @@ local data_stage = {
 	starReward3 = "1_1225,2_2078,3_2",
 	rebirthGold = 4200,
 	boxGold = 900,
+	shareGold = 450
 },
 [46] ={
 	id = 46,
@@ -845,6 +890,7 @@ local data_stage = {
 	starReward3 = "1_1230,2_2170,3_2",
 	rebirthGold = 4500,
 	boxGold = 930,
+	shareGold = 460
 },
 [47] ={
 	id = 47,
@@ -863,6 +909,7 @@ local data_stage = {
 	starReward3 = "1_1235,2_2264,3_2",
 	rebirthGold = 4500,
 	boxGold = 960,
+	shareGold = 470
 },
 [48] ={
 	id = 48,
@@ -881,6 +928,7 @@ local data_stage = {
 	starReward3 = "1_1240,2_2360,3_2",
 	rebirthGold = 4800,
 	boxGold = 980,
+	shareGold = 480
 },
 [49] ={
 	id = 49,
@@ -899,6 +947,7 @@ local data_stage = {
 	starReward3 = "1_1245,2_2458,3_2",
 	rebirthGold = 4800,
 	boxGold = 1000,
+	shareGold = 490
 },
 [50] ={
 	id = 50,
@@ -918,6 +967,7 @@ local data_stage = {
 	starReward3 = "1_1250,2_2558,3_2",
 	rebirthGold = 5000,
 	boxGold = 1050,
+	shareGold = 500
 },
 [51] ={
 	id = 51,
@@ -936,6 +986,7 @@ local data_stage = {
 	starReward3 = "1_1455,2_2660,3_2",
 	rebirthGold = 5000,
 	boxGold = 1100,
+	shareGold = 510
 },
 [52] ={
 	id = 52,
@@ -954,6 +1005,7 @@ local data_stage = {
 	starReward3 = "1_1460,2_2764,3_2",
 	rebirthGold = 5200,
 	boxGold = 1150,
+	shareGold = 520
 },
 [53] ={
 	id = 53,
@@ -972,6 +1024,7 @@ local data_stage = {
 	starReward3 = "1_1465,2_2870,3_2",
 	rebirthGold = 5200,
 	boxGold = 1200,
+	shareGold = 530
 },
 [54] ={
 	id = 54,
@@ -990,6 +1043,7 @@ local data_stage = {
 	starReward3 = "1_1470,2_2978,3_2",
 	rebirthGold = 5400,
 	boxGold = 1250,
+	shareGold = 540
 },
 [55] ={
 	id = 55,
@@ -1009,6 +1063,7 @@ local data_stage = {
 	starReward3 = "1_1475,2_3088,3_2",
 	rebirthGold = 5400,
 	boxGold = 1300,
+	shareGold = 550
 },
 [56] ={
 	id = 56,
@@ -1028,6 +1083,7 @@ local data_stage = {
 	starReward3 = "1_1480,2_3200,3_2",
 	rebirthGold = 5600,
 	boxGold = 1350,
+	shareGold = 560
 },
 [57] ={
 	id = 57,
@@ -1046,6 +1102,7 @@ local data_stage = {
 	starReward3 = "1_1485,2_3314,3_2",
 	rebirthGold = 5600,
 	boxGold = 1400,
+	shareGold = 570
 },
 [58] ={
 	id = 58,
@@ -1064,6 +1121,7 @@ local data_stage = {
 	starReward3 = "1_1490,2_3430,3_2",
 	rebirthGold = 5800,
 	boxGold = 1450,
+	shareGold = 580
 },
 [59] ={
 	id = 59,
@@ -1082,6 +1140,7 @@ local data_stage = {
 	starReward3 = "1_1495,2_3548,3_2",
 	rebirthGold = 5800,
 	boxGold = 1500,
+	shareGold = 590
 },
 [60] ={
 	id = 60,
@@ -1100,6 +1159,7 @@ local data_stage = {
 	starReward3 = "1_1500,2_3668,3_2",
 	rebirthGold = 6000,
 	boxGold = 1550,
+	shareGold = 600
 },
 [61] ={
 	id = 61,
@@ -1120,6 +1180,7 @@ local data_stage = {
 	starReward3 = "1_1805,2_3790,3_2",
 	rebirthGold = 6000,
 	boxGold = 1600,
+	shareGold = 610
 },
 [62] ={
 	id = 62,
@@ -1138,6 +1199,7 @@ local data_stage = {
 	starReward3 = "1_1810,2_3914,3_2",
 	rebirthGold = 6200,
 	boxGold = 1650,
+	shareGold = 620
 },
 [63] ={
 	id = 63,
@@ -1156,6 +1218,7 @@ local data_stage = {
 	starReward3 = "1_1815,2_4040,3_2",
 	rebirthGold = 6200,
 	boxGold = 1700,
+	shareGold = 630
 },
 [64] ={
 	id = 64,
@@ -1174,6 +1237,7 @@ local data_stage = {
 	starReward3 = "1_1820,2_4168,3_2",
 	rebirthGold = 6400,
 	boxGold = 1750,
+	shareGold = 640
 },
 [65] ={
 	id = 65,
@@ -1192,6 +1256,7 @@ local data_stage = {
 	starReward3 = "1_1825,2_4298,3_2",
 	rebirthGold = 6400,
 	boxGold = 1800,
+	shareGold = 650
 },
 [66] ={
 	id = 66,
@@ -1210,6 +1275,7 @@ local data_stage = {
 	starReward3 = "1_1830,2_4430,3_2",
 	rebirthGold = 6600,
 	boxGold = 1850,
+	shareGold = 660
 },
 [67] ={
 	id = 67,
@@ -1228,6 +1294,7 @@ local data_stage = {
 	starReward3 = "1_1835,2_4564,3_2",
 	rebirthGold = 6600,
 	boxGold = 1900,
+	shareGold = 670
 },
 [68] ={
 	id = 68,
@@ -1246,6 +1313,7 @@ local data_stage = {
 	starReward3 = "1_1840,2_4700,3_2",
 	rebirthGold = 6800,
 	boxGold = 1950,
+	shareGold = 680
 },
 [69] ={
 	id = 69,
@@ -1264,6 +1332,7 @@ local data_stage = {
 	starReward3 = "1_1845,2_4838,3_2",
 	rebirthGold = 6800,
 	boxGold = 2000,
+	shareGold = 690
 },
 [70] ={
 	id = 70,
@@ -1282,6 +1351,7 @@ local data_stage = {
 	starReward3 = "1_1850,2_4978,3_2",
 	rebirthGold = 7000,
 	boxGold = 2050,
+	shareGold = 700
 },
 [71] ={
 	id = 71,
@@ -1300,6 +1370,7 @@ local data_stage = {
 	starReward3 = "1_2355,2_5120,3_2",
 	rebirthGold = 7000,
 	boxGold = 2100,
+	shareGold = 710
 },
 [72] ={
 	id = 72,
@@ -1318,6 +1389,7 @@ local data_stage = {
 	starReward3 = "1_2360,2_5264,3_2",
 	rebirthGold = 7200,
 	boxGold = 2150,
+	shareGold = 720
 },
 [73] ={
 	id = 73,
@@ -1336,6 +1408,7 @@ local data_stage = {
 	starReward3 = "1_2365,2_5410,3_2",
 	rebirthGold = 7200,
 	boxGold = 2200,
+	shareGold = 730
 },
 [74] ={
 	id = 74,
@@ -1355,6 +1428,7 @@ local data_stage = {
 	starReward3 = "1_2370,2_5558,3_2",
 	rebirthGold = 7400,
 	boxGold = 2250,
+	shareGold = 740
 },
 [75] ={
 	id = 75,
@@ -1373,6 +1447,7 @@ local data_stage = {
 	starReward3 = "1_2375,2_5708,3_2",
 	rebirthGold = 7400,
 	boxGold = 2300,
+	shareGold = 750
 },
 [76] ={
 	id = 76,
@@ -1391,6 +1466,7 @@ local data_stage = {
 	starReward3 = "1_2380,2_5860,3_2",
 	rebirthGold = 7600,
 	boxGold = 2350,
+	shareGold = 760
 },
 [77] ={
 	id = 77,
@@ -1409,6 +1485,7 @@ local data_stage = {
 	starReward3 = "1_2385,2_6014,3_2",
 	rebirthGold = 7600,
 	boxGold = 2400,
+	shareGold = 770
 },
 [78] ={
 	id = 78,
@@ -1427,6 +1504,7 @@ local data_stage = {
 	starReward3 = "1_2390,2_6170,3_2",
 	rebirthGold = 7800,
 	boxGold = 2450,
+	shareGold = 780
 },
 [79] ={
 	id = 79,
@@ -1445,6 +1523,7 @@ local data_stage = {
 	starReward3 = "1_2395,2_6328,3_2",
 	rebirthGold = 7800,
 	boxGold = 2500,
+	shareGold = 790
 },
 [80] ={
 	id = 80,
@@ -1463,6 +1542,7 @@ local data_stage = {
 	starReward3 = "1_2400,2_6488,3_2",
 	rebirthGold = 8000,
 	boxGold = 2550,
+	shareGold = 800
 },
 [81] ={
 	id = 81,
@@ -1483,6 +1563,7 @@ local data_stage = {
 	starReward3 = "1_2905,2_6650,3_2",
 	rebirthGold = 8000,
 	boxGold = 2600,
+	shareGold = 810
 },
 [82] ={
 	id = 82,
@@ -1501,6 +1582,7 @@ local data_stage = {
 	starReward3 = "1_2910,2_6814,3_2",
 	rebirthGold = 8200,
 	boxGold = 2650,
+	shareGold = 820
 },
 [83] ={
 	id = 83,
@@ -1519,6 +1601,7 @@ local data_stage = {
 	starReward3 = "1_2915,2_6980,3_2",
 	rebirthGold = 8200,
 	boxGold = 2700,
+	shareGold = 830
 },
 [84] ={
 	id = 84,
@@ -1537,6 +1620,7 @@ local data_stage = {
 	starReward3 = "1_2920,2_7148,3_2",
 	rebirthGold = 8400,
 	boxGold = 2750,
+	shareGold = 840
 },
 [85] ={
 	id = 85,
@@ -1555,6 +1639,7 @@ local data_stage = {
 	starReward3 = "1_2925,2_7318,3_2",
 	rebirthGold = 8400,
 	boxGold = 2800,
+	shareGold = 850
 },
 [86] ={
 	id = 86,
@@ -1573,6 +1658,7 @@ local data_stage = {
 	starReward3 = "1_2930,2_7490,3_2",
 	rebirthGold = 8600,
 	boxGold = 2850,
+	shareGold = 860
 },
 [87] ={
 	id = 87,
@@ -1591,6 +1677,7 @@ local data_stage = {
 	starReward3 = "1_2935,2_7664,3_2",
 	rebirthGold = 8600,
 	boxGold = 2900,
+	shareGold = 870
 },
 [88] ={
 	id = 88,
@@ -1610,6 +1697,7 @@ local data_stage = {
 	starReward3 = "1_2940,2_7840,3_2",
 	rebirthGold = 8800,
 	boxGold = 2950,
+	shareGold = 880
 },
 [89] ={
 	id = 89,
@@ -1628,6 +1716,7 @@ local data_stage = {
 	starReward3 = "1_2945,2_8018,3_2",
 	rebirthGold = 8800,
 	boxGold = 3000,
+	shareGold = 890
 },
 [90] ={
 	id = 90,
@@ -1647,6 +1736,7 @@ local data_stage = {
 	starReward3 = "1_2950,2_8198,3_2",
 	rebirthGold = 9000,
 	boxGold = 3050,
+	shareGold = 900
 },
 [91] ={
 	id = 91,
@@ -1665,6 +1755,7 @@ local data_stage = {
 	starReward3 = "1_3455,2_8380,3_2",
 	rebirthGold = 9000,
 	boxGold = 3100,
+	shareGold = 910
 },
 [92] ={
 	id = 92,
@@ -1683,6 +1774,7 @@ local data_stage = {
 	starReward3 = "1_3460,2_8564,3_2",
 	rebirthGold = 9200,
 	boxGold = 3150,
+	shareGold = 920
 },
 [93] ={
 	id = 93,
@@ -1701,6 +1793,7 @@ local data_stage = {
 	starReward3 = "1_3465,2_8750,3_2",
 	rebirthGold = 9200,
 	boxGold = 3200,
+	shareGold = 930
 },
 [94] ={
 	id = 94,
@@ -1720,6 +1813,7 @@ local data_stage = {
 	starReward3 = "1_3470,2_8938,3_2",
 	rebirthGold = 9400,
 	boxGold = 3250,
+	shareGold = 940
 },
 [95] ={
 	id = 95,
@@ -1738,6 +1832,7 @@ local data_stage = {
 	starReward3 = "1_3475,2_9128,3_2",
 	rebirthGold = 9400,
 	boxGold = 3300,
+	shareGold = 950
 },
 [96] ={
 	id = 96,
@@ -1756,6 +1851,7 @@ local data_stage = {
 	starReward3 = "1_3480,2_9320,3_2",
 	rebirthGold = 9600,
 	boxGold = 3350,
+	shareGold = 960
 },
 [97] ={
 	id = 97,
@@ -1774,6 +1870,7 @@ local data_stage = {
 	starReward3 = "1_3485,2_9514,3_2",
 	rebirthGold = 9600,
 	boxGold = 3400,
+	shareGold = 970
 },
 [98] ={
 	id = 98,
@@ -1792,6 +1889,7 @@ local data_stage = {
 	starReward3 = "1_3490,2_9710,3_2",
 	rebirthGold = 9800,
 	boxGold = 3450,
+	shareGold = 980
 },
 [99] ={
 	id = 99,
@@ -1810,6 +1908,7 @@ local data_stage = {
 	starReward3 = "1_3495,2_9908,3_2",
 	rebirthGold = 9800,
 	boxGold = 3500,
+	shareGold = 990
 },
 [100] ={
 	id = 100,
@@ -1829,6 +1928,7 @@ local data_stage = {
 	starReward3 = "1_3500,2_10108,3_2",
 	rebirthGold = 10000,
 	boxGold = 3500,
+	shareGold = 1000
 }
 }
 return data_stage

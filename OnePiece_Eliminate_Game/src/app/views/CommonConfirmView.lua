@@ -10,7 +10,7 @@ local CommonConfirmView = class("CommonConfirmView", function()
     return display.newNode()
 end)
 
-function CommonConfirmView:ctor(content,func)
+function CommonConfirmView:ctor(content,func,tag)
 
 	self._mainNode = CsbContainer:createPushCsb("CommonConfirmView.csb"):addTo(self)
 
@@ -19,6 +19,9 @@ function CommonConfirmView:ctor(content,func)
 		self:removeFromParent()
 		self._mainNode = nil
 	end)
+    if tag~=nil and tag==1 then
+        closeBtn:setVisible(false)
+    end
 
     local confirmBtn = cc.uiloader:seekNodeByName(self._mainNode,"mConfirmBtn")
     CsbContainer:decorateBtn(confirmBtn,function()

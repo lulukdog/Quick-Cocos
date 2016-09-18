@@ -8,6 +8,8 @@ local plistPngPath = {
 	"blink.png",
 	"WaveAni.png",
 	"bomb.png",
+	"Adani.png",
+	"bodySplash.png",
 }
 
 return plistPngPath

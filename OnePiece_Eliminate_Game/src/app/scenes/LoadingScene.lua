@@ -3,6 +3,7 @@ local plistPngPath = require("data.data_plistPath")
 local scheduler = require("framework.scheduler")
 local common = require("app.common")
 local scheduler = require("framework.scheduler")
+local CommonConfirmView = import("..views.CommonConfirmView")
 
 local LoadingScene = class("LoadingScene", function()
     return display.newScene("LoadingScene")
@@ -28,6 +29,7 @@ function LoadingScene:ctor()
   local _startBtn = cc.uiloader:seekNodeByName(self._mainNode, "mStartBtn")
   CsbContainer:decorateBtn(_startBtn, function()
       if game.PLAYERID~="" then
+          UserDefaultUtil:recordCreateRole("luffy")
           _startBtn:setEnabled(false)
           self:enterMapScene()
       end
@@ -71,6 +73,10 @@ function LoadingScene:ctor()
   self:initGuideStep()
   -- 初始化当前是否第一次开始游戏
   self:initFirstGame()
+  -- 初始化是否买过一元购
+  self:initOneYuan()
+  -- 初始化统计部分
+  self:initRecord()
 
   -- 每秒走一次，倒计时用
   GameUtil_addSecond()
@@ -86,6 +92,9 @@ function LoadingScene:ctor()
       end,280/GAME_FRAME_RATE)
   end
 
+  -- 检查更新，并下载新包
+  -- self.needRequest = true -- 防止重复请求
+  self:checkVersion()
 end
 
 -- 添加扫光
@@ -235,7 +244,27 @@ function LoadingScene:initFirstGame()
       game.firstEnterGame = UserDefaultUtil:getFirstGame()==1
   end
 end
-
+-- 初始化是否买过一元购
+function LoadingScene:initOneYuan()
+  if UserDefaultUtil:getOneYuan()~=0 then
+      game.boughtOneYuan = UserDefaultUtil:getOneYuan()==1
+  end
+end
+-- 初始化统计部分
+function LoadingScene:initRecord()
+    -- 伙伴使用统计
+    if UserDefaultUtil:getRecordHeplerUse()~=nil then
+        game.recordHelperUse = UserDefaultUtil:getRecordHeplerUse()
+    end
+    -- 复活购买信息
+    if UserDefaultUtil:getRecordRebirthBuy()~=nil then
+        game.recordRebirthBuy = UserDefaultUtil:getRecordRebirthBuy()
+    end
+    -- 战斗结果信息
+    if UserDefaultUtil:getRecordResult()~=nil then
+        game.recordResult = UserDefaultUtil:getRecordResult()
+    end
+end
 
 -- 加载资源进度条
 function LoadingScene:enterMapScene()
@@ -298,6 +327,14 @@ function LoadingScene:cacheAni()
     frames = display.newFrames("bomb_%d.png",1,3)
     animation = display.newAnimation(frames,0.3/3)     
     display.setAnimationCache("bomb",animation)
+    -- 地图页面的广告的闪烁动画
+    frames = display.newFrames("Adani%02d.png",1,11)
+    animation = display.newAnimation(frames,1.1/11)     
+    display.setAnimationCache("Adani",animation)
+    -- 滑到飞到人身上爆炸动画
+    frames = display.newFrames("body_%d.png",1,6)
+    animation = display.newAnimation(frames,0.6/6)     
+    display.setAnimationCache("bodySplash",animation)
 end
 
 function LoadingScene:isLoadingFinish(  )
@@ -324,15 +361,69 @@ function LoadingScene:loadPlist( )
   self:isLoadingFinish()
 end
 
-
 function LoadingScene:onEnter()
   print("LoadingScene:onEnter")
-  GameUtil_PlayMusic(GAME_MUSIC.bgMusic)
+  if game.firstEnterGame==true then 
+    scheduler.performWithDelayGlobal(function()
+        GameUtil_PlayMusic(GAME_MUSIC.loadingMusic)
+    end,280/GAME_FRAME_RATE)
+  else
+    GameUtil_PlayMusic(GAME_MUSIC.loadingMusic)
+  end
 end
 
 function LoadingScene:onExit()
   scheduler.unscheduleGlobal(self._aniScheduler)
 	print("LoadingScene:onExit")
+end
+
+function LoadingScene:checkVersion()
+  if network.getInternetConnectionStatus()~=0 then
+      function callback(event)
+          -- if self.needRequest==false then return end
+          local ok = (event.name == "completed")
+          local request = event.request
+          if event.name then print("request event.name = " .. event.name) end
+          if not ok then
+              print("请求失败 "..request:getErrorMessage())
+              -- MessagePopView.new("请求失败 "..request:getErrorMessage()):addTo(self)
+              return
+          end
+          local code = request:getResponseStatusCode()
+          if code ~= 200 then
+              print("请求错误，代码 "..request:getResponseStatusCode())
+              MessagePopView.new("请求错误，代码 "..request:getResponseStatusCode()):addTo(self)
+              return
+          end
+          if json.decode(request:getResponseString()) then
+              print("请求 LoadingScene:checkVersion "..request:getResponseString())
+              local versionCfg = json.decode(request:getResponseString())
+              local serverVersionTb = common:chageVersionStrToTb(versionCfg.version)
+              local localVersionTb = common:chageVersionStrToTb(game.VERSION)
+              if serverVersionTb[1]>localVersionTb[1] or serverVersionTb[2]>localVersionTb[2] then
+                  if device.platform == "android" then
+                      CommonConfirmView.new("需要更新新版本",function()
+                          device.openURL(versionCfg.androidApk)
+                          app.exit()
+                      end,1):addTo(self)
+                  elseif device.platform == "ios" then
+                      CommonConfirmView.new("需要更新新版本",function()
+                          device.openURL(versionCfg.iosApk)
+                          app.exit()
+                      end,1):addTo(self)
+                  end
+              else
+                  -- MessagePopView.new("当前版本已经是最新版本"):addTo(self)
+              end
+          end
+      end
+      -- 创建一个请求，并以 GET 方式发送数据到服务端
+      local url = "http://43.240.244.84/game/ServerVersion.cfg"
+      local request = network.createHTTPRequest(callback, url, "GET")
+      request:setTimeout(10)
+      -- 开始请求。当请求完成时会调用 callback() 函数
+      request:start()
+  end
 end
 
 return LoadingScene
