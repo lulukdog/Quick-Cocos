@@ -91,6 +91,9 @@ static AppStorePay *pay;
 //请求失败
 - (void)request:(SKRequest *)request didFailWithError:(NSError *)error{
     NSLog(@"------------------错误-----------------:%@", error);
+    //弹窗
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"请求失败" message:nil delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil];
+    [alertView show];
 }
 
 - (void)requestDidFinish:(SKRequest *)request{
@@ -105,6 +108,7 @@ static AppStorePay *pay;
         switch (tran.transactionState) {
             case SKPaymentTransactionStatePurchased:
                 NSLog(@"交易完成");
+                [self completeTransaction:tran];
                 
                 // recharge success
                 NSString* result = [NSString stringWithFormat:@"%d_%d",[[CatEye sharedInstance]getMoneyCount]*100,1];
@@ -120,9 +124,13 @@ static AppStorePay *pay;
                 break;
             case SKPaymentTransactionStateFailed:
                 NSLog(@"交易失败");
+                [self completeTransaction:tran];
+                //弹窗
+                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"交易失败" message:nil delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil];
+                [alertView show];
                 // recharge fail
-                NSString* failResult = [NSString stringWithFormat:@"fail_%d_%d",[[CatEye sharedInstance]getMoneyCount]*100,1];
-                [[CatEye sharedInstance]rechargeBack:[failResult UTF8String]];
+                NSString* resultFail = [NSString stringWithFormat:@"fail_%d_%d",[[CatEye sharedInstance]getMoneyCount]*100,1];
+                [[CatEye sharedInstance]rechargeBack:[resultFail UTF8String]];
                 break;
             default:
                 break;
